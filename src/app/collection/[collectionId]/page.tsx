@@ -16,6 +16,10 @@ import Typography from "@/components/Typography";
 import SortDropdown from "@/components/SortDropdown";
 import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
+import { Listings } from "@/components/Listings";
+import { Offer } from "@/components/Offer";
+import { DEMO_NFTS } from "@/config";
+import { AcceptModal } from "@/components/AcceptModal";
 
 export default function CollectionPage() {
   const router = useRouter();
@@ -62,29 +66,47 @@ export default function CollectionPage() {
         <CoverBanner src="/assets/images/cover-demo.png" />
         <CollectionOverview />
         <div className="max-w-[1600px] mx-5 2xl:mx-auto relative">
-          <div className="border-b-[0.5px] border-light-400 relative z-10">
-            <button
-              onClick={() => router.push(`${collectionId}?tab=1`)}
-              className={`text-[15px] font-semibold py-2 border-b-2 ${
-                tab !== "2"
-                  ? "text-secondary border-secondary"
-                  : "text-light-200 border-transparent"
-              }`}
-            >
-              Items
-            </button>
-            <button
-              onClick={() => router.push(`${collectionId}?tab=2`)}
-              className={`text-[15px] font-semibold py-2 border-b-2 ml-[30px] ${
-                tab === "2"
-                  ? "text-secondary border-secondary"
-                  : "text-light-200 border-transparent"
-              }`}
-            >
-              Activity
-            </button>
+          <div className="border-b-[0.5px] py-9  border-light-400 relative z-10">
+            <div className="flex gap-3">
+              <button
+                onClick={() => router.push(`${collectionId}?tab=1`)}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "1"
+                  ? " border-secondary bg-secondary"
+                  : "border-transparent"
+                  }`}
+              >
+                Items
+              </button>
+              <button
+                onClick={() => router.push(`${collectionId}?tab=2`)}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "2"
+                  ? " border-secondary bg-secondary"
+                  : "border-transparent"
+                  }`}
+              >
+                Activity
+              </button>
+              <button
+                onClick={() => router.push(`${collectionId}?tab=3`)}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "3"
+                  ? " border-secondary bg-secondary"
+                  : "border-transparent"
+                  }`}
+              >
+                Listings
+              </button>
+              <button
+                onClick={() => router.push(`${collectionId}?tab=4`)}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "4"
+                  ? " border-secondary bg-secondary"
+                  : "border-transparent"
+                  }`}
+              >
+                Offer
+              </button>
+            </div>
           </div>
-          <div className="flex gap-3 mt-6 lg:mt-12  relative z-20">
+          <div className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${(tab === "1" || tab === "2") ? "show" : "hidden"}`}>
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
               <Typography className="ml-2.5 text-[14px] leading-[20px] hidden lg:block">
@@ -116,7 +138,7 @@ export default function CollectionPage() {
               </button>
             </div>
           </div>
-          <div className="mt-[28px] lg:mt-[38px] flex relative z-10 ">
+          <div className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${(tab === "1" || tab === "2") ? "show" : "hidden"}`}>
             <div className="hidden lg:block w-[300px]">
               <CollectionFilter />
             </div>
@@ -127,6 +149,16 @@ export default function CollectionPage() {
               {tab === "2" && <ActivityDetail />}
             </div>
           </div>
+          {tab === "3" && (
+            <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
+              <Listings />
+            </div>
+          )}
+          {tab === "4" && (
+            <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
+              <Offer />
+            </div>
+          )}
         </div>
         {!loading && (
           <img
@@ -136,6 +168,7 @@ export default function CollectionPage() {
           />
         )}
       </MainLayout>
+      {DEMO_NFTS[0] && <AcceptModal nft={DEMO_NFTS[0]} />}
     </>
   );
 }

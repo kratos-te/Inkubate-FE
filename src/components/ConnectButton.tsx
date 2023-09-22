@@ -1,17 +1,17 @@
 interface ConnectButtonProps {
   name: string;
   onClick: Function;
-  logo?: string;
+  logo?: JSX.Element;
 }
 
 export const ConnectButton = ({ name, onClick, logo }: ConnectButtonProps) => {
   return (
     <button
-      className="bg-[#ffffff0d] px-[30px] py-[15px] backdrop-filter-[10px] text-left flex text-white/90 items-center mb-[20px] justify-between"
+      className="p-6 backdrop-filter-[10px] text-left flex text-white/90 items-center mb-[20px] justify-start hover:bg-[#464646]"
       onClick={() => onClick()}
     >
-      {logo && <img src={logo} alt={name} />}
-      <div className="text-start w-[180px]">{name}</div>
+      {logo && <div>{logo}</div>}
+      <div className="text-start  text-[30px] ml-[14px] font-semibold max-lg:text-[24px]">{name}</div>
       {/* <div className="text-xl">
           <ArrowLeftIcon />
         </div> */}

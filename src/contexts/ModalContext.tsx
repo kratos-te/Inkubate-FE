@@ -16,7 +16,15 @@ interface ModalContextType {
   //Offer Modal
   openOfferModal: () => void;
   closeOfferModal: () => void;
-  isOpenedOfferModal: boolean
+  isOpenedOfferModal: boolean 
+  //Accept Modal
+  openAcceptModal: () => void;
+  closeAcceptModal: () => void;
+  isOpenedAcceptModal: boolean;
+  //Mint Modal
+  openMintModal: () => void;
+  closeMintModal: () => void;
+  isOpenedMintModal: boolean;
 }
 
 export const ModalContext = createContext<ModalContextType | undefined>(
@@ -83,6 +91,26 @@ export function ModalProvider({ children }: ModalProviderProps) {
     document.body.classList.remove("modal-open");
   }
 
+  const [isOpenedAcceptModal, setIsOpenedAcceptModal] = useState<boolean>(false);
+  const openAcceptModal = () => {
+    setIsOpenedAcceptModal(true)
+    document.body.classList.add("modal-open");
+  }
+  const closeAcceptModal = () => {
+    setIsOpenedAcceptModal(false)
+    document.body.classList.remove("modal-open");
+  }
+
+  const [isOpenedMintModal, setIsOpenedMintModal] = useState<boolean>(false);
+  const openMintModal = () => {
+    setIsOpenedMintModal(true)
+    document.body.classList.add("modal-open");
+  }
+  const closeMintModal = () => {
+    setIsOpenedMintModal(false)
+    document.body.classList.remove("modal-open");
+  }
+
   const modalContextValue: ModalContextType = {
     openLaunchpadModal,
     closeLaunchpadModal,
@@ -95,7 +123,13 @@ export function ModalProvider({ children }: ModalProviderProps) {
     isOpenedWalletModal,
     openOfferModal,
     closeOfferModal,
-    isOpenedOfferModal
+    isOpenedOfferModal,
+    openAcceptModal,
+    closeAcceptModal,
+    isOpenedAcceptModal,
+    openMintModal,
+    closeMintModal,
+    isOpenedMintModal,
   };
 
   return (

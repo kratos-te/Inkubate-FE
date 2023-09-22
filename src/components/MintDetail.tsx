@@ -13,6 +13,7 @@ import {
 } from "./SvgIcons";
 import useWindowSize from "@/utils/useWindowSize";
 import MintProgress from "./MintProgress";
+import { useModal } from "@/contexts/ModalContext";
 
 interface OverviewProps {
   collection: CollectionItem;
@@ -20,6 +21,7 @@ interface OverviewProps {
 }
 
 const MintDetail: FC<OverviewProps> = () => {
+  const { openMintModal } = useModal()
   const { width } = useWindowSize();
   const description =
     "The Cyber Droid NFTs are unique, algorithmically generated androids on the Ethereum blockchain. They can function as digital art, metaverse avatars, or blockchain game characters. Ownership may also unlock exclusive perks ithin the community.";
@@ -82,7 +84,7 @@ const MintDetail: FC<OverviewProps> = () => {
           <div className="w-full sm:w-[400px]">
             <MintProgress totalSupply={10000} minted={2856} className="mt-6" />
             <div className="grid grid-cols-1 sm:grid-cols-2 mt-5 gap-[14px] sm:gap-2.5">
-              <button className="py-[11px]  h-[42px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 justify-center hover:bg-[#bbb] duration-300">
+              <button className="py-[11px]  h-[42px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 justify-center hover:bg-[#bbb] duration-300" onClick={openMintModal}>
                 <StarIcon className="mr-1" color="#161616" /> Mint Now
               </button>
               <button className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300">

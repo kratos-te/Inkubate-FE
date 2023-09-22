@@ -30,3 +30,8 @@ export type StatsItem = {
     volumeH24: number,
     volumeD7: number,
 }
+
+export type ModalItem = {
+  nft: NftItem;
+  className?: string;
+};
