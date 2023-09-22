@@ -169,7 +169,7 @@ const Header: FC = () => {
                           />
                         ))}
                         <button
-                          className="flex space-x-4 cursor-pointer"
+                          className="flex space-x-4 cursor-pointer hover:bg-dark-400"
                           onClick={handleDisconnect}
                         >
                           <MenuLogoutIcon />
@@ -195,7 +195,7 @@ const Header: FC = () => {
                         className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
                         onClick={handleOpenWrap}
                       >
-                        <p className="text-white text-lg text-center">Wrap</p>
+                        <p className="text-white text-lg text-center">Add Funds</p>
                       </button>
                     </div>
                   )}
@@ -228,28 +228,50 @@ const Header: FC = () => {
                 <HamburgerIcon className="" />
               </div>
 
-              <div className="w-[156px] group-hover:flex absolute text-white hidden top-6 z-10 rounded-b-lg overflow-hidden -right-3 pt-2">
-                <div className="text-white bg-dark-400 flex-col justify-start rounded-lg mt-1 duration-300 w-[144px]">
-                  <Link
-                    href={"/explore"}
-                    className="text-[12px] md:text-[16px] px-3 text-left hover:bg-dark-500 h-11 w-full flex items-center gap-1 font-bold rounded-t-lg"
+              <div className="w-[241px] group-hover:flex absolute text-white hidden top-6 z-10 rounded-b-lg overflow-hidden -right-3 pt-2">
+                <div className="text-white bg-dark-200 flex-col justify-start rounded-lg mt-1 duration-300 w-[241px]">
+                  <div className="flex-col space-y-10 p-6 border-b border-dark-400">
+
+                    {DROPDOWN_LINKS.map((item, key) => (
+                      <MenuButton
+                        key={key}
+                        icon={<item.icon />}
+                        title={item.title}
+                        link={item.link}
+                      />
+                    ))}
+                    <button
+                      className="flex space-x-4 cursor-pointer"
+                      onClick={handleDisconnect}
+                    >
+                      <MenuLogoutIcon />
+                      <p className="text-white text-lg font-semibold">
+                        Log out
+                      </p>
+                    </button>
+                  </div>
+                  {isConnected ? <div className="flex items-center p-6 gap-[14px]">
+                    <Image
+                      src="/assets/images/avatar-demo.png"
+                      width={40}
+                      height={40}
+                      alt=""
+                      className="rounded-full cursor-pointer"
+                    />
+                    <div className="flex-col space-y-1">
+                      <p className="text-white text-lg">{username}</p>
+                      <p className="text-white text-[16px]">{0.52} ETH</p>
+                    </div>
+                  </div> :
+                    <button className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center" onClick={openWalletModal}>
+                      Connect Wallet
+                    </button>}
+
+                  <button
+                    className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
+                    onClick={handleOpenWrap}
                   >
-                    <ExploreMobileIcon className="mr-1" /> Explore
-                  </Link>{" "}
-                  <Link
-                    href={"/stats"}
-                    className="text-[12px] md:text-[16px] px-3 text-left hover:bg-dark-500 h-11 w-full flex items-center gap-1 font-bold"
-                  >
-                    <StatsMobileIcon className="mr-1" /> Stats
-                  </Link>{" "}
-                  <Link
-                    href={"/bridge"}
-                    className="text-[12px] md:text-[16px] px-3 text-left hover:bg-dark-500 h-11 w-full flex items-center gap-1 font-bold first:rounded-t-lg"
-                  >
-                    <BridgeMobileIcon className="mr-1" /> Bridge
-                  </Link>
-                  <button className="rounded-lg bg-secondary mb-5 mx-5 w-[105px] h-9 font-semibold">
-                    Connect
+                    <p className="text-white text-lg text-center">Wrap</p>
                   </button>
                 </div>
               </div>

@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MintOverviewLoader from "@/components/Common/MintOverviewLoader";
 import Skeleton from "react-loading-skeleton";
+import { MintModal } from "@/components/MintModal";
 
 export default function CollectionPage() {
   const contract = "0x2f05e799C61b600c65238a9DF060cABA63Db8E78";
@@ -143,6 +144,7 @@ export default function CollectionPage() {
           />
         )}
       </MainLayout>
+      <MintModal />
     </>
   );
 }

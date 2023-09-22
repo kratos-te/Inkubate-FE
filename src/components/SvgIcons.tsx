@@ -1867,3 +1867,167 @@ export const ArrowDownIcon: FC = () => {
     </svg>
   )
 }
+
+export const MetamaskIcon: FC = () => {
+  return (
+    <svg width="31" height="28" viewBox="0 0 31 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_544_4403)">
+        <path d="M28.6518 0.107178L16.9248 8.78852L19.1041 3.67081L28.6518 0.107178Z" fill="#E17726" stroke="#E17726"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M1.59863 0.107178L13.2273 8.8689L11.1463 3.67081L1.59863 0.107178Z" fill="#E27625" stroke="#E27625"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M24.4276 20.2386L21.3105 25.008L27.9912 26.8478L29.9026 20.3458L24.4276 20.2386Z" fill="#E27625"
+          stroke="#E27625" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M0.357422 20.3458L2.25981 26.8478L8.93158 25.008L5.82345 20.2386L0.357422 20.3458Z" fill="#E27625"
+          stroke="#E27625" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8.57404 12.1825L6.71631 14.9869L13.3256 15.2906L13.1023 8.17224L8.57404 12.1825Z" fill="#E27625"
+          stroke="#E27625" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M21.6853 12.1825L17.0766 8.08295L16.9248 15.2817L23.5341 14.978L21.6853 12.1825Z" fill="#E27625"
+          stroke="#E27625" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8.93115 25.008L12.9324 23.0788L9.4849 20.3904L8.93115 25.008Z" fill="#E27625" stroke="#E27625"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M17.3179 23.0699L21.3102 25.008L20.7654 20.3904L17.3179 23.0699Z" fill="#E27625" stroke="#E27625"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M21.3102 25.008L17.3179 23.0788L17.6394 25.6689L17.6037 26.7675L21.3102 25.008Z" fill="#D5BFB2"
+          stroke="#D5BFB2" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8.93115 25.008L12.6466 26.7675L12.6198 25.6689L12.9324 23.0788L8.93115 25.008Z" fill="#D5BFB2"
+          stroke="#D5BFB2" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12.7097 18.6756L9.38721 17.7021L11.7272 16.6214L12.7097 18.6756Z" fill="#233447" stroke="#233447"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M17.541 18.6756L18.5145 16.6303L20.8724 17.711L17.541 18.6756Z" fill="#233447" stroke="#233447"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8.93138 25.008L9.51192 20.2386L5.82324 20.3458L8.93138 25.008Z" fill="#CC6228" stroke="#CC6228"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M20.7388 20.2386L21.3104 25.008L24.4274 20.3458L20.7388 20.2386Z" fill="#CC6228" stroke="#CC6228"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M23.5341 14.9869L16.9248 15.2906L17.5411 18.6845L18.5146 16.6392L20.8725 17.72L23.5341 14.9869Z"
+          fill="#CC6228" stroke="#CC6228" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M9.39573 17.7021L11.7358 16.6214L12.7093 18.6667L13.3256 15.2727L6.71631 14.9691L9.39573 17.7021Z"
+          fill="#CC6228" stroke="#CC6228" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M6.71631 14.9869L9.48505 20.3904L9.39573 17.7021L6.71631 14.9869Z" fill="#E27525" stroke="#E27525"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M20.8728 17.7021L20.7656 20.3904L23.5344 14.9869L20.8728 17.7021Z" fill="#E27525" stroke="#E27525"
+          stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M13.3257 15.2816L12.7095 18.6756L13.4865 22.6769L13.6562 17.3984L13.3257 15.2816Z" fill="#E27525"
+          stroke="#E27525" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M16.925 15.2816L16.6035 17.3895L16.7643 22.6769L17.5413 18.6756L16.925 15.2816Z" fill="#E27525"
+          stroke="#E27525" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M17.5412 18.6756L16.7642 22.6769L17.3179 23.0699L20.7654 20.3815L20.8726 17.6931L17.5412 18.6756Z"
+          fill="#F5841F" stroke="#F5841F" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M9.396 17.7021L9.48531 20.3904L12.9328 23.0788L13.4866 22.6858L12.7096 18.6845L9.396 17.7021Z"
+          fill="#F5841F" stroke="#F5841F" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M17.6125 26.7675L17.6482 25.6689L17.3445 25.4099H12.9146L12.6288 25.6689L12.6556 26.7675L8.93115 25.008L10.2351 26.0708L12.8699 27.8839H17.3803L20.024 26.0708L21.3101 25.008L17.6125 26.7675Z"
+          fill="#C0AC9D" stroke="#C0AC9D" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M17.318 23.0699L16.7643 22.6769H13.4865L12.9327 23.0699L12.6201 25.66L12.9059 25.401H17.3359L17.6396 25.66L17.318 23.0699Z"
+          fill="#161616" stroke="#161616" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M29.152 9.36014L30.1345 4.5729L28.6518 0.116119L17.3179 8.50272L21.6764 12.1825L27.8391 13.9777L29.1967 12.3879L28.6072 11.9592L29.545 11.1018L28.8215 10.548L29.7593 9.8335L29.152 9.36014Z"
+          fill="#763E1A" stroke="#763E1A" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M0.107422 4.56396L1.10774 9.3512L0.47361 9.82456L1.42927 10.5391L0.705827 11.0928L1.64363 11.9502L1.05415 12.3789L2.41173 13.9687L8.57441 12.1735L12.9329 8.49378L1.59897 0.107178L0.107422 4.56396Z"
+          fill="#763E1A" stroke="#763E1A" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M27.8393 13.9777L21.6766 12.1825L23.5344 14.9869L20.7656 20.3904L24.4364 20.3458H29.9114L27.8393 13.9777Z"
+          fill="#F5841F" stroke="#F5841F" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8.57433 12.1825L2.41165 13.9777L0.357422 20.3458H5.82345L9.49426 20.3904L6.72552 14.9869L8.57433 12.1825Z"
+          fill="#F5841F" stroke="#F5841F" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M16.9251 15.2817L17.3181 8.50272L19.1044 3.67975H11.1465L12.9328 8.50272L13.3258 15.2817L13.4776 17.4073L13.4865 22.6769H16.7554L16.7643 17.4073L16.9251 15.2817Z"
+          fill="#F5841F" stroke="#F5841F" stroke-width="0.25" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+      <defs>
+        <clipPath id="clip0_544_4403">
+          <rect width="30.2507" height="28" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
+
+export const TrustwalletIcon: FC = () => {
+  return (
+    <svg width="26" height="30" viewBox="0 0 26 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_544_4442)">
+        <path
+          d="M12.9653 1.40425L13.6623 0.510632C13.2441 0.191484 12.6864 0.191484 12.3379 0.510632L12.9653 1.40425ZM24.5363 4.85106H25.6516C25.6516 4.21276 25.1636 3.76595 24.5363 3.70212V4.85106ZM12.9653 28.5957L12.3379 29.4894C12.6864 29.7447 13.1744 29.7447 13.5926 29.4894L12.9653 28.5957ZM1.46391 4.85106V3.70212C0.836568 3.70212 0.348633 4.21276 0.348633 4.78723L1.46391 4.85106ZM12.3379 2.29787C17.3567 6.19148 23.0725 5.93616 24.5363 5.93616V3.70212C23.0028 3.70212 17.984 3.89361 13.6623 0.510632L12.3379 2.29787ZM23.421 4.85106C23.3513 10.0213 23.1422 13.6596 22.724 16.3404C22.3057 19.0213 21.7481 20.617 20.9813 21.7021C20.2146 22.8511 19.2387 23.5532 17.8446 24.383C16.3808 25.2766 14.6382 26.1702 12.4076 27.6383L13.6623 29.4894C15.7535 28.0851 17.5658 27.1915 19.0296 26.2979C20.5631 25.4042 21.8875 24.383 22.8634 22.9149C23.8392 21.383 24.5363 19.4681 24.9545 16.6596C25.3728 13.8511 25.5819 10.0851 25.7213 4.91489L23.421 4.85106ZM13.5926 27.6383C11.362 26.1702 9.5497 25.2128 8.1556 24.383C6.7615 23.5532 5.78563 22.8511 5.01887 21.7021C4.25212 20.5532 3.69448 19.0213 3.27625 16.3404C2.85802 13.6596 2.6489 10.0213 2.5792 4.85106H0.348633C0.418338 10.0851 0.697158 13.8511 1.11539 16.6596C1.53362 19.4681 2.23067 21.4468 3.20654 22.9149C4.18241 24.383 5.50681 25.4042 7.04032 26.2979C8.50413 27.1915 10.3165 28.0851 12.4076 29.4894L13.5926 27.6383ZM1.46391 5.93616C2.92772 5.93616 8.64354 6.19148 13.6623 2.29787L12.3379 0.574462C8.01619 3.95744 2.99743 3.76595 1.46391 3.76595V5.93616Z"
+          fill="#0B65C6" stroke="#0B65C6" stroke-miterlimit="10" />
+      </g>
+      <defs>
+        <clipPath id="clip0_544_4442">
+          <rect width="26" height="30" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
+
+export const CoinbaseWallet: FC = () => {
+  return (
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clipRule="evenodd"
+        d="M14.6454 0H21.9681H29.2908V7.51034H21.9681H14.6454H7.32269V15.0207V15.5022V22.4873V22.5311V29.9976H0V22.5311V22.4873V15.5022V15.0207V7.51034V0H7.32269H14.6454ZM21.9686 22.4896H14.6886V15.023H29.287V22.7523C29.287 24.6738 28.543 26.5165 27.2187 27.8756C25.8944 29.2347 24.0981 29.9988 22.2247 30H21.9686V22.4896Z"
+        fill="#6851FF" />
+    </svg>
+  )
+}
+
+export const WalletconnectIcon: FC = () => {
+  return (
+    <svg width="36" height="22" viewBox="0 0 36 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_544_4448)">
+        <path
+          d="M7.34841 4.2991C13.2021 -1.43248 22.6929 -1.43248 28.5465 4.2991L29.2515 4.98847C29.5447 5.27451 29.5447 5.74008 29.2515 6.02612L26.8411 8.38625C26.6951 8.52987 26.4569 8.52987 26.3109 8.38625L25.3414 7.43717C21.2579 3.43859 14.6371 3.43859 10.5523 7.43717L9.51347 8.45327C9.36745 8.59689 9.12929 8.59689 8.98327 8.45327L6.57527 6.09314C6.28204 5.8071 6.28204 5.34153 6.57527 5.05549L7.34841 4.2991ZM33.5313 9.17855L35.676 11.279C35.9692 11.565 35.9692 12.0306 35.676 12.3166L26.0045 21.7859C25.7113 22.0719 25.2373 22.0719 24.9441 21.7859L18.0803 15.0657C18.0073 14.9939 17.8888 14.9939 17.8158 15.0657L10.9509 21.7859C10.6576 22.0719 10.1837 22.0719 9.89047 21.7859L0.21894 12.3166C-0.074282 12.0306 -0.074282 11.565 0.21894 11.279L2.36365 9.17855C2.65687 8.89251 3.13081 8.89251 3.42403 9.17855L10.2878 15.8999C10.3608 15.9717 10.4793 15.9717 10.5523 15.8999L17.4161 9.17855C17.7093 8.89251 18.1833 8.89251 18.4765 9.17855L25.3403 15.8999C25.4133 15.9717 25.5317 15.9717 25.6048 15.8999L32.4685 9.17974C32.7641 8.89251 33.2381 8.89251 33.5313 9.17855Z"
+          fill="#3B99FC" />
+      </g>
+      <defs>
+        <clipPath id="clip0_544_4448">
+          <rect width="35.8951" height="22" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
+
+export const InfoIcon: FC = () => {
+  return (
+    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.5469 2.10938C7.03687 2.10938 2.54688 6.59937 2.54688 12.1094C2.54688 17.6194 7.03687 22.1094 12.5469 22.1094C18.0569 22.1094 22.5469 17.6194 22.5469 12.1094C22.5469 6.59937 18.0569 2.10938 12.5469 2.10938ZM11.7969 8.10938C11.7969 7.69938 12.1369 7.35938 12.5469 7.35938C12.9569 7.35938 13.2969 7.69938 13.2969 8.10938V13.1094C13.2969 13.5194 12.9569 13.8594 12.5469 13.8594C12.1369 13.8594 11.7969 13.5194 11.7969 13.1094V8.10938ZM13.4669 16.4894C13.4169 16.6194 13.3469 16.7194 13.2569 16.8194C13.1569 16.9094 13.0469 16.9794 12.9269 17.0294C12.8069 17.0794 12.6769 17.1094 12.5469 17.1094C12.4169 17.1094 12.2869 17.0794 12.1669 17.0294C12.0469 16.9794 11.9369 16.9094 11.8369 16.8194C11.7469 16.7194 11.6769 16.6194 11.6269 16.4894C11.5769 16.3694 11.5469 16.2394 11.5469 16.1094C11.5469 15.9794 11.5769 15.8494 11.6269 15.7294C11.6769 15.6094 11.7469 15.4994 11.8369 15.3994C11.9369 15.3094 12.0469 15.2394 12.1669 15.1894C12.4069 15.0894 12.6869 15.0894 12.9269 15.1894C13.0469 15.2394 13.1569 15.3094 13.2569 15.3994C13.3469 15.4994 13.4169 15.6094 13.4669 15.7294C13.5169 15.8494 13.5469 15.9794 13.5469 16.1094C13.5469 16.2394 13.5169 16.3694 13.4669 16.4894Z" fill="#E6E6E6" />
+    </svg>
+
+  )
+}
+
+export const PlusIcon: FC = () => {
+  return (
+    <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22.5" cy="22.8965" r="21" stroke="#666666" stroke-width="2" />
+      <path d="M32.1813 26.0685H25.9173V32.4765H20.0853V26.0685H13.8213V20.5605H20.0853V14.1165H25.9173V20.5605H32.1813V26.0685Z" fill="#F2F2F2" />
+    </svg>
+  )
+}
+
+export const MinusIcon: FC = () => {
+  return (
+    <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22.5" cy="22.8965" r="21" stroke="#666666" stroke-width="2" />
+      <path d="M30.2706 20.7045V25.8165H14.4306V20.7045H30.2706Z" fill="#F2F2F2" />
+    </svg>
+  )
+}
+
+export const NextIcon: FC<IconProps> = ({ color, className }) => {
+  return (
+    <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1.625 1.89648L8.9 9.16921L1.625 16.4419" stroke={color ? color : "#F2F3F4"} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  )
+}
+
+export const PrevIcon: FC<IconProps> = ({ color, className }) => {
+  return (
+    <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8.625 16.4434L1.35 9.17063L8.625 1.8979" stroke={color ? color : "#F2F3F4"} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  )
+}

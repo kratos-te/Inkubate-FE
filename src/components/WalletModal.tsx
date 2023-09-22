@@ -9,12 +9,11 @@ import { useSession } from "@/contexts/SessionContext";
 // import { INFURN_APU_KEY } from "@/config";
 import { getNonce, signIn } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
+import Button from "./Button";
+import { MetamaskIcon, TrustwalletIcon, CoinbaseWallet, WalletconnectIcon } from "./SvgIcons";
 
 const walletImg = [
-  "/assets/images/wallet/metamask.svg",
-  "/assets/images/wallet/coinbase.svg",
-  "/assets/images/wallet/walletconnect.svg",
-  "/assets/images/wallet/trust-wallet.svg",
+  <MetamaskIcon />, <TrustwalletIcon />, <CoinbaseWallet />, <WalletconnectIcon />
 ];
 
 const message = "Connected with Inkubate";
@@ -74,38 +73,32 @@ export const WalletModal: FC = () => {
       <div className="w-full h-full flex justify-center items-center">
         <div
           ref={modalRef}
-          className="bg-[#171C21] w-full max-w-[440px] overflow-hidden relative mt-[50px] bg-no-repeat bg-center bg-cover p-11"
+          className="bg-[#171C21] w-[530px] overflow-hidden rounded-2xl relative mt-[50px] p-6 max-lg:w-[377px]"
         >
           <button
-            className="group rounded-lg md:rounded-xl p-1 md:p-2.5 absolute right-2 md:right-9 top-2 md:top-9 z-10"
+            className="group rounded-lg  absolute right-6 max-lg:right-6 top-6 max-lg:top-6 z-10"
             onClick={closeWalletModal}
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(113, 113, 113, 0.30) 0%, rgba(171, 171, 171, 0.70) 100%)",
-            }}
           >
             <CloseCircleIcon className="group-hover:rotate-90 duration-300" />
           </button>
           <div className="modal_header">
-            <div className="text-white text-[24px] mb-[26px] max-w-[280px] text-center leading-7 uppercase mx-auto font-bold">
-              CONNECT WALLET
+            <div className="text-white text-[30px] mb-[26px]  text-left leading-7  font-semibold max-lg:text-[20px]">
+              Connect your wallet
             </div>
           </div>
           <div className="modal_body text-center">
-            <p className="text-[#ffffffcc] text-[16px] leading-7 pb-6">
-              Please select a wallet to connect
-            </p>
-            <div className="flex flex-col">
+            <div className="flex flex-col mt-10 max-lg:mt-2">
               {connectors.map((connector, index) => {
                 return (
                   <ConnectButton
                     key={index}
                     name={connector.name}
-                    onClick={() => handleConnectWallet(connector)}
+                    onClick={() => handleConnectWallet(connector)} 
                     logo={walletImg[index]}
                   />
                 );
               })}
+              <Button className="text-[16px] font-semibold" isButton onClick={closeWalletModal}>Cancel</Button>
             </div>
           </div>
         </div>

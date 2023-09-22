@@ -1,21 +1,17 @@
 import { FC, useState, useRef } from "react"
 import Image from "next/image";
-import { ArrowDownIcon, ArrowLeftIcon, BnbIcon, CalendarIcon, CloseCircleIcon, EthIcon, OfferSmIcon, SwapIcon, VerifiedIcon } from "./SvgIcons"
+import { ArrowDownIcon, ArrowLeftIcon, BnbIcon, CalendarIcon, CloseCircleIcon, EthIcon, NextIcon, OfferSmIcon, PrevIcon, SwapIcon, VerifiedIcon } from "./SvgIcons"
 import { useModal } from "@/contexts/ModalContext";
-import { NftItem } from "@/utils/types";
+import { ModalItem } from "@/utils/types";
 import Typography from "./Typography";
 import { CoinButton } from "./CoinButton";
 import ClickAwayComponent from "./ClickAwayComponent";
 import AssetDetailBox from "./AssetDetailBox";
 import { DATE_RANGE } from "@/config";
 import { LoadingPad } from "./LoadingPad";
+import { DatePicker } from "./DatePicker";
 
-interface OfferModalProps {
-  nft: NftItem;
-  className?: string;
-}
-
-export const OfferModal: FC<OfferModalProps> = ({ nft }) => {
+export const OfferModal: FC<ModalItem> = ({ nft }) => {
   const { closeOfferModal, isOpenedOfferModal } = useModal();
   const { image, name, ownerBy, rarity, price } = nft;
   const [isShowCal, setIsShowCal] = useState<boolean>(false)
@@ -39,6 +35,7 @@ export const OfferModal: FC<OfferModalProps> = ({ nft }) => {
   const handleOffer = () => {
     setMakeOffer(!makeOffer)
   }
+
   if (!isOpenedOfferModal) return null;
   return (
     <div
@@ -122,27 +119,8 @@ export const OfferModal: FC<OfferModalProps> = ({ nft }) => {
                         </div>
                       }
                     </div>
-                    <div className="flex mt-5 justify-between items-center">
-                      <div className="flex-col gap-2 w-[209px]">
-                        <Typography className="text-left text-lg text-white font-semibold">
-                          Starting
-                        </Typography>
-                        <div className="flex justify-between px-3 py-[14px] rounded-[8px] bg-[#616161] mt-2">
-                          <div className="text-white text-[14px] font-normal">1/06/2022</div>
-                        </div>
-                      </div>
-                      <div className="border-b border-white h-1/2 w-[15px] mt-10"></div>
-                      <div>
-                        <Typography className="text-left text-lg text-white w-[209px] font-semibold">
-                          Ending
-                        </Typography>
-                        <div className="flex justify-between px-3 py-[14px] rounded-[8px] bg-[#616161] mt-2">
-                          <div className="text-white text-[14px] font-normal">3/06/2022</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div inline-datepicker data-date="02/25/2022"></div>
-                    <button className="w-full rounded-lg bg-white text-black text-[16px] font-semibold py-3 mt-6" onClick={() => setIsShowCal(false)}>Done</button>
+                    <DatePicker />
+                    <button className="w-full rounded-lg bg-white text-black text-[16px] font-semibold py-3 mt-10" onClick={() => setIsShowCal(false)}>Done</button>
                   </div>
                 )}
               </div>

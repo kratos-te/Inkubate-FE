@@ -16,7 +16,6 @@ import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { InjectedConnector } from "wagmi/connectors/injected";
 import type { Metadata } from "next";
 import { WalletModal } from "@/components/WalletModal";
 import { UserProvider } from "@/contexts/UserContext";
@@ -38,13 +37,6 @@ const config = createConfig({
       chains,
       options: {
         appName: "wagmi",
-      },
-    }),
-    new InjectedConnector({
-      chains,
-      options: {
-        name: "Injected",
-        shimDisconnect: true,
       },
     }),
     new WalletConnectConnector({

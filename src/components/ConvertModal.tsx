@@ -13,6 +13,7 @@ interface ConvertModalProps {
 export const ConvertModal: FC<ConvertModalProps> = ({ isOpen, onClose }) => {
   const [tab, setTab] = useState("eth");
   const [isConvert, setIsConvert] = useState(false);
+  const [isSwap, setIsSwap] = useState(false)
 
   const handelSetEther = () => {
     setTab("eth");
@@ -22,7 +23,9 @@ export const ConvertModal: FC<ConvertModalProps> = ({ isOpen, onClose }) => {
     setTab("bnb");
   };
 
-  const handleSwap = () => { };
+  const handleSwap = () => {
+    setIsSwap(!isSwap)
+  };
 
   const handleConvert = () => {
     setIsConvert(!isConvert);

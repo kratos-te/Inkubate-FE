@@ -48,7 +48,7 @@ const CollectionOverview = () => {
             className="text-[28px] lg:text-[30px] font-bold font-poppins flex gap-2 items-center leading-[1]"
           >
             <span>OG Dread Zero</span>
-            <VerifiedIcon color="#EA4492" className="w- 7 h-7" />
+            <VerifiedIcon color="#EA4492" className="w-7 h-7" />
           </Typography>
 
           <div className="flex gap-4 mt-5 xl:gap-6 lg:hidden">
