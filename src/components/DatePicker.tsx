@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
     add,
     eachDayOfInterval,
@@ -6,17 +6,23 @@ import {
     endOfWeek,
     format,
     getDay,
-    isSameMonth,
     isToday,
     parse,
     startOfToday,
     startOfWeek,
-    startOfMonth
+    addMonths,
+    addDays,
 } from "date-fns";
 import Typography from "./Typography";
 import { NextIcon, PrevIcon } from "./SvgIcons";
 
-export const DatePicker: FC = () => {
+interface DatePrickerProps {
+    type: string
+    range: number
+}
+
+export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
+
     const today = startOfToday();
     const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
     const colStartClasses = [
@@ -32,10 +38,31 @@ export const DatePicker: FC = () => {
 
     const [currMonth, setCurrMonth] = useState(() => format(today, "MMM-yyyy"));
     const [startDay, setStartDay] = useState(() => format(today, "MM/dd/yyyy"))
-    const [endDay, setEndDay] = useState(() => format(today, "MM/dd/yyyy"))
-    const [seletedDay, setSeletedDay] = useState("")
+    const [endDay, setEndDay] = useState(() => format(addMonths(today, 3), "MM/dd/yyyy"))
+    const [seletedDay, setSeletedDay] = useState<Date>()
     const [isSeletedDay, setIsSelectedDay] = useState(false)
     let firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
+
+    useEffect(() => {
+        if (seletedDay) {
+            if (seletedDay === today) {
+                if (type === "day") {
+                    setEndDay(format(addDays(today, range), "MM/dd/yyyy"))
+                }
+                if (type === "month") {
+                    setEndDay(format(addMonths(today, range), "MM/dd/yyyy"))
+                }
+            } else {
+                if (type === "day") {
+                    setEndDay(format(addDays(seletedDay, range), "MM/dd/yyyy"))
+                }
+                if (type === "month") {
+                    setEndDay(format(addMonths(seletedDay, range), "MM/dd/yyyy"))
+                }
+            }
+        }
+        console.log("endDay", endDay)
+    }, [range])
 
     const capitalizeFirstLetter = (query: string): string => {
         return query.charAt(0).toUpperCase() + query.substring(1);
@@ -59,35 +86,56 @@ export const DatePicker: FC = () => {
     };
 
     const handleSetDate = (day: Date) => {
-        setStartDay(format(day, "MM/dd/yyyy"))
-        setSeletedDay(format(day, "MM/dd/yyyy"))
-        setIsSelectedDay(true)
+        const today = new Date();
+        // if(day )
+        if (day > today) {
+            setEndDay(format(day, "MM/dd/yyyy"))
+        }
+        const settedDay = format(day, "MM/dd/yyyy")
+        if (settedDay < endDay) {
+            setStartDay(settedDay)
+        }
+
+        // setSeletedDay(day)
+        // setIsSelectedDay(true)
+    }
+
+    const handleSetStartDay = (e: any) => {
+        setStartDay(e.target.value)
     }
 
     return (
         <>
             <div className="flex mt-5 justify-between items-center">
                 <div className="flex-col gap-2 w-[209px]">
-                    <Typography className="text-left text-lg text-white font-semibold">
+                    <Typography className="text-left text-lg text-white font-semibold max-sm:text-[16px]">
                         Starting
                     </Typography>
-                    <div className="flex justify-between px-3 py-[14px] rounded-[8px] bg-[#616161] mt-2">
-                        <div className="text-white text-[14px] font-normal">{startDay}</div>
-                    </div>
+
+                    {/* <input type="text" className="text-white text-[14px] font-normal bg-[#616161]" value={startDay} /> */}
+                    <input
+                        className="bg-[#616161] w-full rounded-[8px] mt-2 px-3 py-[14px] max-sm:py-[12px] text-light-100 text-[14px]placeholder:text-third"
+                        placeholder="--/--/----"
+                        value={startDay}
+                        onChange={handleSetStartDay}
+                    />
+
                 </div>
                 <div className="border-b border-white h-1/2 w-[15px] mt-10"></div>
-                <div>
-                    <Typography className="text-left text-lg text-white w-[209px] font-semibold">
+                <div className="flex-col gap-2 w-[209px]">
+                    <Typography className="text-left text-lg text-white w-[209px] font-semibold max-sm:text-[16px]">
                         Ending
                     </Typography>
-                    <div className="flex justify-between px-3 py-[14px] rounded-[8px] bg-[#616161] mt-2">
-                        <div className="text-white text-[14px] font-normal">{endDay}</div>
-                    </div>
+                    <input
+                        className="bg-[#616161] w-full rounded-[8px] mt-2 px-3 py-[14px] max-sm:py-[12px] text-light-100 text-[14px]placeholder:text-third"
+                        placeholder="--/--/----"
+                        value={endDay}
+                    />
                 </div>
             </div>
             <div className="flex flex-col gap-[14px] px-[10px] mt-[40px]">
                 <div className="flex justify-between">
-                    <button onClick={() => getPrevMonth}>
+                    <button onClick={getPrevMonth}>
                         <PrevIcon color="#666666" />
                     </button>
                     <div>
@@ -95,7 +143,7 @@ export const DatePicker: FC = () => {
                             {format(firstDayOfMonth, "MMMM yyyy")}
                         </p>
                     </div>
-                    <button onClick={() => getNextMonth}>
+                    <button onClick={getNextMonth}>
                         <NextIcon />
                     </button>
 
@@ -113,12 +161,13 @@ export const DatePicker: FC = () => {
                     {daysInMonth.map((day, idx) => {
                         return (
                             <div key={idx} className={colStartClasses[getDay(day)]}>
-                                <p
-                                    className={`cursor-pointer flex items-center justify-center text-[20px]  font-semibold h-12 w-12 rounded-[12px] ${isToday(day) ? "bg-[#666666] text-white" : "text-[#CAC7C7] hover:bg-[#666666] hover:text-white active:bg-[#666666]"}  ${format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""}`}
+                                <button
+                                    className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[20px]  font-semibold h-12 w-12 rounded-[12px] ${isToday(day) ? " bg-secondary text-white" : "text-[#CAC7C7] hover:bg-[#666666] hover:text-white active:bg-[#666666]"}  ${format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""} ${startDay <= format(day, "MM/dd/yyyy") && (format(day, "MM/dd/yyyy") <= endDay) ? "bg-[#666666]" : ""}`}
                                     onClick={() => handleSetDate(day)}
+                                    disabled={day < today}
                                 >
                                     {format(day, "d")}
-                                </p>
+                                </button>
                             </div>
                         );
                     })}

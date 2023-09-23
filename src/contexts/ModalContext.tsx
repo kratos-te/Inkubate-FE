@@ -25,6 +25,10 @@ interface ModalContextType {
   openMintModal: () => void;
   closeMintModal: () => void;
   isOpenedMintModal: boolean;
+  //Buy Modal
+  openBuyModal: () => void;
+  closeBuyModal: () => void;
+  isOpenedBuyModal: boolean;
 }
 
 export const ModalContext = createContext<ModalContextType | undefined>(
@@ -111,6 +115,16 @@ export function ModalProvider({ children }: ModalProviderProps) {
     document.body.classList.remove("modal-open");
   }
 
+  const [isOpenedBuyModal, setIsOpenedBuyModal] = useState<boolean>(false);
+  const openBuyModal = () => {
+    setIsOpenedBuyModal(true)
+    document.body.classList.add("modal-open");
+  }
+  const closeBuyModal = () => {
+    setIsOpenedBuyModal(false)
+    document.body.classList.remove("modal-open");
+  }
+
   const modalContextValue: ModalContextType = {
     openLaunchpadModal,
     closeLaunchpadModal,
@@ -130,6 +144,9 @@ export function ModalProvider({ children }: ModalProviderProps) {
     openMintModal,
     closeMintModal,
     isOpenedMintModal,
+    openBuyModal,
+    closeBuyModal,
+    isOpenedBuyModal
   };
 
   return (

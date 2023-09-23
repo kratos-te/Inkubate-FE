@@ -24,7 +24,7 @@ import { useSession } from "@/contexts/SessionContext";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
-import { signOut } from "@/utils/api";
+// import { signOut } from "@/utils/api";
 import { MenuButton } from "./MenuButton";
 import { ConvertModal } from "./ConvertModal";
 import ClickAwayComponent from "./ClickAwayComponent";
@@ -33,7 +33,7 @@ import { useUser } from "@/contexts/UserContext";
 const Header: FC = () => {
   const { openWalletModal, closeWalletModal } = useModal();
   const { logout } = useSession();
-  const { setUserAddress } = useUser()
+  const { setUserAddress, setUserName } = useUser()
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
 
@@ -46,6 +46,7 @@ const Header: FC = () => {
     let name = "";
     if (address) {
       name = (address as string).slice(0, 5) + "..." + (address as string).slice(-5);
+      setUserName(name)
       setUserAddress(address.toString())
     }
     return name;
@@ -58,7 +59,7 @@ const Header: FC = () => {
     if (address) {
       setIsShowDropdown(false);
       disconnect();
-      signOut();
+      // signOut();
       logout();
       closeWalletModal();
       router.push("/");
@@ -271,7 +272,7 @@ const Header: FC = () => {
                     className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
                     onClick={handleOpenWrap}
                   >
-                    <p className="text-white text-lg text-center">Wrap</p>
+                    <p className="text-white text-lg text-center">Add Funds</p>
                   </button>
                 </div>
               </div>

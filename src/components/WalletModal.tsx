@@ -7,7 +7,7 @@ import { CloseCircleIcon } from "./SvgIcons";
 import { ConnectButton } from "./ConnectButton";
 import { useSession } from "@/contexts/SessionContext";
 // import { INFURN_APU_KEY } from "@/config";
-import { getNonce, signIn } from "@/utils/api";
+import { getNonce } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
 import Button from "./Button";
 import { MetamaskIcon, TrustwalletIcon, CoinbaseWallet, WalletconnectIcon } from "./SvgIcons";
@@ -45,7 +45,7 @@ export const WalletModal: FC = () => {
       const nonce = await getNonce(address);
       signMessageAsync({ message }).then(async (sign) => {
         console.log(sign)
-        const token = await signIn(address, sign.toString())
+        // const token = await signIn(address, sign.toString())
       })
       // console.log("token", signature);
     // console.log("signature", signature)

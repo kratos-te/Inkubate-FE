@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import AssetOverviewLoader from "@/components/AssetOverview/Loader";
 import AssetContentLoader from "@/components/Common/AssetContentLoader";
 import { OfferModal } from "@/components/OfferModal";
+import { BuyModal } from "@/components/BuyModal";
 
 export default function CollectionPage() {
   const name = "Galxe#1344";
@@ -192,6 +193,7 @@ export default function CollectionPage() {
         )}
       </MainLayout>
       {DEMO_NFTS[0] && (<OfferModal nft={DEMO_NFTS[0]} />)}
+      {DEMO_NFTS[0] && (<BuyModal nft={DEMO_NFTS[0]} />)}
     </>
   );
 }

@@ -5,6 +5,7 @@ import ConvertSpin from "./ConvertSpin";
 import ClickAwayComponent from "./ClickAwayComponent";
 import { CoinButton } from "./CoinButton";
 import { LoadingPad } from "./LoadingPad";
+import { TokenButton } from "@/utils/types";
 
 interface ConvertModalProps {
   isOpen: boolean;
@@ -14,6 +15,14 @@ export const ConvertModal: FC<ConvertModalProps> = ({ isOpen, onClose }) => {
   const [tab, setTab] = useState("eth");
   const [isConvert, setIsConvert] = useState(false);
   const [isSwap, setIsSwap] = useState(false)
+  const [payToken, setPayToken] = useState<TokenButton>({
+    icon: "/assets/icons/eth.png",
+    symbol: "ETH",
+  })
+  const [receiveToken, setReceiveToken] = useState<TokenButton>({
+    icon: "/assets/icons/weth.png",
+    symbol: "WETH",
+  })
 
   const handelSetEther = () => {
     setTab("eth");
@@ -24,7 +33,11 @@ export const ConvertModal: FC<ConvertModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleSwap = () => {
+    const temp = receiveToken
+    setReceiveToken(payToken)
+    setPayToken(temp)
     setIsSwap(!isSwap)
+
   };
 
   const handleConvert = () => {
@@ -85,7 +98,7 @@ export const ConvertModal: FC<ConvertModalProps> = ({ isOpen, onClose }) => {
                   0.00
                 </p>
               </div>
-              <CoinButton icon="/assets/icons/eth.png" symbol="ETH" />
+              <CoinButton icon={payToken.icon} symbol={payToken.symbol} />
             </div>
             <button
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-dark-200 rounded-full p-2 w-10 h-10"
@@ -102,7 +115,7 @@ export const ConvertModal: FC<ConvertModalProps> = ({ isOpen, onClose }) => {
                   0.00
                 </p>
               </div>
-              <CoinButton icon="/assets/icons/weth.png" symbol="WETH" />
+              <CoinButton icon={receiveToken.icon} symbol={receiveToken.symbol} />
             </div>
           </div>
         </div>

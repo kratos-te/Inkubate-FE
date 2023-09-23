@@ -341,10 +341,29 @@ export const DEMO_CHART = [
 ];
 
 export const DATE_RANGE = [
-  "1 Day",
-  "3 Days",
-  "1 Month",
-  "2 Month",
-  "3 Month",
-  "6 Month",
+  {
+    title: "1 Day",
+    type: "day",
+    range: 1,
+  },
+  {
+    title: "3 Days",
+    type: "day",
+    range: 3,
+  },
+  {
+    title: "1 Month",
+    type: "month",
+    range: 1,
+  },
+  {
+    title: "3 Months",
+    type: "month",
+    range: 3,
+  },
+  {
+    title: "6 months",
+    type: "month",
+    range: 6,
+  },
 ];

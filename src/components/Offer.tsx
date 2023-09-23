@@ -34,7 +34,7 @@ export const Offer: FC = () => {
                 </tr>
             </thead>
             <tbody>
-                {nftLists.map((item, key) => (
+                {nftLists.map((item) => (
                     <tr className="cursor-pointer group border-t-[0.5px] border-[#687681]">
                         <td className="py-[38px]">
                             <div className="flex items-center relative z-10">

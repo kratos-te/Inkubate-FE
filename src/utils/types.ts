@@ -35,3 +35,8 @@ export type ModalItem = {
   nft: NftItem;
   className?: string;
 };
+
+export type TokenButton = {
+  icon: string;
+  symbol: string;
+};
