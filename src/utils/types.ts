@@ -40,3 +40,17 @@ export type TokenButton = {
   icon: string;
   symbol: string;
 };
+
+export type UserItem = {
+  id: string;
+  username: string;
+  walletAddress: string;
+};
+
+export type ProfileItem = {
+  bio: string;
+  twitter: string;
+  discord: string;
+  facebook: string;
+  reddit: string;
+};

@@ -1,14 +1,10 @@
 "use client";
-
 import LaunchpadModal from "@/components/LaunchpadModal";
 import SettingModal from "@/components/SettingModal";
 import { ModalProvider } from "@/contexts/ModalContext";
 import { SessionProvider } from "@/contexts/SessionContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { inter, poppins, readexPro } from "@/styles/fonts";
-import "@/styles/globals.scss";
-import "react-loading-skeleton/dist/skeleton.css";
-
 import { WagmiConfig, configureChains, createConfig } from "wagmi";
 import { goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -19,6 +15,9 @@ import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import type { Metadata } from "next";
 import { WalletModal } from "@/components/WalletModal";
 import { UserProvider } from "@/contexts/UserContext";
+
+import "@/styles/globals.scss";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [goerli],
@@ -32,7 +31,9 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 const config = createConfig({
   autoConnect: true,
   connectors: [
-    new MetaMaskConnector({ chains }),
+    new MetaMaskConnector({
+      chains,
+    }),
     new CoinbaseWalletConnector({
       chains,
       options: {

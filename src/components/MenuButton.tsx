@@ -14,11 +14,11 @@ export const MenuButton: FC<MenuButtonProps> = ({
   link,
 }) => {
   return (
-    <div className={`flex space-x-4 ${className ? className : ""}`}>
-      <Link href={link} className="flex space-x-4 items-center">
+    <Link href={link} className="flex space-x-4 items-center">
+      <div className={`flex space-x-4 ${className ? className : ""}`}>
         <div className="w-6 h-6 flex items-center justify-between">{icon}</div>
         <p className="text-white text-lg font-semibold">{title}</p>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };

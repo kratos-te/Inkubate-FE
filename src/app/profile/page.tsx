@@ -38,6 +38,10 @@ export default function CollectionPage() {
       setLoading(false);
     }, 1200);
   }, []);
+
+  const handleEditProfile = () => {
+    openSettingModal();
+  };
   return (
     <>
       <MainLayout
@@ -86,7 +90,7 @@ export default function CollectionPage() {
             </div>
             <button
               className="flex items-center gap-2 group"
-              onClick={openSettingModal}
+              onClick={handleEditProfile}
             >
               <EditIcon />{" "}
               <Typography className="text-[18px] font-semibold group-hover:text-secondary">

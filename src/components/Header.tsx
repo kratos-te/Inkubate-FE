@@ -1,5 +1,5 @@
 "use client";
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
@@ -12,28 +12,23 @@ import {
   AlarmIcon,
   BagIcon,
   BnbIcon,
-  BridgeMobileIcon,
   EthIcon,
-  ExploreMobileIcon,
   HamburgerIcon,
   MenuLogoutIcon,
   SearchIcon,
-  StatsMobileIcon,
 } from "./SvgIcons";
-import { useSession } from "@/contexts/SessionContext";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
-// import { signOut } from "@/utils/api";
 import { MenuButton } from "./MenuButton";
 import { ConvertModal } from "./ConvertModal";
 import ClickAwayComponent from "./ClickAwayComponent";
 import { useUser } from "@/contexts/UserContext";
+import { signOut } from "@/utils/api";
 
 const Header: FC = () => {
   const { openWalletModal, closeWalletModal } = useModal();
-  const { logout } = useSession();
-  const { setUserAddress, setUserName } = useUser()
+  const { username } = useUser();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
 
@@ -42,27 +37,16 @@ const Header: FC = () => {
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const [isConvertModal, setIsConvertModal] = useState(false);
 
-  const username = useMemo(() => {
-    let name = "";
-    if (address) {
-      name = (address as string).slice(0, 5) + "..." + (address as string).slice(-5);
-      setUserName(name)
-      setUserAddress(address.toString())
-    }
-    return name;
-  }, [address]);
-
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
     if (address) {
       setIsShowDropdown(false);
       disconnect();
-      // signOut();
-      logout();
       closeWalletModal();
       router.push("/");
+      await signOut();
     }
   };
 
@@ -77,7 +61,6 @@ const Header: FC = () => {
   };
 
   const handleDropdown = () => {
-    console.log(isShowDropdown);
     setIsShowDropdown(!isShowDropdown);
     setIsConvertModal(false);
   };
@@ -127,16 +110,18 @@ const Header: FC = () => {
               <>
                 <div className="flex border-2 border-[#EA4492] rounded-full">
                   <div
-                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full  text-white items-center cursor-pointer ${isEther ? "bg-[#EA4492]" : ""
-                      }`}
+                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full  text-white items-center cursor-pointer ${
+                      isEther ? "bg-[#EA4492]" : ""
+                    }`}
                     onClick={handelSetEther}
                   >
                     <EthIcon color="white" />
                     <p className="text-[12px] text-white font-bold"> ETH</p>
                   </div>
                   <div
-                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full text-white items-center cursor-pointer ${isBnb ? "bg-[#EA4492]" : ""
-                      }`}
+                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full text-white items-center cursor-pointer ${
+                      isBnb ? "bg-[#EA4492]" : ""
+                    }`}
                     onClick={handleSetBnb}
                   >
                     <BnbIcon />
@@ -148,7 +133,7 @@ const Header: FC = () => {
                 </IconButton>
                 <ClickAwayComponent
                   onClickAway={() => setIsShowDropdown(false)}
-                  className="relative"
+                  className="relative w-[44px] h-[44px]"
                 >
                   <Image
                     src="/assets/images/avatar-demo.png"
@@ -170,7 +155,7 @@ const Header: FC = () => {
                           />
                         ))}
                         <button
-                          className="flex space-x-4 cursor-pointer hover:bg-dark-400"
+                          className="flex w-full space-x-4 cursor-pointer hover:bg-dark-400"
                           onClick={handleDisconnect}
                         >
                           <MenuLogoutIcon />
@@ -179,6 +164,89 @@ const Header: FC = () => {
                           </p>
                         </button>
                       </div>
+                      <Link href="/profile" passHref>
+                        <div className="flex items-center p-6 gap-[14px] cursor-pointer">
+                          <Image
+                            src="/assets/images/avatar-demo.png"
+                            width={40}
+                            height={40}
+                            alt=""
+                            className="rounded-full"
+                          />
+                          <div className="flex-col space-y-1">
+                            <p className="text-white text-lg">{username}</p>
+                            <p className="text-white text-[16px]">{0.52} ETH</p>
+                          </div>
+                        </div>
+                      </Link>
+                      <button
+                        className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
+                        onClick={handleOpenWrap}
+                      >
+                        <p className="text-white text-lg text-center">
+                          Add Funds
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                </ClickAwayComponent>
+                <ConvertModal
+                  isOpen={isConvertModal}
+                  onClose={() => {
+                    setIsConvertModal(false);
+                    setIsShowDropdown(false);
+                  }}
+                />
+              </>
+            ) : (
+              <Button isButton onClick={openWalletModal}>
+                Connect Wallet
+              </Button>
+            )}
+
+            <IconButton onClick={() => console.log("show bag")}>
+              <BagIcon />
+            </IconButton>
+          </div>
+
+          <div className="flex lg:hidden gap-7">
+            <IconButton onClick={() => console.log("show searchbar")}>
+              <SearchIcon className="w-6 h-6" />
+            </IconButton>
+            <ClickAwayComponent
+              onClickAway={() => setIsShowDropdown(false)}
+              className={`rounded-lg relative z-20 text-[14px]`}
+            >
+              <div
+                className="text-[12px] md:text-[16px] flex items-center text-left text-white font-bold"
+                onClick={handleDropdown}
+              >
+                <HamburgerIcon className="" />
+              </div>
+
+              {isShowDropdown && (
+                <div className="w-[241px] absolute text-white top-6 z-10 rounded-b-lg overflow-hidden -right-3 pt-2">
+                  <div className="text-white bg-dark-200 flex-col justify-start rounded-lg mt-1 duration-300 w-[241px]">
+                    <div className="flex-col space-y-10 p-6 border-b border-dark-400">
+                      {DROPDOWN_LINKS.map((item, key) => (
+                        <MenuButton
+                          key={key}
+                          icon={<item.icon />}
+                          title={item.title}
+                          link={item.link}
+                        />
+                      ))}
+                      <button
+                        className="flex space-x-4 cursor-pointer"
+                        onClick={handleDisconnect}
+                      >
+                        <MenuLogoutIcon />
+                        <p className="text-white text-lg font-semibold">
+                          Log out
+                        </p>
+                      </button>
+                    </div>
+                    {isConnected ? (
                       <div className="flex items-center p-6 gap-[14px]">
                         <Image
                           src="/assets/images/avatar-demo.png"
@@ -192,91 +260,33 @@ const Header: FC = () => {
                           <p className="text-white text-[16px]">{0.52} ETH</p>
                         </div>
                       </div>
+                    ) : (
                       <button
-                        className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
-                        onClick={handleOpenWrap}
+                        className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center"
+                        onClick={openWalletModal}
                       >
-                        <p className="text-white text-lg text-center">Add Funds</p>
+                        Connect Wallet
                       </button>
-                    </div>
-                  )}
-                  <ConvertModal
-                    isOpen={isConvertModal}
-                    onClose={() => {
-                      setIsConvertModal(false);
-                      setIsShowDropdown(false);
-                    }}
-                  />
-                </ClickAwayComponent>
-              </>
-            ) : (
-                <Button isButton onClick={openWalletModal}>
-                  Connect Wallet
-                </Button>
-            )}
+                    )}
 
-            <IconButton onClick={() => console.log("show bag")}>
-              <BagIcon />
-            </IconButton>
-          </div>
-
-          <div className="flex lg:hidden gap-7">
-            <IconButton onClick={() => console.log("show searchbar")}>
-              <SearchIcon className="w-6 h-6" />
-            </IconButton>
-            <div className={`group rounded-lg relative z-20 text-[14px]`}>
-              <div className="text-[12px] md:text-[16px] flex items-center text-left text-white font-bold">
-                <HamburgerIcon className="" />
-              </div>
-
-              <div className="w-[241px] group-hover:flex absolute text-white hidden top-6 z-10 rounded-b-lg overflow-hidden -right-3 pt-2">
-                <div className="text-white bg-dark-200 flex-col justify-start rounded-lg mt-1 duration-300 w-[241px]">
-                  <div className="flex-col space-y-10 p-6 border-b border-dark-400">
-
-                    {DROPDOWN_LINKS.map((item, key) => (
-                      <MenuButton
-                        key={key}
-                        icon={<item.icon />}
-                        title={item.title}
-                        link={item.link}
-                      />
-                    ))}
                     <button
-                      className="flex space-x-4 cursor-pointer"
-                      onClick={handleDisconnect}
+                      className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
+                      onClick={handleOpenWrap}
                     >
-                      <MenuLogoutIcon />
-                      <p className="text-white text-lg font-semibold">
-                        Log out
+                      <p className="text-white text-lg text-center">
+                        Add Funds
                       </p>
                     </button>
                   </div>
-                  {isConnected ? <div className="flex items-center p-6 gap-[14px]">
-                    <Image
-                      src="/assets/images/avatar-demo.png"
-                      width={40}
-                      height={40}
-                      alt=""
-                      className="rounded-full cursor-pointer"
-                    />
-                    <div className="flex-col space-y-1">
-                      <p className="text-white text-lg">{username}</p>
-                      <p className="text-white text-[16px]">{0.52} ETH</p>
-                    </div>
-                  </div> :
-                    <button className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center" onClick={openWalletModal}>
-                      Connect Wallet
-                    </button>}
-
-                  <button
-                    className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
-                    onClick={handleOpenWrap}
-                  >
-                    <p className="text-white text-lg text-center">Add Funds</p>
-                  </button>
                 </div>
-              </div>
-            </div>
+              )}
+              <ConvertModal
+                isOpen={isConvertModal}
+                onClose={() => {
+                  setIsConvertModal(false);
+                }}
+              />
+            </ClickAwayComponent>
           </div>
         </div>
       </div>

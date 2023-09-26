@@ -4,7 +4,7 @@ import { SearchIcon } from "./SvgIcons";
 const SearchBar: FC = () => {
   return (
     <div
-      className="rounded-xl w-[300px] xl:w-[480px] 2xl:w-[600px] p-[1px] hidden lg:block relative h-11 backdrop-blur-sm"
+      className="rounded-xl w-[250px] xl:w-[430px] 2xl:w-[500px]  p-[1px] hidden lg:block relative h-11 backdrop-blur-sm"
       style={{
         backgroundImage:
           "linear-gradient(120deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%, rgba(246, 246, 246, 0.00) 100%)",

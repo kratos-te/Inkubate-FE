@@ -1,8 +1,10 @@
 "use client";
+import { useModal } from "@/contexts/ModalContext";
 import Button from "./Button";
 import Typography from "./Typography";
 
 const HomeCta = () => {
+  const { openCreateModal } = useModal();
   return (
     <section
       className="max-w-[1664px] mx-8 2xld:mx-auto px-5 md:px-8 xl:px-[72px] py-5 md:py-12 lg:py-20 rounded-xl xl:mt-[50px] relative overflow-hidden z-10"
@@ -31,10 +33,7 @@ const HomeCta = () => {
           Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
           vulputate libero et velit interdum, ac aliquet odio mattis.
         </Typography>
-        <Button
-          className="mt-[14px] xl:mt-9"
-          onClick={() => console.log("creat now")}
-        >
+        <Button className="mt-[14px] xl:mt-9" onClick={openCreateModal}>
           Create Now
         </Button>
       </div>

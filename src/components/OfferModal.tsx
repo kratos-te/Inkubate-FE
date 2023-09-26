@@ -98,7 +98,7 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
               </Typography>
               <div className="flex justify-between rounded-[8px] bg-dark-400 px-3 py-4 items-center mt-2 max-sm:py-2">
                 <p className="text-[14px] text-white">34</p>
-                <CoinButton icon="/assets/icons/eth.png" symbol="ETH" />
+                <CoinButton icon="/assets/icons/eth.png" symbol="ETH" className={""} />
               </div>
               <p className="text-[16px] text-[#B3B3B3] mt-2 text-left max-sm:text-[14px]">Balance: 0.0600 ETH</p>
             </div>
@@ -106,13 +106,13 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
               <Typography className="text-[24px] font-semibold text-left max-sm:text-[18px]">
                 Duration
               </Typography>
-              <div className="flex-col rounded-[8px] bg-dark-400 px-3 py-4 items-center mt-2 max-sm:py-2" >
+              <div className="flex-col rounded-[8px] bg-dark-400 px-3 py-4 items-center mt-2 max-sm:py-2 relative" >
                 <div className="flex cursor-pointer items-center" onClick={handleOpenCalendar} >
                   <CalendarIcon />
                   <Typography className="flex text-[14px] ml-1"> Set Duration</Typography>
                 </div>
                 {isShowCal && (
-                  <div className="w-[490px] flex-col bg-dark-400 rounded-b-[16px] px-[14px] py-[34px] absolute right-5 z-50">
+                  <div className="w-[490px] flex-col bg-dark-400 rounded-b-[16px] px-[14px] py-[34px] absolute right-5 z-50  max-sm:w-full left-0 top-[30px] md:top-[50px]">
                     <div className="flex-col">
                       <Typography className="text-left text-lg text-white font-semibold max-sm:text-[16px]">
                         Data Range
@@ -124,7 +124,7 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
                       {isCollapsed &&
                         <div className="flex-col -mt-[20px] p-[14px] bg-[#616161] text-[14px] rounded-b-[8px]">
                           {DATE_RANGE.map((item) => (
-                            <div className="flex pt-[14px] text-white text-[14px] font-normal justify-start" onClick={() => handleSetDate(item)}>{item.title}</div>
+                            <div className="flex pt-[14px] text-white text-[14px] font-normal justify-start cursor-pointer" onClick={() => handleSetDate(item)}>{item.title}</div>
                           ))}
                         </div>
                       }

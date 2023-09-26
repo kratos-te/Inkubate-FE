@@ -8,8 +8,8 @@ import { ModalItem } from "@/utils/types";
 import { LoadingPad } from "./LoadingPad";
 
 export const BuyModal: FC<ModalItem> = ({ nft }) => {
-    const { openBuyModal, closeBuyModal, isOpenedBuyModal } = useModal()
-    const { image, name, ownerBy, rarity, price } = nft;
+    const { closeBuyModal, isOpenedBuyModal } = useModal()
+    const { image, name, price } = nft;
     const [isBuyStatus, setIsBuyStatus] = useState(false)
 
     const handleBuy = () => {

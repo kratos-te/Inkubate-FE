@@ -1,12 +1,60 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import Typography from "../Typography";
 import { AddLargeIcon } from "../SvgIcons";
+import { useUser } from "@/contexts/UserContext";
+import { availableUsername, updateProfile, updateUsername } from "@/utils/api";
 
 const ProfileForms: FC = () => {
-  const { register } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { userData, profile } = useUser();
+  const [changedName, setChangeName] = useState(userData.username);
+  const [changedBio, setChangedBio] = useState(profile.bio);
+
+  const handleUsernameChange = (event: any) => {
+    setChangeName(event.target.value);
+  };
+
+  const handleBioChange = (event: any) => {
+    setChangedBio(event.target.value);
+  };
+
+  const onSubmit = async (data: any) => {
+    try {
+      const values: Record<string, string> = {};
+
+      for (const key in data) {
+        const value = data[key];
+        values[key] = value;
+      }
+      console.log("values", userData.username);
+      console.log("userData", values.username);
+      if (userData.username !== values.username && values.username) {
+        const res = await availableUsername(values.username);
+        if (res) {
+          await updateUsername(values.username);
+        }
+      }
+
+      const profile = await updateProfile({
+        bio: changedBio,
+        twitter: "",
+        discord: "",
+        facebook: "",
+        reddit: "",
+      });
+      console.log("profile", profile);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="overflow-auto h-[calc(100vh-220px)] xl:h-[calc(100vh-340px)] custom-scroll m-1 min-h-[600px]">
         <div className="flex gap-8 xl:gap-[45px] px-6 lg:px-[60px] xl:px-[137px] pt-11 xl:pt-[76px] flex-col lg:flex-row">
           <div className="w-full lg:w-1/2 flex flex-col gap-8 xl:gap-[45px]">
@@ -18,6 +66,8 @@ const ProfileForms: FC = () => {
                 {...register("username", { required: false })}
                 className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third"
                 placeholder="Enter a your username"
+                value={changedName ? changedName : userData.username}
+                onChange={handleUsernameChange}
               />
             </div>
             <div className="lg:hidden">
@@ -26,6 +76,8 @@ const ProfileForms: FC = () => {
                 {...register("bio", { required: false })}
                 className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third min-h-[160px] lg:min-h-[180px]"
                 placeholder="share your story"
+                value={changedBio ? changedBio : profile.bio}
+                onChange={handleBioChange}
               ></textarea>
             </div>
             <div className="">
@@ -36,6 +88,7 @@ const ProfileForms: FC = () => {
                 {...register("wallet", { required: false })}
                 className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third"
                 placeholder="Enter your wallet address"
+                value={userData.walletAddress}
               />
             </div>
           </div>
@@ -46,6 +99,8 @@ const ProfileForms: FC = () => {
                 {...register("bio", { required: false })}
                 className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third min-h-[180px]"
                 placeholder="share your story"
+                value={changedBio ? changedBio : profile.bio}
+                onChange={handleBioChange}
               ></textarea>
             </div>
           </div>

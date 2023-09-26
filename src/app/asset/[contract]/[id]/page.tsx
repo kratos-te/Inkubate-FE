@@ -192,8 +192,8 @@ export default function CollectionPage() {
           />
         )}
       </MainLayout>
-      {DEMO_NFTS[0] && (<OfferModal nft={DEMO_NFTS[0]} />)}
-      {DEMO_NFTS[0] && (<BuyModal nft={DEMO_NFTS[0]} />)}
+      {DEMO_NFTS[0] && <OfferModal nft={DEMO_NFTS[0]} />}
+      {DEMO_NFTS[0] && <BuyModal nft={DEMO_NFTS[0]} />}
     </>
   );
 }

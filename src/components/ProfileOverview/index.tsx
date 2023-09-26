@@ -14,7 +14,7 @@ import { useUser } from "@/contexts/UserContext";
 const ProfileOverview = () => {
   const name = "sasuke0601";
   const walletAddress = "0x868131c8b5503465611ac8dBD6d838c6Eb5fAb52";
-  const { userName, userAddress } = useUser()
+  const { username, userAddress } = useUser()
   return (
     <div className="max-w-[1600px] mx-6 relative 2xl:mx-auto z-10">
       <div className="pt-8 xl:pt-12 mb-[30px] md:mb-[60px] lg:mb-[100px] flex gap-[22px] lg:gap-10 xl:gap-[68px] flex-col lg:flex-row">
@@ -41,7 +41,7 @@ const ProfileOverview = () => {
                 component="h2"
                 className="text-[28px] lg:text-[30px] font-bold font-poppins flex gap-2 items-center leading-[1]"
               >
-                <span>{userName}</span>
+                <span>{username}</span>
               </Typography>
               <CopyAddress address={userAddress} />
             </div>

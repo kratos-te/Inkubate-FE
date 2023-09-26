@@ -1,4 +1,5 @@
 "use client";
+// import { getProfile } from "@/utils/api";
 import { createContext, useContext, ReactNode, useState } from "react";
 
 interface ModalContextType {
@@ -16,7 +17,7 @@ interface ModalContextType {
   //Offer Modal
   openOfferModal: () => void;
   closeOfferModal: () => void;
-  isOpenedOfferModal: boolean 
+  isOpenedOfferModal: boolean;
   //Accept Modal
   openAcceptModal: () => void;
   closeAcceptModal: () => void;
@@ -29,6 +30,18 @@ interface ModalContextType {
   openBuyModal: () => void;
   closeBuyModal: () => void;
   isOpenedBuyModal: boolean;
+  //CreateModal
+  openCreateModal: () => void;
+  closeCreateModal: () => void;
+  isOpenedCreateModal: boolean;
+  //Calendar Modal
+  openCalendarModal: () => void;
+  closeCalendarModal: () => void;
+  isOpenedCalendarModal: boolean;
+  //List Modal
+  openListModal: () => void;
+  closeListModal: () => void;
+  isOpenedListModal: boolean;
 }
 
 export const ModalContext = createContext<ModalContextType | undefined>(
@@ -63,6 +76,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
   const [isOpenedSetting, setSettingModal] = useState<boolean>(false);
 
   const openSettingModal = () => {
+    // getProfile()
     setSettingModal(true);
     document.body.classList.add("modal-open");
   };
@@ -87,43 +101,76 @@ export function ModalProvider({ children }: ModalProviderProps) {
 
   const [isOpenedOfferModal, setIsOpenedOfferModal] = useState<boolean>(false);
   const openOfferModal = () => {
-    setIsOpenedOfferModal(true)
+    setIsOpenedOfferModal(true);
     document.body.classList.add("modal-open");
-  }
+  };
   const closeOfferModal = () => {
-    setIsOpenedOfferModal(false)
+    setIsOpenedOfferModal(false);
     document.body.classList.remove("modal-open");
-  }
+  };
 
-  const [isOpenedAcceptModal, setIsOpenedAcceptModal] = useState<boolean>(false);
+  const [isOpenedAcceptModal, setIsOpenedAcceptModal] =
+    useState<boolean>(false);
   const openAcceptModal = () => {
-    setIsOpenedAcceptModal(true)
+    setIsOpenedAcceptModal(true);
     document.body.classList.add("modal-open");
-  }
+  };
   const closeAcceptModal = () => {
-    setIsOpenedAcceptModal(false)
+    setIsOpenedAcceptModal(false);
     document.body.classList.remove("modal-open");
-  }
+  };
 
   const [isOpenedMintModal, setIsOpenedMintModal] = useState<boolean>(false);
   const openMintModal = () => {
-    setIsOpenedMintModal(true)
+    setIsOpenedMintModal(true);
     document.body.classList.add("modal-open");
-  }
+  };
   const closeMintModal = () => {
-    setIsOpenedMintModal(false)
+    setIsOpenedMintModal(false);
     document.body.classList.remove("modal-open");
-  }
+  };
 
   const [isOpenedBuyModal, setIsOpenedBuyModal] = useState<boolean>(false);
   const openBuyModal = () => {
-    setIsOpenedBuyModal(true)
+    setIsOpenedBuyModal(true);
     document.body.classList.add("modal-open");
-  }
+  };
   const closeBuyModal = () => {
-    setIsOpenedBuyModal(false)
+    setIsOpenedBuyModal(false);
     document.body.classList.remove("modal-open");
-  }
+  };
+
+  const [isOpenedCreateModal, setIsOpenedCreateModal] =
+    useState<boolean>(false);
+  const openCreateModal = () => {
+    setIsOpenedCreateModal(true);
+    document.body.classList.add("modal-open");
+  };
+  const closeCreateModal = () => {
+    setIsOpenedCreateModal(false);
+    document.body.classList.remove("modal-open");
+  };
+
+  const [isOpenedCalendarModal, setIsOpenedCalendarModal] =
+    useState<boolean>(false);
+  const openCalendarModal = () => {
+    setIsOpenedCalendarModal(true);
+    document.body.classList.add("modal-open");
+  };
+  const closeCalendarModal = () => {
+    setIsOpenedCalendarModal(false);
+    document.body.classList.remove("modal-open");
+  };
+
+  const [isOpenedListModal, setIsOpenedListModal] = useState<boolean>(false);
+  const openListModal = () => {
+    setIsOpenedListModal(true);
+    document.body.classList.add("modal-open");
+  };
+  const closeListModal = () => {
+    setIsOpenedListModal(false);
+    document.body.classList.remove("modal-open");
+  };
 
   const modalContextValue: ModalContextType = {
     openLaunchpadModal,
@@ -146,7 +193,16 @@ export function ModalProvider({ children }: ModalProviderProps) {
     isOpenedMintModal,
     openBuyModal,
     closeBuyModal,
-    isOpenedBuyModal
+    isOpenedBuyModal,
+    openCreateModal,
+    closeCreateModal,
+    isOpenedCreateModal,
+    openCalendarModal,
+    closeCalendarModal,
+    isOpenedCalendarModal,
+    openListModal,
+    closeListModal,
+    isOpenedListModal,
   };
 
   return (

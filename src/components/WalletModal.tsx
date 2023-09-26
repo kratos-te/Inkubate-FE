@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useRef } from "react";
+import { FC, useCallback, useEffect, useRef } from "react";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { useModal } from "@/contexts/ModalContext";
 
@@ -7,7 +7,7 @@ import { CloseCircleIcon } from "./SvgIcons";
 import { ConnectButton } from "./ConnectButton";
 import { useSession } from "@/contexts/SessionContext";
 // import { INFURN_APU_KEY } from "@/config";
-import { getNonce } from "@/utils/api";
+import { signIn, signOut, signUp } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
 import Button from "./Button";
 import { MetamaskIcon, TrustwalletIcon, CoinbaseWallet, WalletconnectIcon } from "./SvgIcons";
@@ -34,24 +34,39 @@ export const WalletModal: FC = () => {
   // const recoveredAddress = useRef<string>()
 
   const { connect, connectors } = useConnect();
-  const { signMessageAsync } = useSignMessage({ message: 'Connected with Inkubate' })
+  const { signMessageAsync } = useSignMessage()
   // const [signature, setSignature] = useState("")
 
   const modalRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    console.log("address", userAddress)
+    if (!userAddress) return;
+    if (!isConnected) {
+      // signOut();
+      return;
+    }
+
+    signInWallet();
+    sign();
+    closeWalletModal();
+  }, [isConnected]);
+
+  const signInWallet = useCallback(async () => {
+    const nonce = await signUp(userAddress);
+    const verifyMsg = `${message}\nnonce:${nonce}`
+    signMessageAsync({ message: verifyMsg }).then(async (sign) => {
+      const token = await signIn(userAddress, sign.toString())
+      if (token) {
+        localStorage.setItem("accessToken", token)
+      }
+    }).catch((e) => {
+      console.log('====', e)
+    })
+  }, [userAddress, isConnected]);
+
   const handleConnectWallet = async (connector: any) => {
     connect({ connector });
-    if (typeof address === "string" && isConnected) {
-      const nonce = await getNonce(address);
-      signMessageAsync({ message }).then(async (sign) => {
-        console.log(sign)
-        // const token = await signIn(address, sign.toString())
-      })
-      // console.log("token", signature);
-    // console.log("signature", signature)
-      sign();
-      closeWalletModal();
-    }
   };
 
   useEffect(() => {
@@ -93,7 +108,7 @@ export const WalletModal: FC = () => {
                   <ConnectButton
                     key={index}
                     name={connector.name}
-                    onClick={() => handleConnectWallet(connector)} 
+                    onClick={() => handleConnectWallet(connector)}
                     logo={walletImg[index]}
                   />
                 );

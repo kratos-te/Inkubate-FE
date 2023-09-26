@@ -114,10 +114,16 @@ const AssetOverview: FC<OverviewProps> = ({ nft }) => {
             </span>
           </Typography>
           <div className="flex flex-col mt-5 md:flex-row">
-            <button className="px-10 py-[11px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300" onClick={openBuyModal}>
+            <button
+              className="px-10 py-[11px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
+              onClick={openBuyModal}
+            >
               <WalletIcon className="mr-2 mt-[1px]" color="#161616" /> Buy Now
             </button>
-            <button className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300" onClick={openOfferModal}>
+            <button
+              className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+              onClick={openOfferModal}
+            >
               <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
               Make Offer
             </button>

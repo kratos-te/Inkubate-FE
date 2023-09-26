@@ -1,4 +1,4 @@
-import { FC, useRef } from "react"
+import { FC } from "react"
 import Image from "next/image";
 import { useModal } from "@/contexts/ModalContext";
 import { CloseCircleIcon, InfoIcon, VerifiedIcon } from "./SvgIcons";
@@ -7,14 +7,12 @@ import Typography from "./Typography";
 import ClickAwayComponent from "./ClickAwayComponent";
 
 export const AcceptModal: FC<ModalItem> = ({ nft }) => {
-    const { image, name, ownerBy, rarity, price } = nft;
+    const { image, name, price } = nft;
 
     const { closeAcceptModal, isOpenedAcceptModal } = useModal();
 
-
-    const modalRef = useRef<HTMLDivElement>(null);
-
     if (!isOpenedAcceptModal) return null;
+    
     return (
         <div
             className={`fixed z-50 w-full h-full min-h-screen top-0  bg-black/90 transition-opacity`}>
@@ -35,10 +33,7 @@ export const AcceptModal: FC<ModalItem> = ({ nft }) => {
                         </div>
                     </div>
                     <div className="modal_body text-center">
-                        <div className="flex justify-between mt-[60px]">
-                            <p className="text-[20px] font-semibold text-white">Item</p>
-                            <p className="text-[20px] font-semibold text-white">Subtotal </p>
-                        </div>
+
                         <div className="flex justify-between items-center my-7">
                             <div className="flex gap-[24px] items-center">
                                 <Image

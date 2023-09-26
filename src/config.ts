@@ -1,52 +1,58 @@
-import { MenuFavorIcon, MenuListIcon, MenuOfferIcon, MenuSettingIcon, MenuUserIcon } from "./components/SvgIcons";
+import {
+  MenuFavorIcon,
+  MenuListIcon,
+  MenuOfferIcon,
+  MenuSettingIcon,
+  MenuUserIcon,
+} from "./components/SvgIcons";
 
 export const BACKEND_API_URL = "http://localhost:8080";
 export const INFURN_APU_KEY = "dfb6591f687e4a37b958417070e73dab";
 export const HEADER_LINKS = [
   {
     title: "Explore",
-    link: "/explore"
+    link: "/explore",
   },
   {
     title: "Stats",
-    link: "/stats"
+    link: "/stats",
   },
   {
     title: "Bridge",
-    link: "/bridge"
+    link: "/bridge",
   },
   {
     title: "Launchpad",
-    link: "/launchpad"
-  }
+    link: "/launchpad",
+  },
 ];
 
 export const DROPDOWN_LINKS = [
   {
     icon: MenuUserIcon,
     title: "My Nfts",
-    link: "/"
+    link: "/",
   },
   {
     icon: MenuFavorIcon,
     title: "Favourites",
-    link: "/"
+    link: "/",
   },
   {
     icon: MenuListIcon,
     title: "Listings",
-    link: "/"
+    link: "/",
   },
   {
     icon: MenuOfferIcon,
     title: "Offers",
-    link: "/"
+    link: "/",
   },
   {
     icon: MenuSettingIcon,
     title: "Settings",
-    link: "/"
-  }
+    link: "/",
+  },
 ];
 export const DEMO_COLLECTIONS = [
   {
@@ -62,7 +68,7 @@ export const DEMO_COLLECTIONS = [
     description:
       "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
     cover: "/assets/images/cover-demo.png",
-    verified: true
+    verified: true,
   },
   {
     title: "HeyMint",
@@ -77,7 +83,7 @@ export const DEMO_COLLECTIONS = [
     description:
       "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
     cover: "/assets/images/cover-demo.png",
-    verified: true
+    verified: true,
   },
   {
     title: "Bueno",
@@ -92,7 +98,7 @@ export const DEMO_COLLECTIONS = [
     description:
       "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
     cover: "/assets/images/cover-demo.png",
-    verified: true
+    verified: true,
   },
   {
     title: "Magic Eden",
@@ -107,7 +113,7 @@ export const DEMO_COLLECTIONS = [
     description:
       "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
     cover: "/assets/images/cover-demo.png",
-    verified: true
+    verified: true,
   },
   {
     title: "Magic Eden",
@@ -122,7 +128,7 @@ export const DEMO_COLLECTIONS = [
     description:
       "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
     cover: "/assets/images/cover-demo.png",
-    verified: true
+    verified: true,
   },
   {
     title: "Magic Eden",
@@ -137,7 +143,7 @@ export const DEMO_COLLECTIONS = [
     description:
       "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
     cover: "/assets/images/cover-demo.png",
-    verified: true
+    verified: true,
   },
   {
     title: "Magic Eden",
@@ -152,7 +158,7 @@ export const DEMO_COLLECTIONS = [
     description:
       "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
     cover: "/assets/images/cover-demo.png",
-    verified: true
+    verified: true,
   },
   {
     title: "Magic Eden",
@@ -167,8 +173,8 @@ export const DEMO_COLLECTIONS = [
     description:
       "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
     cover: "/assets/images/cover-demo.png",
-    verified: true
-  }
+    verified: true,
+  },
 ];
 
 export const DEMO_NFTS = [
@@ -180,97 +186,97 @@ export const DEMO_NFTS = [
     rarity: 3500,
     contract: "0x2f05e799C61b600c65238a9DF060cABA63Db8E78",
     nftId: 56,
-    favorited: false
-  }
+    favorited: false,
+  },
 ];
 
 export const SORT_LIST = [
   {
     title: "Price low to high",
-    value: "p-l-h"
+    value: "p-l-h",
   },
   {
     title: "Price high to low",
-    value: "p-h-l"
+    value: "p-h-l",
   },
   {
     title: "Recently listed",
-    value: "rl"
+    value: "rl",
   },
   {
     title: "Best offer",
-    value: "be"
+    value: "be",
   },
   {
     title: "Highest last sale",
-    value: "hls"
+    value: "hls",
   },
   {
     title: "Recently sold",
-    value: "rs"
+    value: "rs",
   },
   {
     title: "Recently created",
-    value: "rc"
+    value: "rc",
   },
   {
     title: "Most viewed",
-    value: "mv"
+    value: "mv",
   },
   {
     title: "Oldest",
-    value: "o"
+    value: "o",
   },
   {
     title: "Most favorited",
-    value: "mf"
+    value: "mf",
   },
   {
     title: "Ending soon",
-    value: "es"
+    value: "es",
   },
   {
     title: "Recently received",
-    value: "rce"
-  }
+    value: "rce",
+  },
 ];
 
 export const PROPERTIES = [
   {
     traitType: "Background",
     value: "Color",
-    description: "Lorem"
+    description: "Lorem",
   },
   {
     traitType: "Body",
     value: "Color",
-    description: "Lorem"
+    description: "Lorem",
   },
   {
     traitType: "Head",
     value: "Color",
-    description: "Lorem"
+    description: "Lorem",
   },
   {
     traitType: "Personality",
     value: "Color",
-    description: "Lorem"
+    description: "Lorem",
   },
   {
     traitType: "Neck",
     value: "Color",
-    description: "Lorem"
+    description: "Lorem",
   },
   {
     traitType: "Clothes",
     value: "Color",
-    description: "Lorem"
+    description: "Lorem",
   },
   {
     traitType: "Eyes",
     value: "Color",
-    description: "Lorem"
-  }
+    description: "Lorem",
+  },
 ];
 
 export const DEMO_ACTIVITY = [
@@ -284,13 +290,13 @@ export const DEMO_ACTIVITY = [
       rarity: 3500,
       contract: "0x2f05e799C61b600c65238a9DF060cABA63Db8E78",
       nftId: 56,
-      favorited: false
+      favorited: false,
     },
     price: 0.025,
     from: "0x2f05e799C61b600c65238a9DF060cABA63Db8E78",
     to: "0x2f05e799C61b600c65238a9DF060cABA63Db8E78",
-    timeStamp: 1691766542
-  }
+    timeStamp: 1691766542,
+  },
 ];
 
 export const DEMO_CHART = [
@@ -337,7 +343,7 @@ export const DEMO_CHART = [
   { day: "8-9", value: 1.68 },
   { day: "8-10", value: 1.08 },
   { day: "8-11", value: 1.88 },
-  { day: "8-12", value: 1.91 }
+  { day: "8-12", value: 1.91 },
 ];
 
 export const DATE_RANGE = [
@@ -367,3 +373,5 @@ export const DATE_RANGE = [
     range: 6,
   },
 ];
+
+export const DURATION_RANGE = ["1 day", "7 days", "30 days", "Custom"];

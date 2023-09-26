@@ -1,7 +1,9 @@
+import { ReactNode } from "react";
+
 interface ConnectButtonProps {
   name: string;
   onClick: Function;
-  logo?: JSX.Element;
+  logo?: ReactNode;
 }
 
 export const ConnectButton = ({ name, onClick, logo }: ConnectButtonProps) => {
@@ -11,10 +13,9 @@ export const ConnectButton = ({ name, onClick, logo }: ConnectButtonProps) => {
       onClick={() => onClick()}
     >
       {logo && <div>{logo}</div>}
-      <div className="text-start  text-[30px] ml-[14px] font-semibold max-lg:text-[24px]">{name}</div>
-      {/* <div className="text-xl">
-          <ArrowLeftIcon />
-        </div> */}
+      <div className="text-start  text-[30px] ml-[14px] font-semibold max-lg:text-[24px]">
+        {name}
+      </div>
     </button>
   );
 };
