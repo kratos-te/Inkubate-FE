@@ -76,20 +76,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     reddit: "",
   });
 
-  const getUserData = async (): Promise<UserItem | null> => {
-    const user = await getUser();
-    if (user) {
-      setUserData({
-        id: user.id,
-        username: user.username,
-        walletAddress: user.walletAddress,
-      });
-    }
-    return user;
-  };
-
-  const getProfileData = async () => {
+  const getUserData = async () => {
     const profile = await getProfile();
+    console.log("profile", profile)
     if (profile) {
       setProfile({
         bio: profile.bio,
@@ -99,6 +88,20 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         reddit: profile.reddit,
       });
     }
+    const user = await getUser();
+    console.log("user", user)
+    if (user) {
+      setUserData({
+        id: user.id,
+        username: user.username,
+        walletAddress: user.walletAddress,
+      });
+    }
+
+  };
+
+  const getProfileData = async () => {
+
   };
 
   const contextValue: UserContextType = {

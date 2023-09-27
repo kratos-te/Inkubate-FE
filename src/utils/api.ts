@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { UserItem } from "./types";
+import { ProfileItem, UserItem } from "./types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
   ? process.env.NEXT_PUBLIC_API_BASE_URL
@@ -9,6 +9,11 @@ const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 5000,
 });
+
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
 
 // axiosInstance.defaults.headers.common[
 //   "Authorization"
@@ -93,7 +98,7 @@ export async function signOut(): Promise<string | null> {
     // });
     const response = await axios
       .post(`${API_BASE_URL}/api/auth/signout`, {}, { withCredentials: true })
-      .then(res => res.data);
+      .then((res) => res.data);
     // let text = ""
     // if (response.status == 200) {
     //   text = await response.data
@@ -116,8 +121,7 @@ export async function getUser(): Promise<UserItem | null> {
   try {
     const response = await axios
       .get(`${API_BASE_URL}/api/user/me`, { withCredentials: true })
-      .then(res => res.data);
-    console.log(response);
+      .then((res) => res.data);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -140,8 +144,7 @@ export async function availableUsername(
         { username: username },
         { withCredentials: true }
       )
-      .then(res => res.data);
-    console.log(response);
+      .then((res) => res.data);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -162,8 +165,7 @@ export async function updateUsername(username: string): Promise<string | null> {
         { username: username },
         { withCredentials: true }
       )
-      .then(res => res.data);
-    console.log(response);
+      .then((res) => res.data);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -197,8 +199,7 @@ export async function updateProfile(updateData: {
         },
         { withCredentials: true }
       )
-      .then(res => res.data);
-    console.log(response);
+      .then((res) => res.data);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -211,12 +212,11 @@ export async function updateProfile(updateData: {
   }
 }
 
-export async function getProfile() {
+export async function getProfile(): Promise<ProfileItem | null> {
   try {
     const response = await axios
       .get(`${API_BASE_URL}/api/profile`, { withCredentials: true })
-      .then(res => res.data);
-    console.log(response);
+      .then((res) => res.data);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -228,59 +228,95 @@ export async function getProfile() {
     }
   }
 }
-// export async function signUp(userAddress: string): Promise<string | null> {
-//   try {
-//     const response: AxiosResponse<string> = await axios.post(
-//       `${API_BASE_URL}/api/auth/nonce`,
-//       {
-//         walletAddress: userAddress,
-//       }
-//     );
 
-//     return response.data;
-//   } catch (error) {
-//     if (axios.isAxiosError(error)) {
-//       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
-//       throw new Error(`Axios Error: ${error.message}`);
-//     } else {
-//       // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
-//       return null; // Return null when an error occurs
-//     }
-//   }
-// }
-
-// export const updateUsername = async () => {
-//   try {
-//     const res = await axios.post(
-//       `${BACKEND_API_URL}/api/v1/userupdate-username`,
-//       { payload: "", usernameDto: "" }
-//     );
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
-// export const signIn = async (userAddress: string, signature: string) => {
-//   try {
-//     const res = await axios.post(`${BACKEND_API_URL}/api/auth/signin`, {
-//       walletAddress: userAddress,
-//       signature: signature,
-//     });
-//     return res.data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const signOut = async () => {
-//   try {
-//     // const headers = {
-//     //   'Content-Type': 'application/json',
-//     //   'Authorization': "Bearer" + " " + token
-//     // }
-//     const res = await axios.post(`${BACKEND_API_URL}/api/auth/signout`);
-//     return res.data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+export async function createLaunchpad(createData: {
+  name: string;
+  symbol: string;
+  desc: string;
+  logoImg: string;
+  image: string;
+  mintPrice: bigint;
+  supply: number;
+  owners: string[];
+  ownerRoyalties: number[];
+  maxPerTx: number;
+  maxPerWallet: number;
+  wlEnabled: boolean;
+  wlAddresses: string[];
+  enableReserveTokens: boolean;
+  startDate: string;
+  endDate: string;
+  network: string;
+  twitter: string;
+  discord: string;
+  facebook: string;
+  reddit: string;
+  collectionId: string;
+}) {
+  try {
+    const {
+      name,
+      symbol,
+      desc,
+      logoImg,
+      image,
+      mintPrice,
+      supply,
+      owners,
+      ownerRoyalties,
+      maxPerTx,
+      maxPerWallet,
+      wlEnabled,
+      wlAddresses,
+      enableReserveTokens,
+      startDate,
+      endDate,
+      network,
+      twitter,
+      discord,
+      facebook,
+      reddit,
+      collectionId,
+    } = createData;
+    console.log("create data", createData);
+    const response = await axios.post(
+      `${API_BASE_URL}/api/launchpad`,
+      {
+        name: name,
+        symbol: symbol,
+        desc: desc,
+        logoImg: logoImg,
+        image: image,
+        mintPrice: mintPrice,
+        supply: supply,
+        owners: owners,
+        ownerRoyalties: ownerRoyalties,
+        maxPerTx: maxPerTx,
+        maxPerWallet: maxPerWallet,
+        wlEnabled: wlEnabled,
+        wlAddresses: wlAddresses,
+        enableReserveTokens: enableReserveTokens,
+        startDate: startDate,
+        endDate: endDate,
+        network: network,
+        twitter: twitter,
+        discord: discord,
+        facebook: facebook,
+        reddit: reddit,
+        collectionId: collectionId,
+      },
+      { withCredentials: true }
+    );
+    console.log("response", response);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
+      throw new Error(`Axios Error: ${error.message}`);
+    } else {
+      console.error(error);
+      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
+      return null; // Return null when an error occurs
+    }
+  }
+}

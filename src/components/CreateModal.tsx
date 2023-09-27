@@ -9,11 +9,16 @@ import { DURATION_RANGE } from "@/config";
 import { CalendarModal } from "./CalendarModal";
 import { CoinButton } from "./CoinButton";
 import { useUser } from "@/contexts/UserContext";
+import { createLaunchpad } from "@/utils/api";
 
 export const CreateModal: FC = () => {
     const { closeCreateModal, isOpenedCreateModal, openCalendarModal } = useModal()
     const { date } = useUser()
-    const { register } = useForm();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [dateRange, setDateRange] = useState("")
 
@@ -21,6 +26,57 @@ export const CreateModal: FC = () => {
         setDateRange(item)
         if (item === "Custom") {
             openCalendarModal()
+        }
+    }
+
+    const onSubmit = async (data: any) => {
+        try {
+            const values: Record<string, string> = {};
+            console.log("date", date)
+            for (const key in data) {
+                const value = data[key];
+                values[key] = value;
+            }
+            console.log("value", values)
+            if (values.name && values.symbol && values.mintPrice && values.totalSupply && values.maxPerTx && values.maxPerWallet && values.collectionUri
+            ) {
+                console.log("ok===========")
+                const mintPrice = BigInt(values.mintPrice);
+                const supply = parseInt(values.totalSupply)
+                const maxPerTx = parseInt(values.maxPerTx)
+                const maxPerWallet = parseInt(values.maxPerWallet)
+                const startDate = '2023-09-26T00:00:00Z';
+                const endDate = '2023-09-30T23:59:59Z';
+
+                const launchpad = await createLaunchpad({
+                    name: values.name,
+                    symbol: values.symbol,
+                    desc: "",
+                    image: "",
+                    logoImg: "",
+                    mintPrice: mintPrice,
+                    supply: supply,
+                    owners: [],
+                    ownerRoyalties: [],
+                    maxPerTx: maxPerTx,
+                    maxPerWallet: maxPerWallet,
+                    wlEnabled: true,
+                    wlAddresses: [],
+                    enableReserveTokens: true,
+                    startDate: startDate,
+                    endDate: endDate,
+                    network: "ETH",
+                    twitter: "",
+                    discord: "",
+                    facebook: "",
+                    reddit: "",
+                    collectionId: values.collectionUri,
+                })
+                console.log("launchpad", launchpad)
+            }
+
+        } catch (error) {
+            console.log("error", error);
         }
     }
 
@@ -41,7 +97,7 @@ export const CreateModal: FC = () => {
                         <CloseCircleIcon className="group-hover:rotate-90 duration-300 w-[40px] h-[40px]" />
                     </button>
                     <div className="modal_body text-center">
-                        <form>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="flex gap-7 xl:gap-[98px] px-6 lg:px-[60px] xl:px-4 pt-11 xl:pt-14  flex-col lg:flex-row">
                                 <div className="w-full lg:w-1/2 flex flex-col gap-7 xl:gap-7">
                                     <div className="flex-col">
@@ -194,7 +250,7 @@ export const CreateModal: FC = () => {
                                             Start Date
                                         </Typography>
                                         <div className="flex justify-between px-3 py-[14px] rounded-[8px] bg-dark-400 mt-2 cursor-pointer items-center relative" onClick={() => setIsCollapsed(!isCollapsed)}>
-                                            <div className="text-white text-[14px] font-normal " >{dateRange ? dateRange : "Set duration"}</div>
+                                            <div className="text-white text-[14px] font-normal " >{date ? date : dateRange}</div>
                                             <ArrowDownIcon />
                                             {isCollapsed &&
                                                 <div className="flex-col w-full -mt-[6px] px-[14px] bg-dark-400 text-[14px] rounded-b-[8px] absolute top-[50px] right-0">
@@ -248,7 +304,7 @@ export const CreateModal: FC = () => {
                             <div className="flex flex-col gap-1 mt-6">
 
                                 <button className="w-full bg-white rounded-[12px] py-3 text-black text-[16px] font-semibold">Deploy New Mintable Collection</button>
-                                <button className="w-full bg-[#161616] rounded-[12px] py-3 text-[#666666] text-[16px] font-semibold">Cancel</button>
+                                <button className="w-full bg-[#161616] rounded-[12px] py-3 text-[#666666] text-[16px] font-semibold" onClick={closeCreateModal}>Cancel</button>
 
                             </div>
                         </form>

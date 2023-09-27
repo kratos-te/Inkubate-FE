@@ -20,6 +20,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
 import ActivityDetail from "@/components/ActivityDetail";
+import { useUser } from "@/contexts/UserContext";
+// import { getProfile, getUser } from "@/utils/api";
 
 export default function CollectionPage() {
   const query = useSearchParams();
@@ -29,6 +31,7 @@ export default function CollectionPage() {
   const { openSettingModal } = useModal();
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
+  const { getUserData } = useUser()
 
   const collectionName = "Opbunnies";
 
@@ -39,8 +42,10 @@ export default function CollectionPage() {
     }, 1200);
   }, []);
 
-  const handleEditProfile = () => {
+  const handleEditProfile = async () => {
     openSettingModal();
+    // getProfileData()
+    getUserData()
   };
   return (
     <>

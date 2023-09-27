@@ -43,7 +43,10 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({
   const [token, setToken] = useState("");
 
   const sign = async () => {
-    console.log("signed");
+    const jwtToken = localStorage.getItem("accessToken")
+    if (jwtToken) {
+      setToken(jwtToken)
+    }
     setSigned(true);
   };
 

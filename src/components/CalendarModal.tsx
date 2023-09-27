@@ -109,7 +109,7 @@ export const CalendarModal: FC = () => {
   };
 
   const handleSetDate = () => {
-    setDate(seletedDay + "," + hour + ":" + minutes + ":");
+    setDate(seletedDay + ", " + hour + ":" + minutes);
     closeCalendarModal();
   };
 
@@ -156,7 +156,7 @@ export const CalendarModal: FC = () => {
                       format(day, "MMM") !== currMonth.slice(0, 3)
                         ? "hidden"
                         : ""
-                    }`}
+                      } ${seletedDay === format(day, "MM/dd/yyyy") ? "bg-[#666666] text-white" : ""}`}
                     onClick={() => handleSetDay(day)}
                     disabled={day < today}
                   >

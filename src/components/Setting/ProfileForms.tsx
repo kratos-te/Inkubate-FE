@@ -11,12 +11,13 @@ const ProfileForms: FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { userData, profile } = useUser();
+  const { userData, profile, getUserData } = useUser();
   const [changedName, setChangeName] = useState(userData.username);
   const [changedBio, setChangedBio] = useState(profile.bio);
 
   const handleUsernameChange = (event: any) => {
     setChangeName(event.target.value);
+    console.log("show============", profile.bio)
   };
 
   const handleBioChange = (event: any) => {
@@ -31,8 +32,6 @@ const ProfileForms: FC = () => {
         const value = data[key];
         values[key] = value;
       }
-      console.log("values", userData.username);
-      console.log("userData", values.username);
       if (userData.username !== values.username && values.username) {
         const res = await availableUsername(values.username);
         if (res) {
@@ -40,14 +39,15 @@ const ProfileForms: FC = () => {
         }
       }
 
-      const profile = await updateProfile({
+      const changedProfile = await updateProfile({
         bio: changedBio,
         twitter: "",
         discord: "",
         facebook: "",
         reddit: "",
       });
-      console.log("profile", profile);
+      console.log("profile", changedProfile);
+      getUserData()
     } catch (error) {
       console.log("error", error);
     }

@@ -7,7 +7,7 @@ import { CloseCircleIcon } from "./SvgIcons";
 import { ConnectButton } from "./ConnectButton";
 import { useSession } from "@/contexts/SessionContext";
 // import { INFURN_APU_KEY } from "@/config";
-import { signIn, signOut, signUp } from "@/utils/api";
+import { signIn, signUp } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
 import Button from "./Button";
 import { MetamaskIcon, TrustwalletIcon, CoinbaseWallet, WalletconnectIcon } from "./SvgIcons";
@@ -46,17 +46,17 @@ export const WalletModal: FC = () => {
       // signOut();
       return;
     }
-
     signInWallet();
     sign();
     closeWalletModal();
-  }, [isConnected]);
+  }, [isConnected, userAddress]);
 
   const signInWallet = useCallback(async () => {
     const nonce = await signUp(userAddress);
     const verifyMsg = `${message}\nnonce:${nonce}`
     signMessageAsync({ message: verifyMsg }).then(async (sign) => {
       const token = await signIn(userAddress, sign.toString())
+      console.log("token", token)
       if (token) {
         localStorage.setItem("accessToken", token)
       }
@@ -68,16 +68,6 @@ export const WalletModal: FC = () => {
   const handleConnectWallet = async (connector: any) => {
     connect({ connector });
   };
-
-  useEffect(() => {
-    if (isConnected) {
-      // signMessage({ message })
-      // const getSignature = signMessageData?.toString()
-      // console.log("signature", getSignature)
-      // if (getSignature)
-      //   setSignature(getSignature)
-    }
-  }, [isConnected])
 
   if (!isOpenedWalletModal) return;
   return (
