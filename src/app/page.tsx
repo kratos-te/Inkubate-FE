@@ -12,6 +12,8 @@ export default function Home() {
     <>
       <MainLayout
         className="!bg-dark-300"
+        bgSrc="/assets/images/bg-home.png"
+        bgClass="absolute left-1/2 -translate-x-1/2 -top-400 lg:top-0 w-[2896px] h-[4541px] pointer-events-none object-cover opacity-40 lg:opacity-100"
         meta={
           <Meta title="Inkubate" description="Lorem ipsum dolor sit amet." />
         }
@@ -21,10 +23,6 @@ export default function Home() {
         <NotableCollections />
         <HomeCta />
         <FeaturedProjects />
-        <img
-          src="/assets/images/bg-home.png"
-          className="absolute left-1/2 -translate-x-1/2 -top-400 lg:top-0 w-[2896px] h-[4541px] pointer-events-none object-cover opacity-40 lg:opacity-100"
-        />
       </MainLayout>
       <CreateModal />
     </>

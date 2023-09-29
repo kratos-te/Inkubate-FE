@@ -1,32 +1,37 @@
 "use client";
 import { useEffect, useState } from "react";
-import MainLayout from "@/layouts/MainLayout";
-import ExploreItems from "@/components/ExploreItems";
-import CollectionCard from "@/components/CollectionCard";
-import ExploreCover from "@/components/ExploreCover";
 import { useRouter, useSearchParams } from "next/navigation";
-import { DEMO_COLLECTIONS } from "@/config";
-import { Meta } from "@/layouts/Meta";
 import Skeleton from "react-loading-skeleton";
+
+import { DEMO_COLLECTIONS } from "@/config";
+import CollectionCard from "@/components/CollectionCard";
 import CollecionCardLoader from "@/components/Common/CollecionCardLoader";
+import ExploreCover from "@/components/ExploreCover";
+import ExploreItems from "@/components/ExploreItems";
+import MainLayout from "@/layouts/MainLayout";
+import { Meta } from "@/layouts/Meta";
+import { getAllCollections } from "@/actions/collection";
 
 export default function ExplorePage() {
   const router = useRouter();
   const query = useSearchParams();
   const tab = query?.get("tab");
-  const collections = Array(20).fill(DEMO_COLLECTIONS[0]);
-
+  const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    setTimeout(() => {
+    getAllCollections().then((result) => {
+      setCollections(result || []);
       setLoading(false);
-    }, 1200);
+    });
   }, []);
 
   return (
     <>
       <MainLayout
         className="!bg-dark-300"
+        bgSrc="/assets/images/bg-explorer.png"
+        bgClass="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[3131px] h-[3158px] object-cover opacity-80 lg:opacity-100"
+        pageLoading={loading}
         meta={
           <Meta
             title="Explore NFTs"
@@ -96,13 +101,6 @@ export default function ExplorePage() {
           )}
           {tab === "2" && <ExploreItems />}
         </div>
-        {!loading && (
-          <img
-            src="/assets/images/bg-explorer.png"
-            className="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[3131px] h-[3158px] object-cover opacity-80 lg:opacity-100"
-            alt=""
-          />
-        )}
       </MainLayout>
     </>
   );

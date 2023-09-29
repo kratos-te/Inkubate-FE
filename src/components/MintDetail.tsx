@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CollectionItem } from "@/utils/types";
+import { CollectionItem, CollectionParam, LaunchpadParam } from "@/utils/types";
 import Typography from "./Typography";
 import {
   DiscordIcon,
@@ -14,15 +14,19 @@ import {
 import useWindowSize from "@/utils/useWindowSize";
 import MintProgress from "./MintProgress";
 import { useModal } from "@/contexts/ModalContext";
+import { weiToNum } from "@/utils/util";
 
 interface OverviewProps {
-  collection: CollectionItem;
+  collection: CollectionParam;
+  launchpad: LaunchpadParam;
   className?: string;
 }
 
-const MintDetail: FC<OverviewProps> = () => {
+const MintDetail: FC<OverviewProps> = ({ collection, launchpad }) => {
+// const { price, setPrice } = useState(launchpad.mintPrice)
   const { openMintModal } = useModal()
   const { width } = useWindowSize();
+  const price = launchpad.mintPrice
   const description =
     "The Cyber Droid NFTs are unique, algorithmically generated androids on the Ethereum blockchain. They can function as digital art, metaverse avatars, or blockchain game characters. Ownership may also unlock exclusive perks ithin the community.";
   return (
@@ -35,7 +39,7 @@ const MintDetail: FC<OverviewProps> = () => {
         }}
       >
         <Image
-          src={"/assets/images/nft-demo.png"}
+          src={collection.avatar.url}
           className="relative z-0"
           alt=""
           fill
@@ -48,20 +52,20 @@ const MintDetail: FC<OverviewProps> = () => {
             component="h1"
             className="font-poppins text-[36px] lg:font-readex leading-[44px] lg:text-[28px] lg:leading-[35px] font-bold"
           >
-            {"CYBER DROID"}
+            {collection.name}
           </Typography>
           <div className="flex gap-6">
             <Typography
               component="p"
               className="text-[16px] lg:text-[14px] !font-[400] lg:font-medium mt-2"
             >
-              Price<span className="ml-2 text-secondary">Free</span>
+              Price<span className="ml-2 text-secondary">{weiToNum(price)}</span>
             </Typography>
             <Typography
               component="p"
               className="text-[16px] lg:text-[14px] !font-[400] lg:font-medium mt-2"
             >
-              Supply: <span className="ml-2 text-secondary">10,000</span>
+              Supply: <span className="ml-2 text-secondary">{launchpad.supply}</span>
             </Typography>
           </div>
           <Typography className="text-[12px] mt-2 md:mt-6 flex items-center text-white">

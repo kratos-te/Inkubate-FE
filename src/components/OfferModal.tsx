@@ -1,6 +1,12 @@
-import { FC, useState, useRef } from "react"
+import { FC, useState, useRef } from "react";
 import Image from "next/image";
-import { ArrowDownIcon, ArrowLeftIcon, CalendarIcon, CloseCircleIcon, VerifiedIcon } from "./SvgIcons"
+import {
+  ArrowDownIcon,
+  ArrowLeftIcon,
+  CalendarIcon,
+  CloseCircleIcon,
+  VerifiedIcon,
+} from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
 import { ModalItem } from "@/utils/types";
 import Typography from "./Typography";
@@ -8,6 +14,7 @@ import { CoinButton } from "./CoinButton";
 import { DATE_RANGE } from "@/config";
 import { LoadingPad } from "./LoadingPad";
 import { DatePicker } from "./DatePicker";
+import { SetDuration } from "./SetDuratoin";
 
 interface DateRangeType {
   title: string;
@@ -17,34 +24,31 @@ interface DateRangeType {
 
 export const OfferModal: FC<ModalItem> = ({ nft }) => {
   const { closeOfferModal, isOpenedOfferModal } = useModal();
-  const { image, name, ownerBy, rarity, price } = nft;
-  const [isShowCal, setIsShowCal] = useState<boolean>(false)
+  const { image, name } = nft;
+  const [isShowCal, setIsShowCal] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRangeType>(
-    {
-      title: "",
-      type: "",
-      range: 0,
-    }
-  )
-  const [makeOffer, setMakeOffer] = useState(false)
-
+  const [dateRange, setDateRange] = useState<DateRangeType>({
+    title: "",
+    type: "",
+    range: 0,
+  });
+  const [makeOffer, setMakeOffer] = useState(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleOpenCalendar = () => {
-    console.log("isShowCal", isShowCal)
-    setIsShowCal(!isShowCal)
-  }
+    console.log("isShowCal", isShowCal);
+    setIsShowCal(!isShowCal);
+  };
 
   const handleSetDate = (date: DateRangeType) => {
-    setDateRange(date)
-    setIsCollapsed(false)
-  }
+    setDateRange(date);
+    setIsCollapsed(false);
+  };
 
   const handleOffer = () => {
-    setMakeOffer(!makeOffer)
-  }
+    setMakeOffer(!makeOffer);
+  };
 
   if (!isOpenedOfferModal) return null;
   return (
@@ -98,43 +102,17 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
               </Typography>
               <div className="flex justify-between rounded-[8px] bg-dark-400 px-3 py-4 items-center mt-2 max-sm:py-2">
                 <p className="text-[14px] text-white">34</p>
-                <CoinButton icon="/assets/icons/eth.png" symbol="ETH" className={""} />
+                <CoinButton
+                  icon="/assets/icons/eth.png"
+                  symbol="ETH"
+                  className={""}
+                />
               </div>
-              <p className="text-[16px] text-[#B3B3B3] mt-2 text-left max-sm:text-[14px]">Balance: 0.0600 ETH</p>
+              <p className="text-[16px] text-[#B3B3B3] mt-2 text-left max-sm:text-[14px]">
+                Balance: 0.0600 ETH
+              </p>
             </div>
-            <div className="flex-col items-left mt-6">
-              <Typography className="text-[24px] font-semibold text-left max-sm:text-[18px]">
-                Duration
-              </Typography>
-              <div className="flex-col rounded-[8px] bg-dark-400 px-3 py-4 items-center mt-2 max-sm:py-2 relative" >
-                <div className="flex cursor-pointer items-center" onClick={handleOpenCalendar} >
-                  <CalendarIcon />
-                  <Typography className="flex text-[14px] ml-1"> Set Duration</Typography>
-                </div>
-                {isShowCal && (
-                  <div className="w-[490px] flex-col bg-dark-400 rounded-b-[16px] px-[14px] py-[34px] absolute right-5 z-50  max-sm:w-full left-0 top-[30px] md:top-[50px]">
-                    <div className="flex-col">
-                      <Typography className="text-left text-lg text-white font-semibold max-sm:text-[16px]">
-                        Data Range
-                      </Typography>
-                      <div className="flex justify-between px-3 py-[14px] rounded-[8px] bg-[#616161] mt-2 cursor-pointer items-center" onClick={() => setIsCollapsed(!isCollapsed)}>
-                        <div className="text-white text-[14px] font-normal " >{dateRange.title ? dateRange.title : "3 Months"}</div>
-                        {!isCollapsed ? <ArrowLeftIcon /> : <ArrowDownIcon />}
-                      </div>
-                      {isCollapsed &&
-                        <div className="flex-col -mt-[20px] p-[14px] bg-[#616161] text-[14px] rounded-b-[8px]">
-                          {DATE_RANGE.map((item) => (
-                            <div className="flex pt-[14px] text-white text-[14px] font-normal justify-start cursor-pointer" onClick={() => handleSetDate(item)}>{item.title}</div>
-                          ))}
-                        </div>
-                      }
-                    </div>
-                    <DatePicker type={dateRange.type} range={dateRange.range} />
-                    <button className="w-full rounded-lg bg-white text-black text-[16px] font-semibold py-3 mt-10" onClick={() => setIsShowCal(false)}>Done</button>
-                  </div>
-                )}
-              </div>
-            </div>
+            <SetDuration />
             <div className="flex-col mt-6">
               <Typography className="text-[24px] font-semibold text-left max-sm:text-[18px ]">
                 {"Fees"}
@@ -145,12 +123,20 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
               </div>
             </div>
             {makeOffer && (
-              <LoadingPad title="Processing" description="Confirm the transaction in your wallet to make a offer" />
+              <LoadingPad
+                title="Processing"
+                description="Confirm the transaction in your wallet to make a offer"
+              />
             )}
-            <button className="w-full rounded-lg bg-white text-[16px] font-semibold py-3 mt-6" onClick={handleOffer}>Make Offer</button>
+            <button
+              className="w-full rounded-lg bg-white text-[16px] font-semibold py-3 mt-6"
+              onClick={handleOffer}
+            >
+              Make Offer
+            </button>
           </div>
         </div>
       </div>
     </div>
-  )
-} 
+  );
+};

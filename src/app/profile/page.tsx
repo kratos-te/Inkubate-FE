@@ -21,21 +21,21 @@ import Skeleton from "react-loading-skeleton";
 import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
 import ActivityDetail from "@/components/ActivityDetail";
 import { useUser } from "@/contexts/UserContext";
-// import { getProfile, getUser } from "@/utils/api";
 
-export default function CollectionPage() {
+export default function ProfilePage() {
   const query = useSearchParams();
   const router = useRouter();
+  const { openSettingModal } = useModal();
+
   const tab = query?.get("tab");
   const filter = query?.get("filter");
-  const { openSettingModal } = useModal();
+  const profileName = "My Profile";
+
+  const { profile, getUserData, getProfileData } = useUser();
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
-  const { getUserData } = useUser()
-
-  const collectionName = "Opbunnies";
-
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -44,23 +44,25 @@ export default function CollectionPage() {
 
   const handleEditProfile = async () => {
     openSettingModal();
-    // getProfileData()
-    getUserData()
+    getProfileData();
+    getUserData();
   };
   return (
     <>
       <MainLayout
         className="!bg-dark-200"
+        bgSrc="/assets/images/bg-profile.png"
+        bgClass="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none w-[2167px] h-[2624px] object-cover opacity-60 lg:opacity-100"
+        pageLoading={loading}
         meta={
-          <Meta
-            title={collectionName}
-            description="Lorem ipsum dolor sit amet."
-          />
+          <Meta title={profileName} description="Lorem ipsum dolor sit amet." />
         }
       >
         {!loading ? (
           <>
-            <CoverBanner src="/assets/images/profile-cover.jpg" />
+            <CoverBanner
+              src={profile?.banner?.url || "/assets/images/profile-cover.jpg"}
+            />
             <ProfileOverview />
           </>
         ) : (
@@ -169,13 +171,6 @@ export default function CollectionPage() {
             </div>
           </div>
         </div>
-        {!loading && (
-          <img
-            src="/assets/images/bg-profile.png"
-            className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none w-[2167px] h-[2624px] object-cover opacity-60 lg:opacity-100"
-            alt=""
-          />
-        )}
       </MainLayout>
     </>
   );

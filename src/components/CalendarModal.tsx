@@ -11,17 +11,12 @@ import {
   startOfToday,
   startOfWeek,
 } from "date-fns";
-import {
-  ArrowDownLineIcon,
-  NextIcon,
-  PrevIcon,
-} from "./SvgIcons";
+import { ArrowDownLineIcon, NextIcon, PrevIcon } from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
 
 export const CalendarModal: FC = () => {
   const { closeCalendarModal, isOpenedCalendarModal } = useModal();
-  const { setDate } = useUser();
   const today = startOfToday();
   const HOURS = new Array(12)
     .fill(0)
@@ -50,7 +45,7 @@ export const CalendarModal: FC = () => {
   const [isHour, setIsHour] = useState(false);
   const [isMinutes, setIsMinutes] = useState(false);
   const [isNoon, setIsNoon] = useState(false);
-  
+
   let firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
   const capitalizeFirstLetter = (query: string): string => {
@@ -109,7 +104,7 @@ export const CalendarModal: FC = () => {
   };
 
   const handleSetDate = () => {
-    setDate(seletedDay + ", " + hour + ":" + minutes);
+    // setDate(seletedDay + ", " + hour + ":" + minutes);
     closeCalendarModal();
   };
 
@@ -156,7 +151,11 @@ export const CalendarModal: FC = () => {
                       format(day, "MMM") !== currMonth.slice(0, 3)
                         ? "hidden"
                         : ""
-                      } ${seletedDay === format(day, "MM/dd/yyyy") ? "bg-[#666666] text-white" : ""}`}
+                    } ${
+                      seletedDay === format(day, "MM/dd/yyyy")
+                        ? "bg-[#666666] text-white"
+                        : ""
+                    }`}
                     onClick={() => handleSetDay(day)}
                     disabled={day < today}
                   >
@@ -179,9 +178,10 @@ export const CalendarModal: FC = () => {
                 <ArrowDownLineIcon />
                 {isHour && (
                   <div className="flex flex-col  w-full bg-dark-400 px-3 rounded-[4px] absolute h-[212px] top-[25px] right-0 overflow-auto">
-                    {HOURS.map(hour => (
+                    {HOURS.map((hour, key) => (
                       <div
                         className="flex bg-dark-400 mt-[12px] mb-[4px] text-[12px] font-semibold text-white"
+                        key={`${key}`}
                         onClick={() => handleSetHour(hour.label)}
                       >
                         {hour.label.length < 2 ? "0" + hour.label : hour.label}
@@ -202,9 +202,10 @@ export const CalendarModal: FC = () => {
                 <ArrowDownLineIcon />
                 {isMinutes && (
                   <div className="flex flex-col  w-full bg-dark-400 px-3 rounded-[4px] absolute h-[212px] top-[25px] right-0 overflow-auto">
-                    {MINS.map(min => (
+                    {MINS.map((min, key) => (
                       <div
                         className="flex bg-dark-400 mt-[12px] mb-[4px] text-[12px] font-semibold text-white"
+                        key={key}
                         onClick={() => handleSetMin(min.label)}
                       >
                         {min.label}
@@ -224,9 +225,10 @@ export const CalendarModal: FC = () => {
                 <ArrowDownLineIcon />
                 {isNoon && (
                   <div className="flex flex-col  w-full bg-dark-400 px-3 rounded-[4px] absolute top-[25px] right-0">
-                    {NOONS.map(noon => (
+                    {NOONS.map((noon, key) => (
                       <div
                         className="flex bg-dark-400 mt-[12px] mb-[4px] text-[12px] font-semibold text-white"
+                        key={key}
                         onClick={() => handleSetNoon}
                       >
                         {noon}

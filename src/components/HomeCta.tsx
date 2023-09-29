@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useModal } from "@/contexts/ModalContext";
 import Button from "./Button";

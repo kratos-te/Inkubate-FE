@@ -56,6 +56,9 @@ export default function CollectionPage() {
     <>
       <MainLayout
         className="!bg-dark-300 min-h-screen"
+        bgSrc="/assets/images/bg-explorer.png"
+        bgClass="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[3131px] h-[3158px] object-cover opacity-80 lg:opacity-100"
+        pageLoading={loading}
         meta={
           <PageHead
             title={collectionName}
@@ -160,13 +163,6 @@ export default function CollectionPage() {
             </div>
           )}
         </div>
-        {!loading && (
-          <img
-            src="/assets/images/bg-explorer.png"
-            className="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[3131px] h-[3158px] object-cover opacity-80 lg:opacity-100"
-            alt=""
-          />
-        )}
       </MainLayout>
       {DEMO_NFTS[0] && <AcceptModal nft={DEMO_NFTS[0]} />}
     </>

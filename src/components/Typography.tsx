@@ -3,7 +3,7 @@ import { FC, ReactNode } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface TypographyProps {
-  children?: ReactNode;
+  children?: any;
   component?: string;
   className?: string;
   color?: string;
@@ -21,12 +21,7 @@ const Typography: FC<TypographyProps> = ({
   ) as keyof JSX.IntrinsicElements;
 
   return (
-    <HeadingComponent
-      className={`${className ? className : ""}`}
-      style={{
-        color: color || (theme === "dark" ? "#F2F3F4" : "#041B2D"),
-      }}
-    >
+    <HeadingComponent className={`text-[#F2F3F4] ${className ? className : ""}`}>
       {children}
     </HeadingComponent>
   );

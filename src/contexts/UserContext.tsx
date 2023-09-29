@@ -1,6 +1,4 @@
 "use client";
-import { getProfile, getUser } from "@/utils/api";
-import { UserItem, ProfileItem } from "@/utils/types";
 import React, {
   createContext,
   useContext,
@@ -10,13 +8,20 @@ import React, {
 } from "react";
 import { useAccount } from "wagmi";
 
+import { getProfile, getUser } from "@/actions";
+import { UserItem, ProfileItem, PhotoItem } from "@/utils/types";
+
 interface UserContextType {
   username: string;
   setUsername: React.Dispatch<React.SetStateAction<string>>;
   userAddress: string;
   setUserAddress: React.Dispatch<React.SetStateAction<string>>;
-  date: string;
-  setDate: React.Dispatch<React.SetStateAction<string>>;
+  token: string;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+  startDate: string;
+  setStartDate: React.Dispatch<React.SetStateAction<string>>;
+  endDate: string;
+  setEndDate: React.Dispatch<React.SetStateAction<string>>;
   userData: UserItem;
   setUserData: React.Dispatch<React.SetStateAction<UserItem>>;
   getUserData: () => void;
@@ -30,8 +35,12 @@ const UserContext = createContext<UserContextType>({
   setUsername: () => {},
   userAddress: "",
   setUserAddress: () => {},
-  date: "",
-  setDate: () => {},
+  startDate: "",
+  setStartDate: () => { },
+  endDate: "",
+  setEndDate: () => { },
+  token: "",
+  setToken: () => {},
   userData: { id: "", username: "", walletAddress: "" },
   setUserData: () => {},
   getUserData: () => {},
@@ -41,9 +50,21 @@ const UserContext = createContext<UserContextType>({
     discord: "",
     facebook: "",
     reddit: "",
+    avatarId: "",
+    bannerId: "",
+    avatar: {
+      id: "",
+      url: "",
+      fileEntityId: "",
+    },
+    banner: {
+      id: "",
+      url: "",
+      fileEntityId: "",
+    },
   },
   setProfile: () => {},
-  getProfileData: () => {},
+  getProfileData: () => { },
 });
 
 export const useUser = () => {
@@ -61,7 +82,9 @@ interface UserProviderProps {
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [username, setUsername] = useState("");
   const [userAddress, setUserAddress] = useState("");
-  const [date, setDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [token, setToken] = useState("");
   const { address, isConnected } = useAccount();
   const [userData, setUserData] = useState({
     id: "",
@@ -74,22 +97,22 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     discord: "",
     facebook: "",
     reddit: "",
+    avatarId: "",
+    bannerId: "",
+    avatar: {
+      id: "",
+      url: "",
+      fileEntityId: "",
+    },
+    banner: {
+      id: "",
+      url: "",
+      fileEntityId: "",
+    },
   });
 
   const getUserData = async () => {
-    const profile = await getProfile();
-    console.log("profile", profile)
-    if (profile) {
-      setProfile({
-        bio: profile.bio,
-        twitter: profile.twitter,
-        discord: profile.discord,
-        facebook: profile.facebook,
-        reddit: profile.reddit,
-      });
-    }
     const user = await getUser();
-    console.log("user", user)
     if (user) {
       setUserData({
         id: user.id,
@@ -97,20 +120,35 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         walletAddress: user.walletAddress,
       });
     }
-
+    const profile = await getProfile();
+    if (profile) {
+      setProfile({
+        bio: profile.bio,
+        twitter: profile.twitter,
+        discord: profile.discord,
+        facebook: profile.facebook,
+        reddit: profile.reddit,
+        avatarId: profile.avatarId,
+        bannerId: profile.bannerId,
+        avatar: profile.avatar,
+        banner: profile.banner,
+      });
+    }
   };
 
-  const getProfileData = async () => {
-
-  };
+  const getProfileData = async () => {};
 
   const contextValue: UserContextType = {
     username,
     setUsername,
     userAddress,
     setUserAddress,
-    date,
-    setDate,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    token,
+    setToken,
     userData,
     setUserData,
     getUserData,
@@ -120,9 +158,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log("=========");
     getUserData();
-    getProfileData();
-  }, [address]);
+  }, [address, isConnected, token]);
 
   useEffect(() => {
     let name = "";
