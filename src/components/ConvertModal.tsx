@@ -42,7 +42,7 @@ export const ConvertModal: FC<ConvertModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
   return (
-    <div className="absolute right-2 top-20 bg-dark-200  w-[529px] rounded-2xl overflow-hidden p-6 max-lg:w-[369px] max-lg:-right-4">
+    <div className="absolute right-2 top-32 bg-dark-200  w-[529px] rounded-2xl overflow-hidden p-6 max-lg:w-[369px] max-lg:-right-4">
       <button
         className="group md:rounded-x l absolute right-0 md:right-4 top-2 md:top-4 z-10"
         onClick={onClose}

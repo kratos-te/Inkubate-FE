@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import LaunchpadCollectionList from "@/components/LaunchpadCollectionList";
 import LaunchpadCover from "@/components/LaunchpadCover";
 import LaunchpadDrops from "@/components/LaunchpadDrops";
@@ -8,19 +9,46 @@ import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import Skeleton from "react-loading-skeleton";
 import LaunchpadContentLoader from "@/components/Common/LaunchpadContentLoader";
+import { getAllCollections, getLaunchpad } from "@/actions";
+import { CollectionParam, LaunchpadParam } from "@/utils/types";
 
 export default function LaunchpadPage() {
   const [loading, setLoading] = useState(true);
+  const [launchpads, setLaunchPads] = useState<LaunchpadParam[]>([])
+  const [collections, setCollections] = useState<CollectionParam[]>([])
+
+  const router = useRouter()
+  const pathname = usePathname();
+
+
+
+  useEffect(() => {
+    const launchPad = async () => {
+      if (pathname === "/launchpad") {
+        const launchpadData = await getLaunchpad()
+        const collectionData = await getAllCollections()
+        if (launchpadData) {
+          setLaunchPads(launchpadData.data)
+          setCollections(collectionData)
+        }
+      }
+    }
+    launchPad()
+  }, [pathname])
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1200);
   }, []);
 
+
   return (
     <>
       <MainLayout
         className="!bg-dark-300"
+        bgSrc="/assets/images/bg-stats.png"
+        bgClass="absolute left-1/2 -translate-x-1/2 top-0 w-[2470px] h-[2096px] pointer-events-none object-cover opacity-60 lg:opacity-100"
+        pageLoading={loading}
         meta={
           <Meta title="Launchpad" description="Lorem ipsum dolor sit amet." />
         }
@@ -44,10 +72,11 @@ export default function LaunchpadPage() {
               <LaunchpadCollectionList
                 title="Launchpads"
                 description="Qorem ipsum dolor sit amet, consectetur adipiscing elit."
-                collections={DEMO_COLLECTIONS}
+                launchpads={launchpads}
+                collections={collections}
               />
               <div className="h-[40px] 2xl:h-[72px]" />
-              <LaunchpadCollectionList
+              {/* <LaunchpadCollectionList
                 title="Resources"
                 description="Qorem ipsum dolor sit amet, consectetur adipiscing elit."
                 collections={DEMO_COLLECTIONS}
@@ -57,19 +86,12 @@ export default function LaunchpadPage() {
                 title="Drops"
                 description="Qorem ipsum dolor sit amet, consectetur adipiscing elit."
                 collections={DEMO_COLLECTIONS}
-              />
+              /> */}
             </>
           ) : (
             <LaunchpadContentLoader />
           )}
         </div>
-        {!loading && (
-          <img
-            src="/assets/images/bg-stats.png"
-            className="absolute left-1/2 -translate-x-1/2 top-0 w-[2470px] h-[2096px] pointer-events-none object-cover opacity-60 lg:opacity-100"
-            alt=""
-          />
-        )}
       </MainLayout>
     </>
   );

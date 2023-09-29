@@ -12,9 +12,7 @@ import CopyAddress from "../CopyAddress";
 import { useUser } from "@/contexts/UserContext";
 
 const ProfileOverview = () => {
-  const name = "sasuke0601";
-  const walletAddress = "0x868131c8b5503465611ac8dBD6d838c6Eb5fAb52";
-  const { username, userAddress } = useUser()
+  const { username, userAddress, userData, profile } = useUser();
   return (
     <div className="max-w-[1600px] mx-6 relative 2xl:mx-auto z-10">
       <div className="pt-8 xl:pt-12 mb-[30px] md:mb-[60px] lg:mb-[100px] flex gap-[22px] lg:gap-10 xl:gap-[68px] flex-col lg:flex-row">
@@ -25,13 +23,15 @@ const ProfileOverview = () => {
           }}
         >
           <div className="relative w-[186px] xl:w-[286px] h-[186px] xl:h-[286px] rounded-lg xl:rounded-[19px] overflow-hidden">
-            <Image
-              src={"/assets/images/avatar-demo.png"}
-              fill
-              objectFit="cover"
-              priority
-              alt=""
-            />
+            {profile?.avatar?.url && (
+              <Image
+                src={profile.avatar.url}
+                fill
+                objectFit="cover"
+                priority
+                alt=""
+              />
+            )}
           </div>
         </div>
         <div className="w-full lg:w-[calc(100%-158px)] xl:w-[calc(100%-360px)]">
@@ -41,7 +41,7 @@ const ProfileOverview = () => {
                 component="h2"
                 className="text-[28px] lg:text-[30px] font-bold font-poppins flex gap-2 items-center leading-[1]"
               >
-                <span>{username}</span>
+                <span>{userData.username ? userData.username : username}</span>
               </Typography>
               <CopyAddress address={userAddress} />
             </div>
@@ -59,9 +59,7 @@ const ProfileOverview = () => {
             component="p"
             className="text-[14px] leading-5 text-light-200 max-w-[600px] xl:max-w-[700px] mt-[18px]"
           >
-            In the quiet town where I was born, curiosity was my first language.
-            The world was a puzzle waiting to be solved, and every unanswered
-            question was an invitation to adventure.
+            {profile?.bio || "<Empty Bio>"}
           </Typography>
 
           <div className="flex gap-4 mt-5 xl:gap-6">

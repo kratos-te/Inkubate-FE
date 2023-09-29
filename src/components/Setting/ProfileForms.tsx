@@ -1,53 +1,132 @@
 import { FC, useState } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
-import Typography from "../Typography";
-import { AddLargeIcon } from "../SvgIcons";
+import {
+  availableUsername,
+  createPhoto,
+  updatePhoto,
+  updateProfile,
+  updateUsername,
+} from "@/actions";
+import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
-import { availableUsername, updateProfile, updateUsername } from "@/utils/api";
+
+import { AddLargeIcon } from "../SvgIcons";
+import Typography from "../Typography";
 
 const ProfileForms: FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const { userData, profile, getUserData } = useUser();
+  const { register, handleSubmit } = useForm();
+  const { userData, profile, getUserData, setProfile, getProfileData } =
+    useUser();
+  const { closeSettingModal } = useModal();
   const [changedName, setChangeName] = useState(userData.username);
   const [changedBio, setChangedBio] = useState(profile.bio);
+  const [changePfp, setChangePfp] = useState<string | null>(
+    profile?.avatar?.url || null
+  );
+  const [changeBanner, setChangeBanner] = useState<string | null>(
+    profile?.banner?.url || null
+  );
+  const [selectedPfpFile, setSelectedPfpFile] = useState<File | null>(null);
+  const [selectedBannerFile, setSelectedBannerFile] = useState<File | null>(
+    null
+  );
 
   const handleUsernameChange = (event: any) => {
     setChangeName(event.target.value);
-    console.log("show============", profile.bio)
   };
 
   const handleBioChange = (event: any) => {
     setChangedBio(event.target.value);
   };
 
+  const handleChangePfp = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setSelectedPfpFile(file);
+    setChangePfp(URL.createObjectURL(file));
+  };
+
+  const handleChangeBanner = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setSelectedBannerFile(file);
+    setChangeBanner(URL.createObjectURL(file));
+  };
+
   const onSubmit = async (data: any) => {
     try {
       const values: Record<string, string> = {};
-
+      let avatar = {
+        id: "",
+        url: "",
+        fileEntityId: "",
+      };
+      let banner = {
+        id: "",
+        url: "",
+        fileEntityId: "",
+      };
       for (const key in data) {
         const value = data[key];
         values[key] = value;
       }
+      console.log("newPfp", selectedPfpFile);
+      console.log("newBanner", selectedBannerFile);
       if (userData.username !== values.username && values.username) {
         const res = await availableUsername(values.username);
         if (res) {
           await updateUsername(values.username);
         }
       }
+      if (selectedPfpFile) {
+        if (profile.avatarId) {
+          const updatePfp = await updatePhoto(
+            selectedPfpFile,
+            profile.avatarId
+          );
+          avatar = updatePfp?.data;
+        } else {
+          const createPfp = await createPhoto(selectedPfpFile);
+          avatar = createPfp?.data;
+        }
+      }
+      if (selectedBannerFile) {
+        if (profile.bannerId) {
+          const updateBanner = await updatePhoto(
+            selectedBannerFile,
+            profile.bannerId
+          );
+          banner = updateBanner?.data;
+        } else {
+          const createBanner = await createPhoto(selectedBannerFile);
+          banner = createBanner?.data;
+        }
+      }
 
-      const changedProfile = await updateProfile({
+      setProfile({
+        ...profile,
+        avatar,
+        banner,
+      });
+
+      await updateProfile({
         bio: changedBio,
         twitter: "",
         discord: "",
         facebook: "",
         reddit: "",
+        avatarId: avatar?.id || undefined,
+        bannerId: banner?.id || undefined,
       });
-      console.log("profile", changedProfile);
-      getUserData()
+
+      getUserData();
+      getProfileData();
+      closeSettingModal();
     } catch (error) {
       console.log("error", error);
     }
@@ -115,15 +194,26 @@ const ProfileForms: FC = () => {
           <div className="mt-[22px]">
             <label
               htmlFor="pfp"
-              className="w-[116px] lg:w-[168px] h-[116px] lg:h-[168px] rounded-full bg-dark-400 grid place-content-center border border-dashed border-transparent hover:border-white"
+              className="w-[116px] lg:w-[168px] h-[116px] lg:h-[168px] rounded-full bg-dark-400 grid place-content-center border border-dashed border-transparent hover:border-white relative"
             >
-              <AddLargeIcon />
+              <AddLargeIcon className="z-30" />
+              {changePfp && (
+                <Image
+                  src={changePfp}
+                  width={116}
+                  height={116}
+                  className="w-[116px] lg:w-[168px] h-[116px] lg:h-[168px] rounded-full absolute"
+                  alt="Selected File Preview"
+                />
+              )}
             </label>
+
             <input
               id="pfp"
               type="file"
               className="hidden"
               {...register("pfp", { required: false })}
+              onChange={handleChangePfp}
             />
           </div>
         </div>
@@ -138,17 +228,27 @@ const ProfileForms: FC = () => {
           <div className="">
             <label
               htmlFor="cover"
-              className="w-full h-[168px] bg-dark-400 grid place-content-center rounded-xl border border-dashed border-transparent hover:border-white"
+              className="w-full h-[168px] bg-dark-400 grid place-content-center rounded-xl border border-dashed border-transparent hover:border-white relative"
             >
               <Typography className="text-[14px] lg:text-[24px] !text-third font-poppins !font-[400]">
                 Select an image
               </Typography>
+              {changeBanner && (
+                <Image
+                  src={changeBanner}
+                  width={116}
+                  height={116}
+                  className="w-full h-[168px]  absolute"
+                  alt="Selected File Preview"
+                />
+              )}
             </label>
             <input
               id="cover"
               type="file"
               className="hidden"
               {...register("cover", { required: false })}
+              onChange={handleChangeBanner}
             />
           </div>
           <div className="flex justify-start lg:justify-end mt-[39px] lg:mt-[65px] mb-20">

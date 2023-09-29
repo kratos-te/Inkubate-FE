@@ -1,15 +1,24 @@
 "use client";
 import { FC, useState } from "react";
-import { useAccount, useDisconnect } from "wagmi";
-import Logo from "./Logo";
-import SearchBar from "./SearchBar";
+import { useAccount, useDisconnect, useBalance } from "wagmi";
+import Image from "next/image";
 import Link from "next/link";
-import { DROPDOWN_LINKS, HEADER_LINKS } from "@/config";
-import Typography from "./Typography";
+import { usePathname, useRouter } from "next/navigation";
+import { refresh, signOut, validate } from "@/actions";
+import { DROPDOWN_LINKS, HEADER_LINKS, NOTIFICATIONS } from "@/config";
+import { useModal } from "@/contexts/ModalContext";
+import { useUser } from "@/contexts/UserContext";
 import Button from "./Button";
+import ClickAwayComponent from "./ClickAwayComponent";
+import { ConvertModal } from "./ConvertModal";
 import IconButton from "./IconButton";
+import Logo from "./Logo";
+import { MenuButton } from "./MenuButton";
+import { NotificationModal } from "./NotificationModal";
+import SearchBar from "./SearchBar";
 import {
   AlarmIcon,
+  BadgeIcon,
   BagIcon,
   BnbIcon,
   EthIcon,
@@ -17,20 +26,15 @@ import {
   MenuLogoutIcon,
   SearchIcon,
 } from "./SvgIcons";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useModal } from "@/contexts/ModalContext";
-import { MenuButton } from "./MenuButton";
-import { ConvertModal } from "./ConvertModal";
-import ClickAwayComponent from "./ClickAwayComponent";
-import { useUser } from "@/contexts/UserContext";
-import { signOut } from "@/utils/api";
+import Typography from "./Typography";
 
 const Header: FC = () => {
   const { openWalletModal, closeWalletModal } = useModal();
-  const { username } = useUser();
+  const [isNotificationModal, setIsNotificationModal] = useState(false);
+  const { username, userAddress, profile } = useUser();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
+  const { data, isError, isLoading } = useBalance({ address: userAddress as `0x${string}` })
 
   const [isEther, setIsEther] = useState(true);
   const [isBnb, setIsBnb] = useState(false);
@@ -46,6 +50,7 @@ const Header: FC = () => {
       disconnect();
       closeWalletModal();
       router.push("/");
+      await refresh();
       await signOut();
     }
   };
@@ -69,6 +74,11 @@ const Header: FC = () => {
     setIsConvertModal(true);
     setIsShowDropdown(false);
   };
+
+  const handleNotification = () => {
+    setIsNotificationModal(!isNotificationModal);
+  };
+
   return (
     <header className="py-8 xl:py-10 2xl:py-[54px] absolute left-0 top-0 w-full z-50">
       <div className="max-w-[1600px] mx-6 2xl:mx-auto">
@@ -128,15 +138,21 @@ const Header: FC = () => {
                     <p className="text-[12px] text-white font-bold"> BNB</p>
                   </div>
                 </div>
-                <IconButton onClick={() => console.log("show notification")}>
+                <IconButton className="relative" onClick={handleNotification}>
                   <AlarmIcon />
+                  <BadgeIcon
+                    className={`${!NOTIFICATIONS ? "hidden" : "absolute right-0"
+                      }`}
+                  />
                 </IconButton>
                 <ClickAwayComponent
                   onClickAway={() => setIsShowDropdown(false)}
                   className="relative w-[44px] h-[44px]"
                 >
                   <Image
-                    src="/assets/images/avatar-demo.png"
+                    src={
+                      profile?.avatar?.url || "/assets/images/avatar-demo.png"
+                    }
                     width={44}
                     height={44}
                     alt=""
@@ -155,7 +171,7 @@ const Header: FC = () => {
                           />
                         ))}
                         <button
-                          className="flex w-full space-x-4 cursor-pointer hover:bg-dark-400"
+                          className="flex w-full space-x-4 cursor-pointer"
                           onClick={handleDisconnect}
                         >
                           <MenuLogoutIcon />
@@ -167,7 +183,10 @@ const Header: FC = () => {
                       <Link href="/profile" passHref>
                         <div className="flex items-center p-6 gap-[14px] cursor-pointer">
                           <Image
-                            src="/assets/images/avatar-demo.png"
+                            src={
+                              profile?.avatar?.url ||
+                              "/assets/images/avatar-demo.png"
+                            }
                             width={40}
                             height={40}
                             alt=""
@@ -175,7 +194,7 @@ const Header: FC = () => {
                           />
                           <div className="flex-col space-y-1">
                             <p className="text-white text-lg">{username}</p>
-                            <p className="text-white text-[16px]">{0.52} ETH</p>
+                            <p className="text-white text-[16px]">{data?.formatted} ETH</p>
                           </div>
                         </div>
                       </Link>
@@ -195,6 +214,12 @@ const Header: FC = () => {
                   onClose={() => {
                     setIsConvertModal(false);
                     setIsShowDropdown(false);
+                  }}
+                />
+                <NotificationModal
+                  isOpen={isNotificationModal}
+                  onClose={() => {
+                    setIsNotificationModal(false);
                   }}
                 />
               </>
@@ -293,5 +318,4 @@ const Header: FC = () => {
     </header>
   );
 };
-
 export default Header;

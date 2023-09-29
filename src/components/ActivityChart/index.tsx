@@ -16,9 +16,9 @@ import Skeleton from "react-loading-skeleton";
 
 const ActivityChart = () => {
   const modifyPathAttributes = () => {
-    const pathElements = document.getElementsByClassName(
-      "recharts-rectangle"
-    ) as HTMLCollectionOf<SVGPathElement>;
+    const pathElements = Array.from(
+      document.getElementsByClassName("recharts-rectangle")
+    ) as SVGPathElement[];
 
     if (pathElements.length > 0) {
       for (let pathElement of pathElements) {

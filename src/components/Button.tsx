@@ -1,6 +1,7 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
+
 interface ButtonProps {
-  children?: ReactNode;
+  children?: any;
   isButton?: boolean;
   className?: string;
   onClick?: () => void;
@@ -12,9 +13,7 @@ const Button: FC<ButtonProps> = ({
   isButton,
   onClick,
 }) => {
-  const HeadingComponent = (isButton
-    ? "button"
-    : "div") as keyof JSX.IntrinsicElements;
+  const HeadingComponent = isButton ? "button" : "div";
 
   return (
     <HeadingComponent

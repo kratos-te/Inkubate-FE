@@ -1,5 +1,4 @@
 "use client";
-import { getNonce } from "@/utils/api";
 import React, {
   createContext,
   useContext,
@@ -9,6 +8,8 @@ import React, {
 } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 
+import { signIn, signUp } from "@/actions";
+
 interface AuthContextType {
   signed: boolean;
   sign: () => void;
@@ -16,8 +17,6 @@ interface AuthContextType {
   setSigned: React.Dispatch<React.SetStateAction<boolean>>;
   signature: string;
   setSignature: React.Dispatch<React.SetStateAction<string>>;
-  token: string;
-  setToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -27,8 +26,6 @@ const AuthContext = createContext<AuthContextType>({
   setSigned: () => {},
   signature: "",
   setSignature: () => {},
-  token: "",
-  setToken: () => {},
 });
 
 export const useAuth = () => {
@@ -43,13 +40,13 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+const message = "Connected with Inkubate";
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { address, isConnected } = useAccount();
-
-  const { data, signMessageAsync } = useSignMessage();
+  const { signMessageAsync } = useSignMessage();
   const [signed, setSigned] = useState(false);
   const [signature, setSignature] = useState("");
-  const [token, setToken] = useState("");
 
   const sign = async () => {
     console.log("signed");
@@ -68,8 +65,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setSigned,
     signature,
     setSignature,
-    token,
-    setToken,
   };
 
   const [loading, setLoading] = useState(false);
@@ -77,27 +72,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const walletSign = async () => {
     if (!address) return;
     setLoading(true);
-    const nonce = await getNonce(address);
-    if (nonce) {
-      await signMessageAsync({
-        message: `Connected with Inkubate\nnonce:${nonce}`,
-      }).then(sign => {
-        console.log(sign);
+    const nonce = await signUp(address);
+    const verifyMsg = `${message}\nnonce:${nonce}`;
+    signMessageAsync({ message: verifyMsg })
+      .then(async (sign) => {
+        const token = await signIn(address, sign.toString());
+        console.log("token", token);
+        if (token) {
+          localStorage.setItem("accessToken", token);
+        }
+      })
+      .catch((e) => {
+        console.log("wallet sign in error:", e);
       });
-    }
     setLoading(false);
   };
 
-  useEffect(() => {
-    console.log("===============", loading);
-  }, [loading]);
+  // useEffect(() => {
+  //   console.log("===============", loading);
+  // }, [loading]);
 
-  useEffect(() => {
-    console.log("address, isConnected", address, isConnected);
-    if (isConnected) {
-      walletSign();
-    }
-  }, [address, isConnected]);
+  // useEffect(() => {
+  //   if (isConnected && address) {
+  //     walletSign();
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [address, isConnected]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

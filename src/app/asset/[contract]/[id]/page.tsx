@@ -43,6 +43,9 @@ export default function CollectionPage() {
     <>
       <MainLayout
         className="!bg-dark-200"
+        bgClass="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[2282px] h-[2320px] object-cover opacity-60 lg:opacity-100"
+        bgSrc="/assets/images/bg-asset.png"
+        pageLoading={loading}
         meta={
           <Meta
             title={`${name} ${contract}`}
@@ -184,13 +187,6 @@ export default function CollectionPage() {
             <AssetContentLoader />
           )}
         </div>
-        {!loading && (
-          <img
-            src="/assets/images/bg-asset.png"
-            className="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[2282px] h-[2320px] object-cover opacity-60 lg:opacity-100"
-            alt=""
-          />
-        )}
       </MainLayout>
       {DEMO_NFTS[0] && <OfferModal nft={DEMO_NFTS[0]} />}
       {DEMO_NFTS[0] && <BuyModal nft={DEMO_NFTS[0]} />}

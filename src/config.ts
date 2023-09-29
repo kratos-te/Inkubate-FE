@@ -6,7 +6,11 @@ import {
   MenuUserIcon,
 } from "./components/SvgIcons";
 
-export const BACKEND_API_URL = "http://localhost:8080";
+// Define your backend API base URL in your environment variables
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+  ? process.env.NEXT_PUBLIC_API_BASE_URL
+  : "http://localhost:8080";
+
 export const INFURN_APU_KEY = "dfb6591f687e4a37b958417070e73dab";
 export const HEADER_LINKS = [
   {
@@ -375,3 +379,21 @@ export const DATE_RANGE = [
 ];
 
 export const DURATION_RANGE = ["1 day", "7 days", "30 days", "Custom"];
+
+export const NOTIFICATIONS = [
+  {
+    pfp: "/assets/images/nft-demo.png",
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    time: "3 minutes ago",
+  },
+  {
+    pfp: "/assets/images/nft-demo.png",
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    time: "3 minutes ago",
+  },
+  {
+    pfp: "/assets/images/nft-demo.png",
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    time: "3 minutes ago",
+  },
+];

@@ -1,4 +1,6 @@
 "use client";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { DEMO_COLLECTIONS } from "@/config";
 import AssetDetailBox from "@/components/AssetDetailBox";
 import { PublicIcon, StarIcon } from "@/components/SvgIcons";
@@ -6,26 +8,54 @@ import Typography from "@/components/Typography";
 import MintDetail from "@/components/MintDetail";
 import { Meta } from "@/layouts/Meta";
 import MainLayout from "@/layouts/MainLayout";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import MintOverviewLoader from "@/components/Common/MintOverviewLoader";
 import Skeleton from "react-loading-skeleton";
 import { MintModal } from "@/components/MintModal";
+import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { getCollectionById, getLaunchpadById } from "@/actions";
 
 export default function CollectionPage() {
+  const pathname = usePathname();
+
   const contract = "0x2f05e799C61b600c65238a9DF060cABA63Db8E78";
   const query = useSearchParams();
-  const collectionId = query?.get("collectionId");
+  // const collectionId = query?.get("collectionId");
+  const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>()
+  const [collectionById, setCollectionById] = useState<CollectionParam>()
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1200);
   }, []);
+
+  const collectionId = useMemo(() => {
+    let path = "";
+    if (pathname) {
+      path = pathname.split("/")[2] as string;
+    }
+    return path;
+  }, [pathname]);
+
+  useEffect(() => {
+    console.log("path", pathname.split("/")[1] as string, collectionId)
+    const getCollection = async () => {
+      if (pathname.split("/")[1] as string === "mint" && collectionId) {
+        const collection = await getCollectionById(collectionId)
+        const launchpad = await getLaunchpadById(collection?.data.launchpadId)
+        setLaunchPadById(launchpad?.data)
+        setCollectionById(collection?.data)
+      }
+    }
+    getCollection()
+  }, [collectionId, pathname])
   return (
     <>
       <MainLayout
         className="!bg-dark-200"
+        pageLoading={loading}
+        bgSrc="/assets/images/bg-explorer.png"
+        bgClass="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[3131px] h-[3158px] object-cover opacity-80 lg:opacity-100"
         meta={
           <Meta
             title={`${collectionId ? collectionId : ""} ${contract}`}
@@ -35,8 +65,8 @@ export default function CollectionPage() {
       >
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
-            DEMO_COLLECTIONS[0] && (
-              <MintDetail collection={DEMO_COLLECTIONS[0]} />
+            collectionById && launchpadById && (
+              <MintDetail collection={collectionById} launchpad={launchpadById} />
             )
           ) : (
             <MintOverviewLoader />
@@ -136,15 +166,10 @@ export default function CollectionPage() {
             </div>
           )}
         </div>
-        {!loading && (
-          <img
-            src="/assets/images/bg-explorer.png"
-            className="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[3131px] h-[3158px] object-cover opacity-80 lg:opacity-100"
-            alt=""
-          />
-        )}
       </MainLayout>
-      <MintModal />
+      {collectionById && launchpadById &&
+        <MintModal collection={collectionById} launchpad={launchpadById} />
+      }
     </>
   );
 }

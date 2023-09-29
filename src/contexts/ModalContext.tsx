@@ -1,5 +1,5 @@
 "use client";
-// import { getProfile } from "@/utils/api";
+// import { getProfile } from "@/actions";
 import { createContext, useContext, ReactNode, useState } from "react";
 
 interface ModalContextType {
@@ -42,6 +42,10 @@ interface ModalContextType {
   openListModal: () => void;
   closeListModal: () => void;
   isOpenedListModal: boolean;
+  //Notification Modal
+  openNotificationModal: () => void;
+  closeNotificationModal: () => void;
+  isOpenedNotificationModal: boolean;
 }
 
 export const ModalContext = createContext<ModalContextType | undefined>(
@@ -172,6 +176,17 @@ export function ModalProvider({ children }: ModalProviderProps) {
     document.body.classList.remove("modal-open");
   };
 
+  const [isOpenedNotificationModal, setIsOpenedNotificationModal] =
+    useState<boolean>(false);
+  const openNotificationModal = () => {
+    setIsOpenedNotificationModal(true);
+    document.body.classList.add("modal-open");
+  };
+  const closeNotificationModal = () => {
+    setIsOpenedNotificationModal(false);
+    document.body.classList.remove("modal-open");
+  };
+
   const modalContextValue: ModalContextType = {
     openLaunchpadModal,
     closeLaunchpadModal,
@@ -203,6 +218,9 @@ export function ModalProvider({ children }: ModalProviderProps) {
     openListModal,
     closeListModal,
     isOpenedListModal,
+    openNotificationModal,
+    closeNotificationModal,
+    isOpenedNotificationModal,
   };
 
   return (
