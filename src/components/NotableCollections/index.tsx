@@ -4,13 +4,22 @@ import CollectionCard from "../CollectionCard";
 import Typography from "../Typography";
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
+import { getAllCollections } from "@/actions";
 
 const NotableCollections = () => {
   const [loading, setIsLoading] = useState(true);
+  const [collections, setCollections] = useState([]);
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1200);
+  }, []);
+
+  useEffect(() => {
+    getAllCollections().then((result) => {
+      setCollections(result || []);
+      setIsLoading(false);
+    });
   }, []);
   return !loading ? (
     <section
@@ -33,13 +42,9 @@ const NotableCollections = () => {
       </div>
       <div className="relative z-10 grid place-content-center ">
         <div className="mt-4 xl:mt-[70px] flex gap-10  overflow-x-auto px-6 max-w-[1304px] mx-auto w-full">
-          {DEMO_COLLECTIONS[0] && (
-            <>
-              <CollectionCard collection={DEMO_COLLECTIONS[0]} />
-              <CollectionCard collection={DEMO_COLLECTIONS[0]} />
-              <CollectionCard collection={DEMO_COLLECTIONS[0]} />
-            </>
-          )}
+          {collections.map((item, key) => (
+            <CollectionCard collection={item} key={key} />
+          ))}
         </div>
       </div>
     </section>

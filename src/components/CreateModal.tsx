@@ -18,6 +18,7 @@ import { numToWei } from "@/utils/util";
 export const CreateModal: FC = () => {
   const { closeCreateModal, isOpenedCreateModal, openCalendarModal } =
     useModal();
+  const { startDate, endDate } = useUser()
   const { register, handleSubmit } = useForm();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dateRange, setDateRange] = useState("");
@@ -137,8 +138,8 @@ export const CreateModal: FC = () => {
         const supply = parseInt(values.totalSupply);
         const maxPerTx = parseInt(values.maxPerTx);
         const maxPerWallet = parseInt(values.maxPerWallet);
-        const startDate = "2023-09-26T00:00:00Z";
-        const endDate = "2023-09-30T23:59:59Z";
+        // const startDate = "2023-09-26T00:00:00Z";
+        // const endDate = "2023-09-30T23:59:59Z";
 
         const launchpad = await createLaunchpad({
           name: values.name,
@@ -152,9 +153,9 @@ export const CreateModal: FC = () => {
           ownerRoyalties: [],
           maxPerTx: maxPerTx,
           maxPerWallet: maxPerWallet,
-          wlEnabled: true,
+          wlEnabled: false,
           wlAddresses: [""],
-          enableReserveTokens: true,
+          enableReserveTokens: false,
           startDate: startDate,
           endDate: endDate,
           network: "MAIN",

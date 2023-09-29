@@ -8,6 +8,7 @@ import { Meta } from "@/layouts/Meta";
 import { CreateModal } from "@/components/CreateModal";
 
 export default function Home() {
+
   return (
     <>
       <MainLayout

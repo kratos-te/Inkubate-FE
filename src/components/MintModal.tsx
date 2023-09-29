@@ -11,7 +11,7 @@ interface MintModalProps {
   launchpad: LaunchpadParam
 }
 export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
-  const { mint } = useErc721a()
+  const { mint, getMintingStartTime } = useErc721a()
   const { closeMintModal, isOpenedMintModal } = useModal();
   const [mintValue, setMintValue] = useState<number>(1);
   const [mintStatus, setMintStatus] = useState<boolean>(false);
@@ -26,6 +26,8 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
   const handleMint = async (amount: number) => {
     setMintStatus(true);
     try {
+      const startTimeRes = await getMintingStartTime();
+      if (startTimeRes?.res) console.log("here", startTimeRes.res)
       const value = Number(launchpad.mintPrice) * amount
       console.log("value", value, collection.address)
       const rept = await mint(amount, value.toString(), collection.address)

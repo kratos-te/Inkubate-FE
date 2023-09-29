@@ -141,6 +141,7 @@ export interface CollectionParam {
   twitter: string;
   discord: string;
   website: string;
+  verified: boolean;
 }
 
 export interface InputData {

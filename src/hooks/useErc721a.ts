@@ -61,10 +61,24 @@ export function useErc721a() {
     }
   };
 
+  const getMintingStartTime = async () => {
+    try {
+      const contract = getContract({
+        address: "0x939d38e76586a61a9765165ccf1c367ace48a9ee",
+        abi: ERC721A_ABI as Abi,
+      });
+      const res = await contract.read.mintingStartTime();
+      return { isError: false, res };
+    } catch (error) {
+      return { isError: true, msg: error };
+    }
+  };
+
   return {
     approve,
     mint,
     enableWhitelistMode,
     getWhitelistMode,
+    getMintingStartTime,
   };
 }
