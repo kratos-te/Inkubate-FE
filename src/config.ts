@@ -9,7 +9,7 @@ import {
 // Define your backend API base URL in your environment variables
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
   ? process.env.NEXT_PUBLIC_API_BASE_URL
-  : "http://localhost:8080";
+  : "https://localhost:8080";
 
 export const INFURN_APU_KEY = "dfb6591f687e4a37b958417070e73dab";
 export const HEADER_LINKS = [

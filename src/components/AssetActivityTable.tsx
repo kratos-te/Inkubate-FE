@@ -45,7 +45,7 @@ const AssetActivityTable: FC<ActivityTableProps> = ({}) => {
               <UserAvatar
                 gradientFrom="red"
                 gradientTo="blue"
-                src="/assets/images/avatar-demo.png"
+                src="/assets/images/default-avatar.svg"
               />
               Qorem
             </div>

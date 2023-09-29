@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import LaunchpadModal from "@/components/LaunchpadModal";
 import SettingModal from "@/components/SettingModal";
 import { ModalProvider } from "@/contexts/ModalContext";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { inter, poppins, readexPro } from "@/styles/fonts";
 import { WalletModal } from "@/components/WalletModal";
@@ -50,16 +49,14 @@ export default function RootLayout({
       <body className="bg-dark-200">
         <ThemeProvider>
           <WagmiProvider>
-            <AuthProvider>
-              <UserProvider>
-                <ModalProvider>
-                  {children}
-                  <LaunchpadModal />
-                  <SettingModal />
-                  <WalletModal />
-                </ModalProvider>
-              </UserProvider>
-            </AuthProvider>
+            <UserProvider>
+              <ModalProvider>
+                {children}
+                <LaunchpadModal />
+                <SettingModal />
+                <WalletModal />
+              </ModalProvider>
+            </UserProvider>
           </WagmiProvider>
         </ThemeProvider>
       </body>

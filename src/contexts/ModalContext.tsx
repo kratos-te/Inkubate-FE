@@ -94,6 +94,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
     useState<boolean>(false);
 
   const openWalletModal = () => {
+    console.log("open wallet modal");
     setIsOpenedWalletModal(true);
     // document.body.classList.add("modal-open");
   };

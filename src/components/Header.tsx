@@ -151,7 +151,7 @@ const Header: FC = () => {
                 >
                   <Image
                     src={
-                      profile?.avatar?.url || "/assets/images/avatar-demo.png"
+                      profile?.avatar?.url || "/assets/images/default-avatar.svg"
                     }
                     width={44}
                     height={44}
@@ -185,7 +185,7 @@ const Header: FC = () => {
                           <Image
                             src={
                               profile?.avatar?.url ||
-                              "/assets/images/avatar-demo.png"
+                              "/assets/images/default-avatar.svg"
                             }
                             width={40}
                             height={40}
@@ -274,7 +274,7 @@ const Header: FC = () => {
                     {isConnected ? (
                       <div className="flex items-center p-6 gap-[14px]">
                         <Image
-                          src="/assets/images/avatar-demo.png"
+                          src="/assets/images/default-avatar.svg"
                           width={40}
                           height={40}
                           alt=""
