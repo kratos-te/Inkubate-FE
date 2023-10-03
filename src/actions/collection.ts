@@ -26,8 +26,13 @@ export async function getAllCollections() {
 export async function getCollectionById(id: string) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.get(`${API_BASE_URL}/api/collection/${id}`, {
-      withCredentials: true,
+      headers,
     });
     console.log("collection by Id", response);
     return response;

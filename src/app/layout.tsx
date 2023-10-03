@@ -10,6 +10,7 @@ import { UserProvider } from "@/contexts/UserContext";
 import "@/styles/globals.scss";
 import "react-loading-skeleton/dist/skeleton.css";
 import WagmiProvider from "@/contexts/WagmiConext";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   icons: [
@@ -50,12 +51,14 @@ export default function RootLayout({
         <ThemeProvider>
           <WagmiProvider>
             <UserProvider>
-              <ModalProvider>
-                {children}
-                <LaunchpadModal />
-                <SettingModal />
-                <WalletModal />
-              </ModalProvider>
+              <AuthProvider>
+                <ModalProvider>
+                  {children}
+                  <LaunchpadModal />
+                  <SettingModal />
+                  <WalletModal />
+                </ModalProvider>
+              </AuthProvider>
             </UserProvider>
           </WagmiProvider>
         </ThemeProvider>

@@ -6,9 +6,14 @@ import { NftParams } from "@/utils/types";
 export async function getNft(collectionId: string) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.get(
       `${API_BASE_URL}/api/nft/${collectionId}`,
-      { withCredentials: true }
+      { headers }
     );
     console.log("nfts", response);
     return response;
@@ -27,9 +32,14 @@ export async function getNft(collectionId: string) {
 export async function getNftbyOwner(userId: string) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.get(
       `${API_BASE_URL}/api/nft/owner/${userId}`,
-      { withCredentials: true }
+      { headers }
     );
     console.log("nft by owner", response);
     return response;
@@ -48,9 +58,14 @@ export async function getNftbyOwner(userId: string) {
 export async function getNftByMinter(userId: string) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.get(
       `${API_BASE_URL}/api/nft/minter/${userId}`,
-      { withCredentials: true }
+      { headers }
     );
     console.log("nft by owner", response);
     return response;
@@ -69,8 +84,13 @@ export async function getNftByMinter(userId: string) {
 export async function createNft(createData: NftParams) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.post(`${API_BASE_URL}/api/nft`, createData, {
-      withCredentials: true,
+      headers,
     });
     return response;
   } catch (error) {
@@ -88,10 +108,15 @@ export async function createNft(createData: NftParams) {
 export async function getNftByOne(nftId: string, address: string) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.post(
       `${API_BASE_URL}/api/nft/get`,
       { nftId: nftId, address: address },
-      { withCredentials: true }
+      { headers }
     );
     return response;
   } catch (error) {

@@ -5,10 +5,15 @@ import { checkAuthorization } from ".";
 export async function listingNft(signature: string) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.post(
       `${API_BASE_URL}/api/listing`,
       { signature: signature },
-      { withCredentials: true }
+      { headers }
     );
     console.log("listing", response);
     return response;

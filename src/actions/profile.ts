@@ -6,8 +6,13 @@ import { checkAuthorization } from ".";
 export async function getProfile(): Promise<ProfileItem | null> {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios
-      .get(`${API_BASE_URL}/api/profile`, { withCredentials: true })
+      .get(`${API_BASE_URL}/api/profile`, { headers })
       .then((res) => res.data)
       .catch((e) => {
         throw e;
@@ -36,6 +41,11 @@ export async function updateProfile(updateData: {
 }): Promise<string | null> {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const { bio, twitter, discord, facebook, reddit, avatarId, bannerId } =
       updateData;
     console.log("update ");
@@ -51,7 +61,7 @@ export async function updateProfile(updateData: {
           avatarId: avatarId,
           bannerId: bannerId,
         },
-        { withCredentials: true }
+        { headers }
       )
       .then((res) => res.data)
       .catch((e) => {
@@ -73,13 +83,15 @@ export async function updateProfile(updateData: {
 export async function createPhoto(image: File) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const formData = new FormData();
     formData.append("file", image);
     const response = await axios.post(`${API_BASE_URL}/api/file`, formData, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      headers,
     });
     return response;
   } catch (error) {
@@ -97,8 +109,13 @@ export async function createPhoto(image: File) {
 export async function getPhoto(photoId: string) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.get(`${API_BASE_URL}/api/file/${photoId}`, {
-      withCredentials: true,
+      headers,
     });
     return response;
   } catch (error) {
@@ -116,16 +133,18 @@ export async function getPhoto(photoId: string) {
 export async function updatePhoto(image: File, photoId: string) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const formData = new FormData();
     formData.append("file", image);
     const response = await axios.post(
       `${API_BASE_URL}/api/file/${photoId}`,
       formData,
       {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers,
       }
     );
     return response;

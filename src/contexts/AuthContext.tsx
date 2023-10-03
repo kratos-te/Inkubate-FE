@@ -1,5 +1,8 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { signIn, signOut, signUp } from "@/actions";
+import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
+import { useAccount, useSignMessage } from "wagmi";
+import { useUser } from "./UserContext";
 // import { useAccount, useSignMessage } from "wagmi";
 
 // import { signIn, signUp } from "@/actions";
@@ -11,6 +14,10 @@ interface AuthContextType {
   setSigned: React.Dispatch<React.SetStateAction<boolean>>;
   signature: string;
   setSignature: React.Dispatch<React.SetStateAction<string>>;
+  accessToken: string;
+  setAccessToken: React.Dispatch<React.SetStateAction<string>>;
+  refreshToken: string;
+  setRefreshToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -20,6 +27,10 @@ const AuthContext = createContext<AuthContextType>({
   setSigned: () => {},
   signature: "",
   setSignature: () => {},
+  accessToken: "",
+  setAccessToken: () => { },
+  refreshToken: "",
+  setRefreshToken: () => { },
 });
 
 export const useAuth = () => {
@@ -37,10 +48,16 @@ interface AuthProviderProps {
 // const message = "Connected with Inkubate";
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // const { address } = useAccount();
+  const { isConnected } = useAccount();
   // const { signMessageAsync } = useSignMessage();
   const [signed, setSigned] = useState(false);
   const [signature, setSignature] = useState("");
+  const { userAddress, getUserData } = useUser();
+  const { signMessageAsync } = useSignMessage();
+  const [accessToken, setAccessToken] = useState("");
+  const [refreshToken, setRefreshToken] = useState("");
+
+  const message = "Connected with Inkubate";
 
   const sign = async () => {
     console.log("signed");
@@ -49,6 +66,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     console.log("logout");
+    signOut(accessToken)
+    setAccessToken("");
+    setRefreshToken("");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     setSigned(false);
   };
 
@@ -59,41 +81,52 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setSigned,
     signature,
     setSignature,
+    accessToken,
+    setAccessToken,
+    refreshToken,
+    setRefreshToken,
   };
 
-  // const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const localAccessToken = localStorage.getItem("accessToken");
+    if (localAccessToken) setAccessToken(localAccessToken);
+    const localRefreshToken = localStorage.getItem("refreshToken");
+    if (localRefreshToken) setRefreshToken(localRefreshToken);
+  }, []);
 
-  // const walletSign = async () => {
-  //   if (!address) return;
-  //   setLoading(true);
-  //   const nonce = await signUp(address);
-  //   const verifyMsg = `${message}\nnonce:${nonce}`;
-  //   signMessageAsync({ message: verifyMsg })
-  //     .then(async sign => {
-  //       const token = await signIn(address, sign.toString());
-  //       console.log("token", token);
-  //       if (token) {
-  //         localStorage.setItem("accessToken", token);
-  //       }
-  //     })
-  //     .catch(e => {
-  //       console.log("wallet sign in error:", e);
-  //     });
-  //   setLoading(false);
-  // };
+  const signInWallet = useCallback(async () => {
+    const nonce = await signUp(userAddress);
+    const verifyMsg = `${message}\nnonce:${nonce}`;
+    signMessageAsync({ message: verifyMsg })
+      .then(async (sign) => {
+        const token = await signIn(userAddress, sign.toString());
+        if (token) {
+          console.log("token", token.accessToken)
+          setAccessToken(token.accessToken);
+          localStorage.setItem("accessToken", token.accessToken);
+          setRefreshToken(token.refreshToken);
+          localStorage.setItem("refreshToken", token.refreshToken)
+          getUserData();
+        }
+      })
+      .catch((e) => {
+        console.log("====", e);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userAddress]);
 
-  // useEffect(() => {
-  //   console.log("===============", loading);
-  // }, [loading]);
-
-  // useEffect(() => {
-  //   if (isConnected && address) {
-  //     walletSign();
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [address, isConnected]);
+  useEffect(() => {
+    if (!userAddress) return;
+    if (!isConnected) {
+      // signOut();
+      return;
+    }
+    signInWallet();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, userAddress]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
+

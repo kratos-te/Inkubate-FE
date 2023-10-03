@@ -4,7 +4,6 @@ import { useAccount, useDisconnect, useBalance } from "wagmi";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { refresh, signOut } from "@/actions";
 import { DROPDOWN_LINKS, HEADER_LINKS, NOTIFICATIONS } from "@/config";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
@@ -27,11 +26,13 @@ import {
   SearchIcon,
 } from "./SvgIcons";
 import Typography from "./Typography";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Header: FC = () => {
   const { openWalletModal, closeWalletModal } = useModal();
   const [isNotificationModal, setIsNotificationModal] = useState(false);
   const { username, userAddress, profile } = useUser();
+  const { logout } = useAuth()
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
   const { data } = useBalance({ address: userAddress as `0x${string}` });
@@ -50,8 +51,9 @@ const Header: FC = () => {
       disconnect();
       closeWalletModal();
       router.push("/");
-      await refresh();
-      await signOut();
+      logout()
+      // await signOut(accessToken);
+      // await refresh(refreshToken);
     }
   };
 

@@ -5,12 +5,16 @@ import { checkAuthorization } from ".";
 
 export async function createLaunchpad(createData: CreateLaunchpadParam) {
   try {
-    console.log("create data", createData);
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.post(
       `${API_BASE_URL}/api/launchpad`,
       createData,
-      { withCredentials: true }
+      { headers }
     );
     console.log("response", response);
     return response;
@@ -30,8 +34,13 @@ export async function createLaunchpad(createData: CreateLaunchpadParam) {
 export async function getLaunchpad() {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.get(`${API_BASE_URL}/api/launchpad`, {
-      withCredentials: true,
+      headers,
     });
     console.log("launchpad", response);
     return response;
@@ -51,8 +60,13 @@ export async function getLaunchpad() {
 export async function getLaunchpadById(id: number) {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.get(`${API_BASE_URL}/api/launchpad/${id}`, {
-      withCredentials: true,
+      headers,
     });
     console.log("launchpad by Id", response);
     return response;
