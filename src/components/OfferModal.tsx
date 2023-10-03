@@ -1,50 +1,20 @@
 import { FC, useState, useRef } from "react";
 import Image from "next/image";
-import {
-  ArrowDownIcon,
-  ArrowLeftIcon,
-  CalendarIcon,
-  CloseCircleIcon,
-  VerifiedIcon,
-} from "./SvgIcons";
+import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
 import { ModalItem } from "@/utils/types";
 import Typography from "./Typography";
 import { CoinButton } from "./CoinButton";
-import { DATE_RANGE } from "@/config";
 import { LoadingPad } from "./LoadingPad";
-import { DatePicker } from "./DatePicker";
 import { SetDuration } from "./SetDuratoin";
-
-interface DateRangeType {
-  title: string;
-  type: string;
-  range: number;
-}
 
 export const OfferModal: FC<ModalItem> = ({ nft }) => {
   const { closeOfferModal, isOpenedOfferModal } = useModal();
-  const { image, name } = nft;
-  const [isShowCal, setIsShowCal] = useState<boolean>(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRangeType>({
-    title: "",
-    type: "",
-    range: 0,
-  });
+  const { imgUrl, name } = nft;
+
   const [makeOffer, setMakeOffer] = useState(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
-
-  const handleOpenCalendar = () => {
-    console.log("isShowCal", isShowCal);
-    setIsShowCal(!isShowCal);
-  };
-
-  const handleSetDate = (date: DateRangeType) => {
-    setDateRange(date);
-    setIsCollapsed(false);
-  };
 
   const handleOffer = () => {
     setMakeOffer(!makeOffer);
@@ -74,7 +44,7 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
           <div className="modal_body text-center">
             <div className="flex gap-[24px] items-center">
               <Image
-                src={image}
+                src={imgUrl}
                 className="relative z-0 rounded-xl w-[120px] h-[120px] max-sm:w-[90px] max-sm:h-[90px]"
                 alt=""
                 width={120}

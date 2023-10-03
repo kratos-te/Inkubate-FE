@@ -9,7 +9,7 @@ import React, {
 import { useAccount } from "wagmi";
 
 import { getProfile, getUser } from "@/actions";
-import { UserItem, ProfileItem, PhotoItem } from "@/utils/types";
+import { UserItem, ProfileItem } from "@/utils/types";
 
 interface UserContextType {
   username: string;
@@ -18,16 +18,22 @@ interface UserContextType {
   setUserAddress: React.Dispatch<React.SetStateAction<string>>;
   token: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
-  startDate: string;
-  setStartDate: React.Dispatch<React.SetStateAction<string>>;
-  endDate: string;
-  setEndDate: React.Dispatch<React.SetStateAction<string>>;
+  startDate: Date;
+  setStartDate: React.Dispatch<React.SetStateAction<Date>>;
+  endDate: Date;
+  setEndDate: React.Dispatch<React.SetStateAction<Date>>;
+  startTime: string;
+  setStartTime: React.Dispatch<React.SetStateAction<string>>;
+  endTime: string;
+  setEndTime: React.Dispatch<React.SetStateAction<string>>;
   userData: UserItem;
   setUserData: React.Dispatch<React.SetStateAction<UserItem>>;
   getUserData: () => void;
   profile: ProfileItem;
   setProfile: React.Dispatch<React.SetStateAction<ProfileItem>>;
   getProfileData: () => void;
+  // nftData: NftTypes;
+  // setNftData: React.Dispatch<React.SetStateAction<NftTypes>>;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -35,10 +41,14 @@ const UserContext = createContext<UserContextType>({
   setUsername: () => {},
   userAddress: "",
   setUserAddress: () => {},
-  startDate: "",
-  setStartDate: () => { },
-  endDate: "",
-  setEndDate: () => { },
+  startDate: new Date(),
+  setStartDate: () => {},
+  endDate: new Date(),
+  setEndDate: () => {},
+  startTime: "",
+  setStartTime: () => {},
+  endTime: "",
+  setEndTime: () => {},
   token: "",
   setToken: () => {},
   userData: { id: "", username: "", walletAddress: "" },
@@ -64,7 +74,52 @@ const UserContext = createContext<UserContextType>({
     },
   },
   setProfile: () => {},
-  getProfileData: () => { },
+  getProfileData: () => {},
+  // nftData: {
+  //   id: "",
+  //   address: "",
+  //   assetUrl: "",
+  //   attributes: [],
+  //   collection: {
+  //     id: "",
+  //     name: "",
+  //     address: "",
+  //     desc: "",
+  //     avatarId: "",
+  //     avatar: {
+  //       id: "",
+  //       url: "",
+  //       fileEntityId: ""
+  //     },
+  //     bannerId: "",
+  //     banner: {
+  //       id: "",
+  //       url: "",
+  //       fileEntityId: ""
+  //     },
+  //     mintPrice: 0n,
+  //     launchpadId: 0,
+  //     network: "",
+  //     twitter: "",
+  //     discord: "",
+  //     website: "",
+  //     verified: false
+  //   },
+  //   collectionId: "",
+  //   contractType: "",
+  //   imgUrl: "",
+  //   minterId: "",
+  //   name: "",
+  //   nftId: "",
+  //   owner: {
+  //     id: "",
+  //     username: "",
+  //     walletAddress: ""
+  //   },
+  //   ownerId: "",
+  //   royalty: 0,
+  // },
+  // setNftData: () => { }
 });
 
 export const useUser = () => {
@@ -82,8 +137,10 @@ interface UserProviderProps {
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [username, setUsername] = useState("");
   const [userAddress, setUserAddress] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [token, setToken] = useState("");
   const { address, isConnected } = useAccount();
   const [userData, setUserData] = useState({
@@ -147,6 +204,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setStartDate,
     endDate,
     setEndDate,
+    startTime,
+    setStartTime,
+    endTime,
+    setEndTime,
     token,
     setToken,
     userData,
@@ -155,6 +216,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     profile,
     setProfile,
     getProfileData,
+    // nftData,
+    // setNftData,
   };
 
   useEffect(() => {

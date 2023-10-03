@@ -7,7 +7,7 @@ import Typography from "./Typography";
 import ClickAwayComponent from "./ClickAwayComponent";
 
 export const AcceptModal: FC<ModalItem> = ({ nft }) => {
-    const { image, name, price } = nft;
+    const { imgUrl, name } = nft;
 
     const { closeAcceptModal, isOpenedAcceptModal } = useModal();
 
@@ -37,7 +37,7 @@ export const AcceptModal: FC<ModalItem> = ({ nft }) => {
                         <div className="flex justify-between items-center my-7">
                             <div className="flex gap-[24px] items-center">
                                 <Image
-                                    src={image}
+                                    src={imgUrl}
                                     className="relative z-0 rounded-xl"
                                     alt=""
                                     width={120}
@@ -59,10 +59,10 @@ export const AcceptModal: FC<ModalItem> = ({ nft }) => {
                                     </Typography>
                                 </div>
                             </div>
-                            <div className="flex-col gap-1">
+                            {/* <div className="flex-col gap-1">
                                 <p className="text-[20px] font-semibold text-white">{price} ETH</p>
                                 <p className="text-[16px] font-semibold text-[#666666]">($100.00)</p>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="flex-col gap-6 py-7 border-b-[1px] border-[#666666]">
                             <div className="flex gap-1 items-center">

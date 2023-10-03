@@ -84,3 +84,24 @@ export async function createNft(createData: NftParams) {
     return null; // Return null when an error occurs
   }
 }
+
+export async function getNftByOne(nftId: string, address: string) {
+  try {
+    await checkAuthorization();
+    const response = await axios.post(
+      `${API_BASE_URL}/api/nft/get`,
+      { nftId: nftId, address: address },
+      { withCredentials: true }
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
+      console.error(`Axios Error: ${error.message}`);
+    } else {
+      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
+      console.error(error);
+    }
+    return null; // Return null when an error occurs
+  }
+}

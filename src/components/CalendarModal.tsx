@@ -13,7 +13,6 @@ import {
 } from "date-fns";
 import { ArrowDownLineIcon, NextIcon, PrevIcon } from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
-import { useUser } from "@/contexts/UserContext";
 
 export const CalendarModal: FC = () => {
   const { closeCalendarModal, isOpenedCalendarModal } = useModal();

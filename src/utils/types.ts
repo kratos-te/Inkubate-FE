@@ -1,3 +1,4 @@
+import { OrderType } from "./constants";
 export type VariantSize =
   | "2xs"
   | "xs"
@@ -40,7 +41,7 @@ export type StatsItem = {
 };
 
 export type ModalItem = {
-  nft: NftItem;
+  nft: NftTypes;
   className?: string;
 };
 
@@ -156,8 +157,60 @@ export interface NftParams {
   address: string;
   assetUrl: string;
   imgUrl: string;
-  royalty: string;
+  royalty: Number;
   contractType: string;
   attributes: string;
-  creatorId: string;
 }
+
+export interface NftTypes {
+  id: string;
+  address: string;
+  assetUrl: string;
+  attributes: string[];
+  collection: CollectionParam;
+  collectionId: string;
+  contractType: string;
+  imgUrl: string;
+  minterId: string;
+  name: string;
+  nftId: string;
+  owner: UserItem;
+  ownerId: string;
+  royalty: number;
+  createdAt: string;
+}
+
+export interface OfferItem {
+  itemType: number;
+  token: string;
+  identifierOrCriteria: string; // BigNumber / uint256
+  startAmount: string; // BigNumber / uint256
+  endAmount: string; // BigNumber / uint256
+}
+
+export interface ConsiderationItem {
+  itemType: number;
+  token: string;
+  identifierOrCriteria: string; // BigNumber / uint256
+  startAmount: string; // BigNumber / uint256
+  endAmount: string; // BigNumber / uint256
+  recipient: string;
+}
+
+export type OrderParameters = {
+  offerer: string;
+  orderType: OrderType;
+  offer: OfferItem[];
+  consideration: ConsiderationItem[];
+  startTime: string; // BigNumber
+  endTime: string; // BigNumber
+  zone: string;
+  zoneHash: string;
+  salt: string;
+  totalOriginalConsiderationItems: string; // BigNumber
+  conduitKey: string;
+};
+
+export type OrderComponents = OrderParameters & {
+  counter: string /* BigNumber */;
+};

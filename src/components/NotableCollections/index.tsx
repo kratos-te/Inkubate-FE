@@ -1,8 +1,7 @@
 "use client";
-import { DEMO_COLLECTIONS } from "@/config";
+import { useEffect, useState } from "react";
 import CollectionCard from "../CollectionCard";
 import Typography from "../Typography";
-import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import { getAllCollections } from "@/actions";
 
@@ -16,7 +15,7 @@ const NotableCollections = () => {
   }, []);
 
   useEffect(() => {
-    getAllCollections().then((result) => {
+    getAllCollections().then(result => {
       setCollections(result || []);
       setIsLoading(false);
     });

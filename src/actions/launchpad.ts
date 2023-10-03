@@ -48,7 +48,7 @@ export async function getLaunchpad() {
   }
 }
 
-export async function getLaunchpadById(id: string) {
+export async function getLaunchpadById(id: number) {
   try {
     await checkAuthorization();
     const response = await axios.get(`${API_BASE_URL}/api/launchpad/${id}`, {

@@ -1,28 +1,28 @@
-import Image from "next/image";
 import { FC } from "react";
 import Typography from "./Typography";
 import IconButton from "./IconButton";
 import { AddIcon, FavoriteIcon } from "./SvgIcons";
 import Link from "next/link";
-import { NftItem } from "@/utils/types";
+import { NftTypes } from "@/utils/types";
 
 interface ItemProps {
-  nft: NftItem;
+  nft: NftTypes;
   width: number;
 }
 
 const NftCard: FC<ItemProps> = ({ nft, width }) => {
-  const { image, name, price, ownerBy, rarity, contract, nftId } = nft;
+  const { imgUrl, name, owner, royalty, nftId, address } = nft;
   const favorited = false;
 
   const handleFavorite = () => {
     console.log("favorite");
+    console.log("owner", owner);
   };
   const handleBuy = () => {
     console.log("Buy now");
   };
   return (
-    <Link href={`/asset/${contract}/${nftId}`}>
+    <Link href={`/asset/${address}/${nftId}`}>
       <div
         className="rounded-xl shadow-card group"
         style={{
@@ -33,10 +33,10 @@ const NftCard: FC<ItemProps> = ({ nft, width }) => {
           className="relative overflow-hidden rounded-t-xl"
           style={{ width: width, height: width }}
         >
-          <Image src={image} alt={name} fill objectFit="cover" priority />
+          <image xlinkHref={imgUrl} name={name} className="object-cover" />
           <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
             <Typography className="font-[500] text-[12px]">
-              #{rarity}
+              #{royalty}
             </Typography>
           </div>
         </div>
@@ -55,7 +55,7 @@ const NftCard: FC<ItemProps> = ({ nft, width }) => {
                 Price:
               </Typography>
               <Typography className="text-[13px] lg:text-[15px] font-bold font-readex">
-                {price} ETH
+                {/* {price} ETH */}
               </Typography>
             </div>{" "}
             <div className="w-1/2">
@@ -63,7 +63,7 @@ const NftCard: FC<ItemProps> = ({ nft, width }) => {
                 Owned by
               </Typography>
               <Typography className="text-[12px] leading-[18px] text-[#666666] font-readex">
-                {ownerBy}
+                {owner?.username}
               </Typography>
             </div>
           </div>

@@ -1,3 +1,4 @@
+"use client";
 import { FC, useEffect, useState } from "react";
 import {
   add,
@@ -24,8 +25,15 @@ interface DatePrickerProps {
 }
 
 export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
-  const { isOpenedCreateModal } = useModal()
-  const { setStartDate, setEndDate } = useUser()
+  const { isOpenedCreateModal } = useModal();
+  const {
+    setStartDate,
+    setEndDate,
+    setStartTime,
+    startTime,
+    setEndTime,
+    endTime,
+  } = useUser();
   const today = startOfToday();
   const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   const colStartClasses = [
@@ -39,12 +47,8 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   ];
 
   const [currMonth, setCurrMonth] = useState(() => format(today, "MMM-yyyy"));
-  const [startDay, setStartDay] = useState(() => format(today, "MM/dd/yyyy"));
-  const [endDay, setEndDay] = useState(() =>
-    format(addMonths(today, 3), "MM/dd/yyyy")
-  );
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startDay, setStartDay] = useState<Date>(today);
+  const [endDay, setEndDay] = useState<Date>(addMonths(today, 3));
   const firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
   const capitalizeFirstLetter = (query: string): string => {
@@ -72,13 +76,13 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
     const today = new Date();
 
     if (day > today) {
-      setEndDay(format(day, "MM/dd/yyyy"));
-      setEndDate(format(day, "MM/dd/yyyy"));
+      setEndDay(day);
+      setEndDate(day);
     }
     const settedDay = format(day, "MM/dd/yyyy");
-    if (settedDay < endDay) {
-      setStartDay(settedDay);
-      setStartDate(settedDay)
+    if (settedDay < format(endDay, "MM/dd/yyyy")) {
+      setStartDay(day);
+      setStartDate(day);
     }
   };
 
@@ -86,33 +90,34 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
     setStartDay(e.target.value);
   };
 
+  const handleSetEndDay = (e: any) => {
+    setEndDay(e.target.value);
+  };
+
   const handleSetStartTime = (e: any) => {
-    setStartTime(e.target.value)
+    setStartTime(e.target.value);
   };
 
   const handleSetEndTime = (e: any) => {
-    setEndTime(e.target.value)
+    setEndTime(e.target.value);
   };
-
 
   useEffect(() => {
     if (type === "day") {
-      setEndDay(format(addDays(today, range), "MM/dd/yyyy"))
+      setEndDay(addDays(today, range));
     } else if (type === "month") {
-      setEndDay(format(addMonths(today, range), "MM/dd/yyyy"))
+      setEndDay(addMonths(today, range));
     }
-  }, [type, range, today])
+  }, [type, range, today]);
 
   useEffect(() => {
-    setStartDate(startDay + ", " + startTime)
-    setEndDate(endDay + ", " + endTime)
-  }, [endDay, endTime, setEndDate, setStartDate, startDay, startTime])
+    setStartDate(startDay);
+    setEndDate(endDay);
+  }, [endDay, endTime, setEndDate, setStartDate, startDay, startTime]);
 
   return (
     <>
-
       <div className="flex mt-5 justify-between items-center">
-
         <div className="flex-col gap-2 w-[calc(50%-15px)]">
           <Typography className="text-left text-lg text-white font-semibold max-sm:text-[16px]">
             Start Date
@@ -121,7 +126,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
           <input
             className="bg-[#616161] w-full rounded-[8px] mt-2 px-3 py-[14px] max-sm:py-[12px] text-light-100 text-[14px]placeholder:text-third"
             placeholder="--/--/----"
-            value={startDay}
+            value={format(startDay, "MM/dd/yyyy")}
             onChange={handleSetStartDay}
           />
         </div>
@@ -133,8 +138,8 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
           <input
             className="bg-[#616161] w-full rounded-[8px] mt-2 px-3 py-[14px] max-sm:py-[12px] text-light-100 text-[14px]placeholder:text-third"
             placeholder="--/--/----"
-            value={endDay}
-            onChange={e => setEndDay(e.target.value)}
+            value={format(endDay, "MM/dd/yyyy")}
+            onChange={handleSetEndDay}
           />
         </div>
       </div>
@@ -195,15 +200,19 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
             return (
               <div key={idx} className={colStartClasses[getDay(day)]}>
                 <button
-                  className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[16px] md:text-[20px] font-semibold h-9 w-9 md:h-12 md:w-12 rounded-md md:rounded-xl ${isToday(day)
-                    ? " bg-secondary text-white"
-                    : "text-[#CAC7C7] hover:bg-[#666666] hover:text-white active:bg-[#666666]"
-                    }  ${format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""
-                    } ${startDay <= format(day, "MM/dd/yyyy") &&
-                      format(day, "MM/dd/yyyy") <= endDay
+                  className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[16px] md:text-[20px] font-semibold h-9 w-9 md:h-12 md:w-12 rounded-md md:rounded-xl ${
+                    isToday(day)
+                      ? " bg-secondary text-white"
+                      : "text-[#CAC7C7] hover:bg-[#666666] hover:text-white active:bg-[#666666]"
+                  }  ${
+                    format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""
+                  } ${
+                    format(startDay, "MM/dd/yyyy") <=
+                      format(day, "MM/dd/yyyy") &&
+                    format(day, "MM/dd/yyyy") <= format(endDay, "MM/dd/yyyy")
                       ? "bg-[#666666]"
                       : ""
-                    }`}
+                  }`}
                   onClick={() => handleSetDate(day)}
                   disabled={day < today}
                 >

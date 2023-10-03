@@ -12,6 +12,13 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
   : "https://localhost:8080";
 
 export const INFURN_APU_KEY = "dfb6591f687e4a37b958417070e73dab";
+
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+export const ZERO_HASH =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
+export const SALT =
+  "24446860302761739304752683030156737591518664810215442929804740456659635214915";
+  
 export const HEADER_LINKS = [
   {
     title: "Explore",
@@ -379,6 +386,7 @@ export const DATE_RANGE = [
 ];
 
 export const DURATION_RANGE = ["1 day", "7 days", "30 days", "Custom"];
+export const TOKEN = ["ETH", "USDT", "USDC", "WETH"];
 
 export const NOTIFICATIONS = [
   {

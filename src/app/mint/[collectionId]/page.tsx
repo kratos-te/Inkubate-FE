@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { DEMO_COLLECTIONS } from "@/config";
+import { usePathname } from "next/navigation";
 import AssetDetailBox from "@/components/AssetDetailBox";
 import { PublicIcon, StarIcon } from "@/components/SvgIcons";
 import Typography from "@/components/Typography";
@@ -18,10 +17,9 @@ export default function CollectionPage() {
   const pathname = usePathname();
 
   const contract = "0x2f05e799C61b600c65238a9DF060cABA63Db8E78";
-  const query = useSearchParams();
   // const collectionId = query?.get("collectionId");
-  const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>()
-  const [collectionById, setCollectionById] = useState<CollectionParam>()
+  const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
+  const [collectionById, setCollectionById] = useState<CollectionParam>();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -38,17 +36,17 @@ export default function CollectionPage() {
   }, [pathname]);
 
   useEffect(() => {
-    console.log("path", pathname.split("/")[1] as string, collectionId)
+    console.log("path", pathname.split("/")[1] as string, collectionId);
     const getCollection = async () => {
-      if (pathname.split("/")[1] as string === "mint" && collectionId) {
-        const collection = await getCollectionById(collectionId)
-        const launchpad = await getLaunchpadById(collection?.data.launchpadId)
-        setLaunchPadById(launchpad?.data)
-        setCollectionById(collection?.data)
+      if ((pathname.split("/")[1] as string) === "mint" && collectionId) {
+        const collection = await getCollectionById(collectionId);
+        const launchpad = await getLaunchpadById(collection?.data.launchpadId);
+        setLaunchPadById(launchpad?.data);
+        setCollectionById(collection?.data);
       }
-    }
-    getCollection()
-  }, [collectionId, pathname])
+    };
+    getCollection();
+  }, [collectionId, pathname]);
   return (
     <>
       <MainLayout
@@ -65,8 +63,12 @@ export default function CollectionPage() {
       >
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
-            collectionById && launchpadById && (
-              <MintDetail collection={collectionById} launchpad={launchpadById} />
+            collectionById &&
+            launchpadById && (
+              <MintDetail
+                collection={collectionById}
+                launchpad={launchpadById}
+              />
             )
           ) : (
             <MintOverviewLoader />
@@ -167,9 +169,9 @@ export default function CollectionPage() {
           )}
         </div>
       </MainLayout>
-      {collectionById && launchpadById &&
+      {collectionById && launchpadById && (
         <MintModal collection={collectionById} launchpad={launchpadById} />
-      }
+      )}
     </>
   );
 }

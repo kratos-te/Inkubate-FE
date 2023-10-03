@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CollectionItem, CollectionParam, LaunchpadParam } from "@/utils/types";
+import { CollectionParam, LaunchpadParam } from "@/utils/types";
 import Typography from "./Typography";
 import { VerifiedIcon } from "./SvgIcons";
 import { getLaunchpadById } from "@/actions";
@@ -14,27 +14,33 @@ interface ItemProps {
 
 const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
   const { name, avatar, banner, id, verified, launchpadId } = collection;
-  const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>()
+  const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
 
   useEffect(() => {
     const getLaunchpad = async () => {
-      const launchpad = await getLaunchpadById(launchpadId)
-      setLaunchPadById(launchpad?.data)
-    }
-    getLaunchpad()
-  }, [launchpadId])
+      const launchpad = await getLaunchpadById(launchpadId);
+      setLaunchPadById(launchpad?.data);
+    };
+    getLaunchpad();
+  }, [launchpadId]);
   return (
-    <Link
-      href={`/collection/${id}`}
-      className="inline-block min-w-[240px]"
-    >
+    <Link href={`/collection/${id}`} className="inline-block min-w-[240px]">
       <div
-        className={`bg-dark-200 rounded-xl shadow-card relative ${className ? className : ""
-          }`}
+        className={`bg-dark-200 rounded-xl shadow-card relative ${
+          className ? className : ""
+        }`}
       >
-        {banner && (<div className="relative overflow-hidden rounded-t-xl h-[124px] xl:h-[235px]">
-          <Image src={banner.url} alt={banner.fileEntityId} fill objectFit="cover" priority />
-        </div>)}
+        {banner && (
+          <div className="relative overflow-hidden rounded-t-xl h-[124px] xl:h-[235px]">
+            <Image
+              src={banner.url}
+              alt={banner.fileEntityId}
+              fill
+              objectFit="cover"
+              priority
+            />
+          </div>
+        )}
 
         <div className="px-4 xl:px-[30px] pt-[14px] pb-[18px]">
           <div className="py-0 xl:py-2">
@@ -45,9 +51,17 @@ const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
                   background: "linear-gradient(90deg, #428CD4, #FF9CDA)",
                 }}
               >
-                {avatar && <div className="relative w-[66px] xl:w-[112px] h-[66px] xl:h-[112px] rounded-lg xl:rounded-[19px] overflow-hidden">
-                  <Image src={avatar.url} fill objectFit="cover" priority alt="" />
-                </div>}
+                {avatar && (
+                  <div className="relative w-[66px] xl:w-[112px] h-[66px] xl:h-[112px] rounded-lg xl:rounded-[19px] overflow-hidden">
+                    <Image
+                      src={avatar.url}
+                      fill
+                      objectFit="cover"
+                      priority
+                      alt=""
+                    />
+                  </div>
+                )}
               </div>
               <div className="w-[calc(100%-84px)] xl:w-[calc(100%-150px)]">
                 <Typography className="font-bold font-secondary flex items-center text-[16px] xl:text-[24px] leading-[1.5]">

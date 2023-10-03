@@ -17,7 +17,9 @@ const Pagination: FC = () => {
         3
       </button>
       <button className="opacity-100">
-        <SquareArrowIcon />
+        <>
+          <SquareArrowIcon />
+        </>
       </button>
     </div>
   );

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { NftItem } from "@/utils/types";
+import { NftTypes } from "@/utils/types";
 import Typography from "../Typography";
 import {
   AddCartIcon,
@@ -17,16 +17,18 @@ import {
 } from "../SvgIcons";
 import useWindowSize from "@/utils/useWindowSize";
 import { useModal } from "@/contexts/ModalContext";
+import { useAccount } from "wagmi";
 
 interface OverviewProps {
-  nft: NftItem;
+  nft: NftTypes;
   className?: string;
 }
 
 const AssetOverview: FC<OverviewProps> = ({ nft }) => {
-  const { openOfferModal, openBuyModal } = useModal();
+  const { openOfferModal, openBuyModal, openListModal } = useModal();
+  const { address } = useAccount();
 
-  const { image, name, ownerBy, rarity, price } = nft;
+  const { imgUrl, name, owner, royalty } = nft;
   const { width } = useWindowSize();
   return (
     <div className="flex flex-col lg:flex-row">
@@ -37,16 +39,10 @@ const AssetOverview: FC<OverviewProps> = ({ nft }) => {
           height: width - 60,
         }}
       >
-        <Image
-          src={image}
-          className="relative z-0"
-          alt=""
-          fill
-          objectFit="cover"
-        />
+        <image xlinkHref={imgUrl} className="relative z-0 object-cover" />
         <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
           <Typography className="font-semibold text-[15px] !text-white">
-            #{rarity}
+            #{royalty}
           </Typography>
         </div>
       </div>
@@ -99,35 +95,56 @@ const AssetOverview: FC<OverviewProps> = ({ nft }) => {
             component="p"
             className="text-[16px] lg:text-[14px] !font-[400] lg:font-medium mt-2"
           >
-            Owned by<span className="ml-2 text-secondary">{ownerBy}</span>
+            Owned by
+            <span className="ml-2 text-secondary">{owner.username}</span>
           </Typography>
           <Typography className="text-[14px] font-medium mt-5">
             Price
           </Typography>
-          <Typography className="text-[30px] lg:text-[28px] leading-[35px] font-bold mt-[5px]">
+          {/* <Typography className="text-[30px] lg:text-[28px] leading-[35px] font-bold mt-[5px]">
             {price} ETH
-          </Typography>
+          </Typography> */}
           <Typography className="text-[15px] mt-2.5 flex items-center text-light-200">
             <ClockIcon className="mr-[5px]" />
             <span className="text-light-200">
               Sale ened Sep 19. 2023. 8:48 AM
             </span>
           </Typography>
-          <div className="flex flex-col mt-5 md:flex-row">
-            <button
-              className="px-10 py-[11px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
-              onClick={openBuyModal}
-            >
-              <WalletIcon className="mr-2 mt-[1px]" color="#161616" /> Buy Now
-            </button>
-            <button
-              className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
-              onClick={openOfferModal}
-            >
-              <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
-              Make Offer
-            </button>
-          </div>
+          {address === owner.walletAddress ? (
+            <div className="flex flex-col mt-5 md:flex-row">
+              <button
+                className="px-10 py-[11px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
+                onClick={openListModal}
+              >
+                <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
+                Sell NFT
+              </button>
+              {/* <button
+                className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+                onClick={openOfferModal}
+              >
+                <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
+                Make Offer
+              </button> */}
+            </div>
+          ) : (
+            <div className="flex flex-col mt-5 md:flex-row">
+              <button
+                className="px-10 py-[11px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
+                onClick={openBuyModal}
+              >
+                <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
+                Buy Now
+              </button>
+              <button
+                className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+                onClick={openOfferModal}
+              >
+                <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
+                Make Offer
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,21 +1,29 @@
-import { useModal } from "@/contexts/ModalContext";
+"use client";
 import { FC, useState } from "react";
+import { useModal } from "@/contexts/ModalContext";
 import { CloseCircleIcon, MinusIcon, PlusIcon } from "./SvgIcons";
 import { LoadingPad } from "./LoadingPad";
 import ClickAwayComponent from "./ClickAwayComponent";
 import { useErc721a } from "@/hooks/useErc721a";
 import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { createNft } from "@/actions/nft";
 
 interface MintModalProps {
-  collection: CollectionParam
-  launchpad: LaunchpadParam
+  collection: CollectionParam;
+  launchpad: LaunchpadParam;
 }
 export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
-  const { mint, getMintingStartTime } = useErc721a()
+  const { mint, getMintingStartTime, getTokenUri } = useErc721a();
   const { closeMintModal, isOpenedMintModal } = useModal();
   const [mintValue, setMintValue] = useState<number>(1);
   const [mintStatus, setMintStatus] = useState<boolean>(false);
+  // const [asset, setAsset] = useState("")
   const [mintSuccess] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   console.log('====>')
+  //   handleGetTokenURI("0x31ed3477ad7598e1024d01dfbf6239b43d6066bc", "2")
+  // }, [])
 
   const handleMinus = () => {
     setMintValue(mintValue - 1);
@@ -23,22 +31,62 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
   const handlePlus = () => {
     setMintValue(mintValue + 1);
   };
+
+  const handleGetTokenURI = async (address: string, id: string) => {
+    try {
+      const tokenUri = await getTokenUri(address, id);
+      console.log("tokenUri", tokenUri);
+      // setAsset(tokenUri as string)
+      const response = await fetch(tokenUri as string);
+      const data = await response.json();
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const handleMint = async (amount: number) => {
     setMintStatus(true);
     try {
-      const startTimeRes = await getMintingStartTime();
-      if (startTimeRes?.res) console.log("here", startTimeRes.res)
-      const value = Number(launchpad.mintPrice) * amount
-      console.log("value", value, collection.address)
-      const rept = await mint(amount, value.toString(), collection.address)
-      console.log("transaction result is ", rept)
+      const startTimeRes = await getMintingStartTime(collection.address);
+      if (startTimeRes?.res) console.log("here", startTimeRes.res);
+      const value = Number(launchpad.mintPrice) * amount;
+      console.log("value", value, collection.address);
+      const rept = await mint(amount, value.toString(), collection.address);
+      console.log("transaction result is ", rept);
       if (rept.status === "success") {
-        if (rept.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
-          console.log("tokenId is ", rept.logs[0].topics[3]?.toString())
-        }
+        // if (
+        //   rept.logs[0].topics[0] ===
+        //   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+        // ) {
+        // }
+        rept.logs.map(async item => {
+          const decimalValue = parseInt(item.topics[3] as `0x${string}`, 16);
+          const nftData = await handleGetTokenURI(
+            collection.address,
+            decimalValue.toString()
+          );
+          const asset = await getTokenUri(
+            collection.address,
+            decimalValue.toString()
+          );
+
+          console.log("nftData ===============", nftData);
+          const createNFT = await createNft({
+            collectionId: collection.id,
+            name: collection.name,
+            nftId: decimalValue.toString(),
+            address: collection.address,
+            assetUrl: asset as string,
+            imgUrl: nftData.image,
+            royalty: 0,
+            contractType: "ERC721",
+            attributes: nftData.attributes,
+          });
+          console.log("created Nft,", createNFT);
+        });
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
     } finally {
       setMintStatus(false);
     }

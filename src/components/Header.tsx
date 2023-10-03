@@ -4,7 +4,7 @@ import { useAccount, useDisconnect, useBalance } from "wagmi";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { refresh, signOut, validate } from "@/actions";
+import { refresh, signOut } from "@/actions";
 import { DROPDOWN_LINKS, HEADER_LINKS, NOTIFICATIONS } from "@/config";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
@@ -34,7 +34,7 @@ const Header: FC = () => {
   const { username, userAddress, profile } = useUser();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
-  const { data, isError, isLoading } = useBalance({ address: userAddress as `0x${string}` })
+  const { data } = useBalance({ address: userAddress as `0x${string}` });
 
   const [isEther, setIsEther] = useState(true);
   const [isBnb, setIsBnb] = useState(false);
@@ -141,8 +141,9 @@ const Header: FC = () => {
                 <IconButton className="relative" onClick={handleNotification}>
                   <AlarmIcon />
                   <BadgeIcon
-                    className={`${!NOTIFICATIONS ? "hidden" : "absolute right-0"
-                      }`}
+                    className={`${
+                      !NOTIFICATIONS ? "hidden" : "absolute right-0"
+                    }`}
                   />
                 </IconButton>
                 <ClickAwayComponent
@@ -151,7 +152,8 @@ const Header: FC = () => {
                 >
                   <Image
                     src={
-                      profile?.avatar?.url || "/assets/images/default-avatar.svg"
+                      profile?.avatar?.url ||
+                      "/assets/images/default-avatar.svg"
                     }
                     width={44}
                     height={44}
@@ -194,7 +196,9 @@ const Header: FC = () => {
                           />
                           <div className="flex-col space-y-1">
                             <p className="text-white text-lg">{username}</p>
-                            <p className="text-white text-[16px]">{data?.formatted} ETH</p>
+                            <p className="text-white text-[16px]">
+                              {data?.formatted} ETH
+                            </p>
                           </div>
                         </div>
                       </Link>

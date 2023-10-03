@@ -9,7 +9,7 @@ import { LoadingPad } from "./LoadingPad";
 
 export const BuyModal: FC<ModalItem> = ({ nft }) => {
     const { closeBuyModal, isOpenedBuyModal } = useModal()
-    const { image, name, price } = nft;
+    const { imgUrl, name } = nft;
     const [isBuyStatus, setIsBuyStatus] = useState(false)
 
     const handleBuy = () => {
@@ -40,7 +40,7 @@ export const BuyModal: FC<ModalItem> = ({ nft }) => {
                     <div className="modal_body text-center">
                         <div className="flex gap-[24px] items-center mt-[34px] pb-[14px]">
                             <Image
-                                src={image}
+                                src={imgUrl}
                                 className="relative z-0 rounded-xl"
                                 alt=""
                                 width={120}
@@ -60,18 +60,18 @@ export const BuyModal: FC<ModalItem> = ({ nft }) => {
                                 >
                                     {name}
                                 </Typography>
-                                <p className="text-[18px] font-semibold text-[#666666] text-left">
+                                {/* <p className="text-[18px] font-semibold text-[#666666] text-left">
                                     {price} ETH
-                                </p>
+                                </p> */}
                             </div>
                         </div>
                         <div className="flex flex-col gap-2 mt-6 border-t-[1px] border-[#666666] py-6">
                             <p className="text-[24px] font-semibold text-left text-white">Fees </p>
 
-                            <div className="flex justify-between ">
+                            {/* <div className="flex justify-between ">
                                 <p className="text-[16px] text-[#B3B3B3] font-norma">Subtotal</p>
                                 <p className="text-[16px] text-[#B3B3B3] font-norma">{price} ETH </p>
-                            </div>
+                            </div> */}
                             <div className="flex justify-between ">
                                 <p className="text-[16px] text-[#B3B3B3] font-norma">Marketplace Fee</p>
                                 <p className="text-[16px] text-[#B3B3B3] font-norma">2.5% </p>

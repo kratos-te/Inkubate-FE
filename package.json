@@ -21,6 +21,7 @@
     "encoding": "^0.1.13",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
+    "ethers": "^6.7.1",
     "lit-html": "2.7.0",
     "lokijs": "^1.5.12",
     "moment": "^2.29.4",
