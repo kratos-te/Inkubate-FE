@@ -21,20 +21,13 @@ export async function signUp(userAddress: string): Promise<string | null> {
     return null; // Return null when an error occurs
   }
 }
-export async function signIn(
-  userAddress: string,
-  signature: string
-): Promise<string | null> {
+export async function signIn(userAddress: string, signature: string) {
   try {
-    const response: AxiosResponse<string> = await axios.post(
-      `${API_BASE_URL}/api/auth/signin`,
-      {
-        walletAddress: userAddress,
-        signature: signature,
-      },
-      { withCredentials: true }
-    );
-
+    const response = await axios.post(`${API_BASE_URL}/api/auth/signin`, {
+      walletAddress: userAddress,
+      signature: signature,
+    });
+    console.log("signIN", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -48,10 +41,21 @@ export async function signIn(
   }
 }
 
-export async function signOut(): Promise<string | null> {
+export async function signOut(accessToken: string): Promise<string | null> {
   try {
+    await checkAuthorization();
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios
-      .post(`${API_BASE_URL}/api/auth/signout`, {}, { withCredentials: true })
+      .post(
+        `${API_BASE_URL}/api/auth/signout`,
+        {},
+        {
+          headers: headers,
+        }
+      )
       .then((res) => res.data)
       .catch((e) => {
         throw e;
@@ -71,12 +75,22 @@ export async function signOut(): Promise<string | null> {
 
 export async function refresh(): Promise<string | null> {
   try {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) return null;
+    const headers = {
+      Authorization: `Bearer ${refreshToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios.post(
       `${API_BASE_URL}/api/auth/refresh`,
       {},
-      { withCredentials: true }
+      {
+        headers: headers,
+      }
     );
     console.log("refresh", response);
+    localStorage.setItem("accessToken", response.data.accessToken);
+    localStorage.setItem("refreshToken", response.data.refreshToken);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -92,8 +106,14 @@ export async function refresh(): Promise<string | null> {
 
 export async function validate(): Promise<boolean> {
   try {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return false;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios
-      .post(`${API_BASE_URL}/api/auth/validate`, {}, { withCredentials: true })
+      .post(`${API_BASE_URL}/api/auth/validate`, {}, { headers })
       .then((res) => res.data)
       .catch((e) => {
         throw e;

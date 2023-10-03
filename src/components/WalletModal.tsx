@@ -1,70 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { FC, useCallback, useEffect, useRef } from "react";
-import { useAccount, useConnect, useSignMessage } from "wagmi";
+import { FC, useRef } from "react";
+import { useAccount, useConnect } from "wagmi";
 
-import { signIn, signUp } from "@/actions";
 import { useModal } from "@/contexts/ModalContext";
-import { useUser } from "@/contexts/UserContext";
 
 import Button from "./Button";
 import { ConnectButton } from "./ConnectButton";
-import {
-  CloseCircleIcon,
-  MetamaskIcon,
-  TrustwalletIcon,
-  CoinbaseWallet,
-  WalletconnectIcon,
-} from "./SvgIcons";
-
-const message = "Connected with Inkubate";
-
-const walletImg = [
-  <MetamaskIcon key="metamask" />,
-  <TrustwalletIcon key="trustwallet" />,
-  <CoinbaseWallet key="conibase" />,
-  <WalletconnectIcon key="walletconnect" />,
-];
+import { CloseCircleIcon } from "./SvgIcons";
 
 export const WalletModal: FC = () => {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const { closeWalletModal, isOpenedWalletModal } = useModal();
-  const { userAddress, getUserData, setToken } = useUser();
+  // const { userAddress, getUserData, setToken } = useUser();
 
   const { connect, connectors } = useConnect();
-  const { signMessageAsync } = useSignMessage();
+  // const { signMessageAsync } = useSignMessage();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!userAddress) return;
-    if (!isConnected) {
-      // signOut();
-      return;
-    }
-    signInWallet();
-    closeWalletModal();
-  }, [isConnected, userAddress]);
-
-  const signInWallet = useCallback(async () => {
-    const nonce = await signUp(userAddress);
-    const verifyMsg = `${message}\nnonce:${nonce}`;
-    signMessageAsync({ message: verifyMsg })
-      .then(async (sign) => {
-        const token = await signIn(userAddress, sign.toString());
-        if (token) {
-          setToken(token);
-          localStorage.setItem("accessToken", token);
-          getUserData();
-        }
-      })
-      .catch((e) => {
-        console.log("====", e);
-      });
-  }, [userAddress, isConnected]);
-
   const handleConnectWallet = async (connector: any) => {
     connect({ connector });
+    closeWalletModal();
   };
 
   if (!isOpenedWalletModal) return;
@@ -98,7 +55,7 @@ export const WalletModal: FC = () => {
                     key={index}
                     name={connector.name}
                     onClick={() => handleConnectWallet(connector)}
-                    logo={walletImg[index]}
+                    logo={`./assets/icons/${connector.name}.svg`}
                   />
                 );
               })}

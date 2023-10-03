@@ -6,8 +6,13 @@ import { checkAuthorization } from ".";
 export async function getUser(): Promise<UserItem | null> {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios
-      .get(`${API_BASE_URL}/api/user/me`, { withCredentials: true })
+      .get(`${API_BASE_URL}/api/user/me`, { headers })
       .then((res) => res.data)
       .catch((e) => {
         throw e;
@@ -30,11 +35,16 @@ export async function availableUsername(
 ): Promise<string | null> {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios
       .post(
         `${API_BASE_URL}/api/user/available-username`,
         { username: username },
-        { withCredentials: true }
+        { headers }
       )
       .then((res) => res.data)
       .catch((e) => {
@@ -56,11 +66,16 @@ export async function availableUsername(
 export async function updateUsername(username: string): Promise<string | null> {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
     const response = await axios
       .patch(
         `${API_BASE_URL}/api/user/update-username`,
         { username: username },
-        { withCredentials: true }
+        { headers }
       )
       .then((res) => res.data)
       .catch((e) => {
