@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 const ETH_TO_WEI = 10 ** 18;
 
 export const formatNumberToK = (value: number): string => {
@@ -19,4 +21,36 @@ export const numToWei = (value: string | number): string => {
 export const weiToNum = (value: string | bigint): number => {
   const amount = typeof value === "string" ? BigInt(value) : value;
   return Number(amount) / ETH_TO_WEI;
+};
+
+export const date2UTC = (startDate: Date, startTime: string) => {
+  // Create a new Date object with the local date and time
+  const localDateTime = new Date(
+    `${format(startDate, "yyyy-MM-dd")} ${startTime}`
+  );
+
+  // Get the UTC date and time components
+  const utcDate = localDateTime.getUTCDate();
+  const utcMonth = localDateTime.getUTCMonth() + 1; // Months are zero-based
+  const utcYear = localDateTime.getUTCFullYear();
+  const utcHours = localDateTime.getUTCHours();
+  const utcMinutes = localDateTime.getUTCMinutes();
+  const utcSeconds = localDateTime.getUTCSeconds();
+
+  // Create a UTC string in the desired format
+  const utcDateTime = `${utcYear}-${utcMonth
+    .toString()
+    .padStart(2, "0")}-${utcDate.toString().padStart(2, "0")}T${utcHours
+    .toString()
+    .padStart(2, "0")}:${utcMinutes.toString().padStart(2, "0")}:${utcSeconds
+    .toString()
+    .padStart(2, "0")}Z`;
+
+  return utcDateTime;
+};
+
+export const bytes20ToBytes32 = (addressValue: string) => {
+  const addressBytes = addressValue.slice(2); // Remove "0x" prefix
+  const padding = "0".repeat(24); // 32 bytes - 20 bytes = 12 bytes = 24 hexadecimal characters
+  return `0x${padding}${addressBytes}`;
 };

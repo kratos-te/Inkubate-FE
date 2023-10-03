@@ -1,11 +1,11 @@
-import { CollectionItem } from "@/utils/types";
+import { CollectionParam } from "@/utils/types";
 import { FC } from "react";
 import Typography from "./Typography";
 import CollectionCard from "./CollectionCard";
 interface ListProps {
   title: string;
   description: string;
-  collections: CollectionItem[];
+  collections: CollectionParam[];
 }
 
 const LaunchpadDrops: FC<ListProps> = ({ title, description, collections }) => {

@@ -1,8 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import { CloseIcon, ExtendIcon, SalesIcon } from "./SvgIcons";
-import { DEMO_ACTIVITY } from "@/config";
-import Image from "next/image";
 import Typography from "./Typography";
 import UserAvatar from "./UserAvatar";
 import moment from "moment";
@@ -11,8 +9,13 @@ import Link from "next/link";
 import ActivityMobileCard from "./ActivityMobileCard";
 import Skeleton from "react-loading-skeleton";
 import ActivityMobileCardLoader from "./Common/ActivityMobileCardLoader";
+import { NftTypes } from "@/utils/types";
 
-const ActivityDetail: FC = ({}) => {
+interface DetailProps {
+  nftData: NftTypes[];
+}
+
+const ActivityDetail: FC<DetailProps> = ({ nftData }) => {
   const tags = [
     {
       title: "sale",
@@ -84,8 +87,8 @@ const ActivityDetail: FC = ({}) => {
           </thead>
           {!loading && (
             <tbody>
-              {DEMO_ACTIVITY[0] &&
-                Array.from({ length: 12 }, () => DEMO_ACTIVITY[0]).map(
+              {nftData &&
+                nftData.map(
                   (row, key) =>
                     row && (
                       <tr
@@ -95,31 +98,28 @@ const ActivityDetail: FC = ({}) => {
                         <td>
                           <div className="flex items-center text-secondary font-readex text-[14px] font-medium capitalize">
                             <SalesIcon color="#EA4492" className="mr-1" />
-                            {row.event}
+                            {row.name}
                           </div>
                         </td>
                         <td>
                           <div className="py-[17px] flex items-center">
-                            <Image
-                              src={row.item.image}
-                              width={40}
-                              height={40}
-                              className="rounded-md mr-2.5"
-                              alt=""
+                            <image
+                              xlinkHref={row.imgUrl}
+                              className="rounded-md mr-2.5 w-[40px] h-[40px]"
                             />
                             <div className="">
                               <Typography className="font-semibold leading-[1.5]">
-                                {row.item.name}
+                                {row.name}
                               </Typography>
                               <Typography className="text-[14px] font-medium leading-[1.5] !text-dark-700 mt-0.5">
-                                OG Dread Zero
+                                {row.owner.username}
                               </Typography>
                             </div>
                           </div>
                         </td>
                         <td className="">
                           <Typography className="text-[14px] font-bold">
-                            ETH {row.price}
+                            {/* ETH {row.price} */}
                           </Typography>
                         </td>
                         <td>
@@ -130,7 +130,7 @@ const ActivityDetail: FC = ({}) => {
                               className="hidden xl:block mr-2"
                             />
                             <Typography className="text-[14px] font-bold ml-2">
-                              0x5124
+                              {row.owner.username}
                             </Typography>
                           </div>
                         </td>
@@ -142,20 +142,18 @@ const ActivityDetail: FC = ({}) => {
                               className="hidden xl:block mr-2"
                             />
                             <Typography className="text-[14px] font-bold">
-                              0x5124
+                              {row.owner.username}
                             </Typography>
                           </div>
                         </td>
                         <td>
                           <Link
-                            href={
-                              "https://optimistic.etherscan.io/tx/0xbc6a03694e8e412833e9a7f03018446570fadfe5cb4f89e31fa66fe39dda922a"
-                            }
+                            href={`https://Goerli.etherscan.io/tx/${row.address}`}
                             target="_blank"
                           >
                             <div className="flex items-center justify-end">
                               <Typography className="text-[14px] font-bold ml-2">
-                                {moment(row.timeStamp * 1000).fromNow()}
+                                {moment(new Date(row.createdAt)).fromNow()}
                               </Typography>
                               <ExtendIcon className="ml-1" />
                             </div>
@@ -168,7 +166,7 @@ const ActivityDetail: FC = ({}) => {
           )}
           {loading && (
             <tbody>
-              {Array.from({ length: 12 }, () => DEMO_ACTIVITY[0]).map(
+              {nftData.map(
                 (row, key) =>
                   row && (
                     <tr className="border-t-[0.5px] border-[687681]" key={key}>
@@ -264,13 +262,9 @@ const ActivityDetail: FC = ({}) => {
         </table>
         <div className="flex flex-col gap-3 lg:hidden mt-[30px]">
           {!loading &&
-            Array.from({ length: 10 }).map((_, key) => (
-              <ActivityMobileCard key={key} />
-            ))}
+            nftData.map((_, key) => <ActivityMobileCard key={key} />)}
           {loading &&
-            Array.from({ length: 10 }).map((_, key) => (
-              <ActivityMobileCardLoader key={key} />
-            ))}
+            nftData.map((_, key) => <ActivityMobileCardLoader key={key} />)}
         </div>
       </div>
     </>

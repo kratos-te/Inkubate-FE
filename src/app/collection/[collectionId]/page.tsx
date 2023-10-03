@@ -16,16 +16,16 @@ import Typography from "@/components/Typography";
 import SortDropdown from "@/components/SortDropdown";
 import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
-import { Listings } from "@/components/Listings";
-import { Offer } from "@/components/Offer";
-import { DEMO_NFTS } from "@/config";
-import { AcceptModal } from "@/components/AcceptModal";
+import { getNft } from "@/actions/nft";
+import { NftTypes } from "@/utils/types";
 
 export default function CollectionPage() {
   const router = useRouter();
   const query = useSearchParams();
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
+  const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([])
+
   const tab = useMemo(() => {
     let t = "1";
     if (query && query?.get("tab")) {
@@ -52,6 +52,14 @@ export default function CollectionPage() {
       setLoading(false);
     }, 1200);
   }, []);
+
+  useEffect(() => {
+    const getNftByCollection = async () => {
+      const nfts = await getNft(collectionId)
+      setNftByCollection(nfts?.data)
+    }
+    getNftByCollection()
+  }, [collectionId])
   return (
     <>
       <MainLayout
@@ -88,24 +96,6 @@ export default function CollectionPage() {
                   }`}
               >
                 Activity
-              </button>
-              <button
-                onClick={() => router.push(`${collectionId}?tab=3`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "3"
-                  ? " border-secondary bg-secondary"
-                  : "border-transparent"
-                  }`}
-              >
-                Listings
-              </button>
-              <button
-                onClick={() => router.push(`${collectionId}?tab=4`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "4"
-                  ? " border-secondary bg-secondary"
-                  : "border-transparent"
-                  }`}
-              >
-                Offer
               </button>
             </div>
           </div>
@@ -147,12 +137,12 @@ export default function CollectionPage() {
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
               {tab === "1" && (
-                <NftGrid collectionId="opbunnies" isDense={isDense} />
+                <NftGrid nftData={nftByCollection} collectionId={collectionId} isDense={isDense} />
               )}
-              {tab === "2" && <ActivityDetail />}
+              {tab === "2" && <ActivityDetail nftData={nftByCollection} />}
             </div>
           </div>
-          {tab === "3" && (
+          {/* {tab === "3" && (
             <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
               <Listings />
             </div>
@@ -161,10 +151,9 @@ export default function CollectionPage() {
             <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
               <Offer />
             </div>
-          )}
+          )} */}
         </div>
       </MainLayout>
-      {DEMO_NFTS[0] && <AcceptModal nft={DEMO_NFTS[0]} />}
     </>
   );
 }

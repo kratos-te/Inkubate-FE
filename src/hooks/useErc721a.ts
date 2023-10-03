@@ -36,6 +36,19 @@ export function useErc721a() {
     });
   };
 
+  const getTokenUri = async (address: string, tokenId: string) => {
+    try {
+      const contract: any = getContract({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+      });
+      const res = await contract.read.tokenURI({ args: [BigInt(tokenId)] });
+      return res;
+    } catch (error) {
+      return { isError: true, msg: error };
+    }
+  };
+
   const enableWhitelistMode = async () => {
     // only creator function
     return await write({
@@ -50,7 +63,7 @@ export function useErc721a() {
 
   const getWhitelistMode = async () => {
     try {
-      const contract = getContract({
+      const contract: any = getContract({
         address: "0x9AC3b5616B37543d88aC539994e36F6b7974c744",
         abi: ERC721A_ABI as Abi,
       });
@@ -61,10 +74,10 @@ export function useErc721a() {
     }
   };
 
-  const getMintingStartTime = async () => {
+  const getMintingStartTime = async (address: string) => {
     try {
-      const contract = getContract({
-        address: "0x939d38e76586a61a9765165ccf1c367ace48a9ee",
+      const contract: any = getContract({
+        address: address as `0x${string}`,
         abi: ERC721A_ABI as Abi,
       });
       const res = await contract.read.mintingStartTime();
@@ -80,5 +93,6 @@ export function useErc721a() {
     enableWhitelistMode,
     getWhitelistMode,
     getMintingStartTime,
+    getTokenUri,
   };
 }

@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CollectionItem, CollectionParam, LaunchpadParam } from "@/utils/types";
+import { CollectionParam, LaunchpadParam } from "@/utils/types";
 import Typography from "./Typography";
 import {
   DiscordIcon,
@@ -23,10 +23,10 @@ interface OverviewProps {
 }
 
 const MintDetail: FC<OverviewProps> = ({ collection, launchpad }) => {
-// const { price, setPrice } = useState(launchpad.mintPrice)
-  const { openMintModal } = useModal()
+  // const { price, setPrice } = useState(launchpad.mintPrice)
+  const { openMintModal } = useModal();
   const { width } = useWindowSize();
-  const price = launchpad.mintPrice
+  const price = launchpad.mintPrice;
   const description =
     "The Cyber Droid NFTs are unique, algorithmically generated androids on the Ethereum blockchain. They can function as digital art, metaverse avatars, or blockchain game characters. Ownership may also unlock exclusive perks ithin the community.";
   return (
@@ -59,13 +59,15 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad }) => {
               component="p"
               className="text-[16px] lg:text-[14px] !font-[400] lg:font-medium mt-2"
             >
-              Price<span className="ml-2 text-secondary">{weiToNum(price)}</span>
+              Price
+              <span className="ml-2 text-secondary">{weiToNum(price)}</span>
             </Typography>
             <Typography
               component="p"
               className="text-[16px] lg:text-[14px] !font-[400] lg:font-medium mt-2"
             >
-              Supply: <span className="ml-2 text-secondary">{launchpad.supply}</span>
+              Supply:{" "}
+              <span className="ml-2 text-secondary">{launchpad.supply}</span>
             </Typography>
           </div>
           <Typography className="text-[12px] mt-2 md:mt-6 flex items-center text-white">
@@ -88,7 +90,10 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad }) => {
           <div className="w-full sm:w-[400px]">
             <MintProgress totalSupply={10000} minted={2856} className="mt-6" />
             <div className="grid grid-cols-1 sm:grid-cols-2 mt-5 gap-[14px] sm:gap-2.5">
-              <button className="py-[11px]  h-[42px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 justify-center hover:bg-[#bbb] duration-300" onClick={openMintModal}>
+              <button
+                className="py-[11px]  h-[42px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 justify-center hover:bg-[#bbb] duration-300"
+                onClick={openMintModal}
+              >
                 <StarIcon className="mr-1" color="#161616" /> Mint Now
               </button>
               <button className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300">

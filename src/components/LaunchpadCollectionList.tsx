@@ -1,4 +1,4 @@
-import { CollectionItem, CollectionParam, CreateLaunchpadParam, LaunchpadParam } from "@/utils/types";
+import { CollectionParam, LaunchpadParam } from "@/utils/types";
 import { FC } from "react";
 import Typography from "./Typography";
 import LaunchpadCard from "./LaunchpadCard";
@@ -9,9 +9,7 @@ interface ListProps {
   collections: CollectionParam[];
 }
 
-const LaunchpadCollectionList: FC<ListProps> = ({
-  title, collections
-}) => {
+const LaunchpadCollectionList: FC<ListProps> = ({ collections }) => {
   return (
     <div className="mx-auto px-0 lg:px-6 2xl:px-0 text-center lg:text-left relative z-10">
       <Typography

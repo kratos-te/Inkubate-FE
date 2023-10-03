@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CollectionItem, CollectionParam, LaunchpadParam } from "@/utils/types";
+import { CollectionParam } from "@/utils/types";
 import Typography from "./Typography";
 
 interface ItemProps {

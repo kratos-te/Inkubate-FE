@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   EditIcon,
   FilterIcon,
@@ -21,13 +21,19 @@ import Skeleton from "react-loading-skeleton";
 import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
 import ActivityDetail from "@/components/ActivityDetail";
 import { useUser } from "@/contexts/UserContext";
+import { getNftbyOwner } from "@/actions/nft";
+import { NftTypes } from "@/utils/types";
+import { Listings } from "@/components/Listings";
+import { Offer } from "@/components/Offer";
+// import { AcceptModal } from "@/components/AcceptModal";
 
 export default function ProfilePage() {
   const query = useSearchParams();
   const router = useRouter();
   const { openSettingModal } = useModal();
+  const { userData } = useUser();
 
-  const tab = query?.get("tab");
+  // const tab = query?.get("tab");
   const filter = query?.get("filter");
   const profileName = "My Profile";
 
@@ -35,6 +41,15 @@ export default function ProfilePage() {
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [nftByOwner, setNftByOwner] = useState<NftTypes[]>([]);
+
+  const tab = useMemo(() => {
+    let t = "1";
+    if (query && query?.get("tab")) {
+      t = query?.get("tab") as string;
+    }
+    return t;
+  }, [query]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -47,6 +62,17 @@ export default function ProfilePage() {
     getProfileData();
     getUserData();
   };
+
+  useEffect(() => {
+    const getNftData = async () => {
+      const nftData = await getNftbyOwner(userData.id);
+      console.log("NFTs", nftData);
+      if (nftData) {
+        setNftByOwner(nftData.data);
+      }
+    };
+    getNftData();
+  }, [userData]);
   return (
     <>
       <MainLayout
@@ -109,7 +135,7 @@ export default function ProfilePage() {
             <button
               onClick={() => router.push(`?tab=1`)}
               className={`text-[15px] font-semibold py-2 border-b-2 ${
-                tab !== "2"
+                tab === "1"
                   ? "text-secondary border-secondary"
                   : "text-light-200 border-transparent"
               }`}
@@ -125,6 +151,26 @@ export default function ProfilePage() {
               }`}
             >
               Activity
+            </button>
+            <button
+              onClick={() => router.push(`?tab=3`)}
+              className={`text-[15px] font-semibold py-2 border-b-2 ml-[30px] ${
+                tab === "3"
+                  ? "text-secondary border-secondary"
+                  : "text-light-200 border-transparent"
+              }`}
+            >
+              Listings
+            </button>
+            <button
+              onClick={() => router.push(`?tab=4`)}
+              className={`text-[15px] font-semibold py-2 border-b-2 ml-[30px] ${
+                tab === "4"
+                  ? "text-secondary border-secondary"
+                  : "text-light-200 border-transparent"
+              }`}
+            >
+              Offer
             </button>
           </div>
           <div className="relative flex gap-3 mt-6 lg:mt-12 z-20">
@@ -159,19 +205,38 @@ export default function ProfilePage() {
               </button>
             </div>
           </div>
-          <div className="mt-[28px] lg:mt-[38px] flex relative z-10 ">
+          <div
+            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${
+              tab === "1" || tab === "2" ? "show" : "hidden"
+            }`}
+          >
             <div className="hidden lg:block w-[300px]">
               <CollectionFilter />
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
-              {tab !== "2" && (
-                <NftGrid collectionId="opbunnies" isDense={isDense} />
+              {tab === "1" && (
+                <NftGrid
+                  nftData={nftByOwner}
+                  collectionId="opbunnies"
+                  isDense={isDense}
+                />
               )}
-              {tab === "2" && <ActivityDetail />}
+              {tab === "2" && <ActivityDetail nftData={nftByOwner} />}
             </div>
           </div>
+          {tab === "3" && (
+            <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
+              <Listings />
+            </div>
+          )}
+          {tab === "4" && (
+            <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
+              <Offer />
+            </div>
+          )}
         </div>
       </MainLayout>
+      {/* {DEMO_NFTS[0] && <AcceptModal nft={DEMO_NFTS[0]} />} */}
     </>
   );
 }

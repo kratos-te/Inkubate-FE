@@ -1,6 +1,5 @@
 "use client";
-import { FC, ReactNode } from "react";
-import { useTheme } from "@/contexts/ThemeContext";
+import { FC } from "react";
 
 interface TypographyProps {
   children?: any;
@@ -13,15 +12,15 @@ const Typography: FC<TypographyProps> = ({
   children,
   component,
   className,
-  color,
 }) => {
-  const { theme } = useTheme();
   const HeadingComponent = (
     component ? component : "div"
   ) as keyof JSX.IntrinsicElements;
 
   return (
-    <HeadingComponent className={`text-[#F2F3F4] ${className ? className : ""}`}>
+    <HeadingComponent
+      className={`text-[#F2F3F4] ${className ? className : ""}`}
+    >
       {children}
     </HeadingComponent>
   );

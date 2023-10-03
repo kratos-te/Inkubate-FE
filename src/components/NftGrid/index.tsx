@@ -1,16 +1,16 @@
-import { DEMO_NFTS } from "@/config";
-import useWindowSize from "@/utils/useWindowSize";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
+import useWindowSize from "@/utils/useWindowSize";
 import NftCard from "../NftCard";
 import NftCardLoader from "../Common/NftCardLoader";
+import { NftTypes } from "@/utils/types";
 
 interface GridProps {
+  nftData: NftTypes[];
   collectionId: string;
   isDense: boolean;
 }
 
-const NftGrid: FC<GridProps> = ({ isDense }) => {
-  const nfts = Array(40).fill(DEMO_NFTS[0]);
+const NftGrid: FC<GridProps> = ({ isDense, nftData }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const windowSize = useWindowSize();
 
@@ -55,7 +55,7 @@ const NftGrid: FC<GridProps> = ({ isDense }) => {
       }}
     >
       {!loading
-        ? nfts.map((item, key) => (
+        ? nftData.map((item, key) => (
             <NftCard nft={item} key={key} width={width} />
           ))
         : Array.from({ length: 20 }).map((_, key) => (

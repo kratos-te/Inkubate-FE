@@ -3,39 +3,29 @@ import { FC, useState } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useModal } from "@/contexts/ModalContext";
-import { ArrowDownIcon, CloseCircleIcon, MinuPlusIcon, PlusIcon, UploadIcon } from "./SvgIcons";
+import { CloseCircleIcon, MinuPlusIcon, UploadIcon } from "./SvgIcons";
 import Typography from "./Typography";
 import { createLaunchpad, createPhoto } from "@/actions";
-import { DURATION_RANGE } from "@/config";
 import { CalendarModal } from "./CalendarModal";
 import { CoinButton } from "./CoinButton";
 import { useUser } from "@/contexts/UserContext";
-import { DatePicker } from "./DatePicker";
 import { SetDuration } from "./SetDuratoin";
 import { InputData } from "@/utils/types";
-import { numToWei } from "@/utils/util";
+import { date2UTC, numToWei } from "@/utils/util";
 
 export const CreateModal: FC = () => {
-  const { closeCreateModal, isOpenedCreateModal, openCalendarModal } =
-    useModal();
-  const { startDate, endDate } = useUser()
+  const { closeCreateModal, isOpenedCreateModal } = useModal();
+  const { startDate, endDate, startTime, endTime } = useUser();
   const { register, handleSubmit } = useForm();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [dateRange, setDateRange] = useState("");
-  const [selectedNftItemFile, setSelectedNftItemFile] = useState<File | null>(null);
-  const [selectedCoverFile, setSelectedCoverFile] = useState<File | null>(
+  const [selectedNftItemFile, setSelectedNftItemFile] = useState<File | null>(
     null
   );
-  const [nftItem, setNftItem] = useState<string | null>(
-    "" || null
-  );
-  const [covetImage, setCovetImage] = useState<string | null>(
-    "" || null
-  );
-  const [addressList, setAddressList] = useState<InputData[]>([])
-  const [ownerList, setOwnerList] = useState<InputData[]>([])
-  const [feeList, setFeeList] = useState<InputData[]>([])
-
+  const [selectedCoverFile, setSelectedCoverFile] = useState<File | null>(null);
+  const [nftItem, setNftItem] = useState<string | null>("" || null);
+  const [covetImage, setCovetImage] = useState<string | null>("" || null);
+  const [addressList, setAddressList] = useState<InputData[]>([]);
+  const [ownerList, setOwnerList] = useState<InputData[]>([]);
+  const [feeList, setFeeList] = useState<InputData[]>([]);
 
   const handleInputChange = (
     event: any,
@@ -55,47 +45,42 @@ export const CreateModal: FC = () => {
       ...addressList,
       {
         input: "",
-        input_rank: addressList.length + 1
-      }
+        input_rank: addressList.length + 1,
+      },
     ]);
     setOwnerList([
       ...ownerList,
       {
         input: "",
-        input_rank: ownerList.length + 1
-      }
+        input_rank: ownerList.length + 1,
+      },
     ]);
     setFeeList([
       ...feeList,
       {
         input: "",
-        input_rank: feeList.length + 1
-      }
-    ])
-  }
-
-  const handleSetDate = (item: string) => {
-    setDateRange(item);
-    if (item === "Custom") {
-      openCalendarModal();
-    }
+        input_rank: feeList.length + 1,
+      },
+    ]);
   };
 
   const handleChangeNftItem = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
     const file = event.target.files[0];
     if (!file) return;
-    setSelectedNftItemFile(file)
-    setNftItem(URL.createObjectURL(file))
-  }
+    setSelectedNftItemFile(file);
+    setNftItem(URL.createObjectURL(file));
+  };
 
-  const handleChangeCoverImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeCoverImage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (!event.target.files) return;
     const file = event.target.files[0];
     if (!file) return;
-    setSelectedCoverFile(file)
-    setCovetImage(URL.createObjectURL(file))
-  }
+    setSelectedCoverFile(file);
+    setCovetImage(URL.createObjectURL(file));
+  };
 
   const onSubmit = async (data: any) => {
     try {
@@ -115,14 +100,14 @@ export const CreateModal: FC = () => {
         url: "",
         fileEntityId: "",
       };
-      console.log("value", values);
+      
       if (selectedNftItemFile) {
-        const createNftItem = await createPhoto(selectedNftItemFile)
-        nftItem = createNftItem?.data
+        const createNftItem = await createPhoto(selectedNftItemFile);
+        nftItem = createNftItem?.data;
       }
       if (selectedCoverFile) {
-        const createCoverImage = await createPhoto(selectedCoverFile)
-        coverImage = createCoverImage?.data
+        const createCoverImage = await createPhoto(selectedCoverFile);
+        coverImage = createCoverImage?.data;
       }
       if (
         values.name &&
@@ -133,15 +118,15 @@ export const CreateModal: FC = () => {
         values.maxPerWallet &&
         values.collectionUri
       ) {
-        console.log("ok===========");
+        
         const mintPrice = BigInt(numToWei(values.mintPrice));
         const supply = parseInt(values.totalSupply);
         const maxPerTx = parseInt(values.maxPerTx);
         const maxPerWallet = parseInt(values.maxPerWallet);
-        // const startDate = "2023-09-26T00:00:00Z";
-        // const endDate = "2023-09-30T23:59:59Z";
+        const startDay = date2UTC(startDate, startTime);
+        const endDay = date2UTC(endDate, endTime);
 
-        const launchpad = await createLaunchpad({
+        await createLaunchpad({
           name: values.name,
           symbol: values.symbol,
           desc: "",
@@ -156,8 +141,8 @@ export const CreateModal: FC = () => {
           wlEnabled: false,
           wlAddresses: [""],
           enableReserveTokens: false,
-          startDate: startDate,
-          endDate: endDate,
+          startDate: startDay,
+          endDate: endDay,
           network: "MAIN",
           twitter: "",
           discord: "",
@@ -165,7 +150,6 @@ export const CreateModal: FC = () => {
           reddit: "",
           collectionUri: values.collectionUri,
         });
-        console.log("launchpad", launchpad);
       }
     } catch (error) {
       console.log("error", error);
@@ -193,7 +177,10 @@ export const CreateModal: FC = () => {
                     <Typography className="font-semibold leading-6 text-[16px] text-left">
                       NFT Item
                     </Typography>
-                    <p className="flex text-[14px] font-normal text-[#666666]">Supported File Formats: PNG, GIF, WEBP, MP4 or MP3. Max 100mb.</p>
+                    <p className="flex text-[14px] font-normal text-[#666666]">
+                      Supported File Formats: PNG, GIF, WEBP, MP4 or MP3. Max
+                      100mb.
+                    </p>
                     <div className="mt-[14px]">
                       <label
                         htmlFor="nftItem"
@@ -223,7 +210,9 @@ export const CreateModal: FC = () => {
                     <Typography className="font-semibold leading-6 text-[16px] text-left">
                       NFT Cover Image
                     </Typography>
-                    <p className="flex text-[14px] font-normal text-[#666666]">Recommended Size: 1400px x 350px. Max 100mb.</p>
+                    <p className="flex text-[14px] font-normal text-[#666666]">
+                      Recommended Size: 1400px x 350px. Max 100mb.
+                    </p>
                     <div className="mt-[14px]">
                       <label
                         htmlFor="coverImage"
@@ -299,7 +288,6 @@ export const CreateModal: FC = () => {
                       placeholder="Set the max tokens mintable for a wallet"
                     />
                   </div>
-
                 </div>
                 <div className="w-full lg:w-1/2 flex flex-col gap-6 lg:gap-[34px] ">
                   <div className="flex-col">
@@ -336,24 +324,43 @@ export const CreateModal: FC = () => {
                     <Typography className="font-semibold leading-6 text-[16px] text-left">
                       Assign Fee Distribution
                     </Typography>
-                    {addressList.length > 0 ? addressList.map((item, index) => (
-                      <>
-                        <div key={index} className="flex gap-2 ">
-                          <input
-                            className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[85%] rounded-xl mt-2 p-[14px] placeholder:text-third"
-                            placeholder="Enter a name for the collection"
-                            onChange={(event) => handleInputChange(event, index, ownerList, setOwnerList)}
-                          />
-                          <input
-                            className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[15%] rounded-xl mt-2 p-[14px] placeholder:text-third"
-                            placeholder="0.00%"
-                            onChange={(event) => handleInputChange(event, index, feeList, setFeeList)}
-                          />
-                        </div>
-                      </>
-                    )) : ""}
+                    {addressList.length > 0
+                      ? addressList.map((_, index) => (
+                          <>
+                            <div key={index} className="flex gap-2 ">
+                              <input
+                                className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[85%] rounded-xl mt-2 p-[14px] placeholder:text-third"
+                                placeholder="Enter a name for the collection"
+                                onChange={event =>
+                                  handleInputChange(
+                                    event,
+                                    index,
+                                    ownerList,
+                                    setOwnerList
+                                  )
+                                }
+                              />
+                              <input
+                                className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[15%] rounded-xl mt-2 p-[14px] placeholder:text-third"
+                                placeholder="0.00%"
+                                onChange={event =>
+                                  handleInputChange(
+                                    event,
+                                    index,
+                                    feeList,
+                                    setFeeList
+                                  )
+                                }
+                              />
+                            </div>
+                          </>
+                        ))
+                      : ""}
 
-                    <button className="flex w-[158px] px-[4px] py-[10px] rounded-xl bg-dark-400 text-[14px] text-[#B3B3B3] font-semibold" onClick={handleCreateAddressList}>
+                    <button
+                      className="flex w-[158px] px-[4px] py-[10px] rounded-xl bg-dark-400 text-[14px] text-[#B3B3B3] font-semibold"
+                      onClick={handleCreateAddressList}
+                    >
                       <MinuPlusIcon />
                       Another Address
                     </button>

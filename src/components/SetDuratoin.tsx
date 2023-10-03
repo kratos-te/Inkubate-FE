@@ -5,6 +5,7 @@ import { ArrowDownIcon, ArrowLeftIcon, CalendarIcon } from "./SvgIcons";
 import Typography from "./Typography";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
+import { format } from "date-fns";
 
 interface DateRangeType {
     title: string;
@@ -14,7 +15,7 @@ interface DateRangeType {
 
 export const SetDuration: FC = () => {
     const { isOpenedCreateModal } = useModal()
-    const { startDate, endDate } = useUser()
+    const { startDate, endDate, startTime, endTime } = useUser()
     const [isShowCal, setIsShowCal] = useState<boolean>(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [dateRange, setDateRange] = useState<DateRangeType>({
@@ -46,7 +47,7 @@ export const SetDuration: FC = () => {
                     >
                         <CalendarIcon />
                         <Typography className="flex text-[14px] ml-1">
-                            {(startDate && endDate) ? `${startDate} - ${endDate}` : "Set Duration"}
+                            {(startDate && endDate) ? `${format(startDate, "MM/dd/yyyy") + ", " + startTime} - ${format(endDate, "MM/dd/yyyy") + ", " + endTime}` : "Set Duration"}
                         </Typography>
                     </div>
                     {isShowCal && (

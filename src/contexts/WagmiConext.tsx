@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { FC, ReactNode, useEffect, useState } from "react";
 import { Web3Modal } from "@web3modal/react";
 import {
@@ -7,7 +7,7 @@ import {
   w3mProvider,
 } from "@web3modal/ethereum";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { goerli, mainnet, optimism, polygon } from "wagmi/chains";
+import { goerli } from "wagmi/chains";
 
 // 1. Get projectID at https://cloud.walletconnect.com
 if (!process.env.NEXT_PUBLIC_PROJECT_ID) {
@@ -40,7 +40,9 @@ const WagmiProvider: FC<Props> = ({ children }) => {
   }, []);
   return (
     <>
-      {ready ? <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig> : null}
+      {ready ? (
+        <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>
+      ) : null}
 
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
     </>

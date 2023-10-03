@@ -1,10 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import LaunchpadCollectionList from "@/components/LaunchpadCollectionList";
 import LaunchpadCover from "@/components/LaunchpadCover";
-import LaunchpadDrops from "@/components/LaunchpadDrops";
-import { DEMO_COLLECTIONS } from "@/config";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import Skeleton from "react-loading-skeleton";
@@ -14,33 +12,29 @@ import { CollectionParam, LaunchpadParam } from "@/utils/types";
 
 export default function LaunchpadPage() {
   const [loading, setLoading] = useState(true);
-  const [launchpads, setLaunchPads] = useState<LaunchpadParam[]>([])
-  const [collections, setCollections] = useState<CollectionParam[]>([])
+  const [launchpads, setLaunchPads] = useState<LaunchpadParam[]>([]);
+  const [collections, setCollections] = useState<CollectionParam[]>([]);
 
-  const router = useRouter()
   const pathname = usePathname();
-
-
 
   useEffect(() => {
     const launchPad = async () => {
       if (pathname === "/launchpad") {
-        const launchpadData = await getLaunchpad()
-        const collectionData = await getAllCollections()
+        const launchpadData = await getLaunchpad();
+        const collectionData = await getAllCollections();
         if (launchpadData) {
-          setLaunchPads(launchpadData.data)
-          setCollections(collectionData)
+          setLaunchPads(launchpadData.data);
+          setCollections(collectionData);
         }
       }
-    }
-    launchPad()
-  }, [pathname])
+    };
+    launchPad();
+  }, [pathname]);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1200);
   }, []);
-
 
   return (
     <>

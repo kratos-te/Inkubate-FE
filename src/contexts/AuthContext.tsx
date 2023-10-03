@@ -1,14 +1,8 @@
 "use client";
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
-import { useAccount, useSignMessage } from "wagmi";
+import React, { createContext, useContext, useState, ReactNode } from "react";
+// import { useAccount, useSignMessage } from "wagmi";
 
-import { signIn, signUp } from "@/actions";
+// import { signIn, signUp } from "@/actions";
 
 interface AuthContextType {
   signed: boolean;
@@ -40,11 +34,11 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const message = "Connected with Inkubate";
+// const message = "Connected with Inkubate";
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { address, isConnected } = useAccount();
-  const { signMessageAsync } = useSignMessage();
+  // const { address } = useAccount();
+  // const { signMessageAsync } = useSignMessage();
   const [signed, setSigned] = useState(false);
   const [signature, setSignature] = useState("");
 
@@ -67,26 +61,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setSignature,
   };
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-  const walletSign = async () => {
-    if (!address) return;
-    setLoading(true);
-    const nonce = await signUp(address);
-    const verifyMsg = `${message}\nnonce:${nonce}`;
-    signMessageAsync({ message: verifyMsg })
-      .then(async (sign) => {
-        const token = await signIn(address, sign.toString());
-        console.log("token", token);
-        if (token) {
-          localStorage.setItem("accessToken", token);
-        }
-      })
-      .catch((e) => {
-        console.log("wallet sign in error:", e);
-      });
-    setLoading(false);
-  };
+  // const walletSign = async () => {
+  //   if (!address) return;
+  //   setLoading(true);
+  //   const nonce = await signUp(address);
+  //   const verifyMsg = `${message}\nnonce:${nonce}`;
+  //   signMessageAsync({ message: verifyMsg })
+  //     .then(async sign => {
+  //       const token = await signIn(address, sign.toString());
+  //       console.log("token", token);
+  //       if (token) {
+  //         localStorage.setItem("accessToken", token);
+  //       }
+  //     })
+  //     .catch(e => {
+  //       console.log("wallet sign in error:", e);
+  //     });
+  //   setLoading(false);
+  // };
 
   // useEffect(() => {
   //   console.log("===============", loading);

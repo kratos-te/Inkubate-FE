@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
-
-import { DEMO_COLLECTIONS } from "@/config";
 import CollectionCard from "@/components/CollectionCard";
 import CollecionCardLoader from "@/components/Common/CollecionCardLoader";
 import ExploreCover from "@/components/ExploreCover";

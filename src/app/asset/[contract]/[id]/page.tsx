@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { DEMO_NFTS, PROPERTIES } from "@/config";
+import { PROPERTIES } from "@/config";
 import AssetOverview from "@/components/AssetOverview";
 import AssetDetailBox from "@/components/AssetDetailBox";
 import {
@@ -19,26 +19,56 @@ import {
 import Typography from "@/components/Typography";
 import AssetActivityTable from "@/components/AssetActivityTable";
 import AssetActivityTableMobile from "@/components/AssetActivityTableMobile";
-import NftCard from "@/components/NftCard";
 import Button from "@/components/Button";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AssetOverviewLoader from "@/components/AssetOverview/Loader";
 import AssetContentLoader from "@/components/Common/AssetContentLoader";
 import { OfferModal } from "@/components/OfferModal";
 import { BuyModal } from "@/components/BuyModal";
+import { usePathname } from "next/navigation";
+import { getNftByOne } from "@/actions/nft";
+import { NftTypes } from "@/utils/types";
+import { ListModal } from "@/components/ListModal";
 
 export default function CollectionPage() {
   const name = "Galxe#1344";
   const contract = "0x2f05e799C61b600c65238a9DF060cABA63Db8E78";
+  const pathname = usePathname();
 
   const [loading, setLoading] = useState(true);
+  const [nftByOne, setNftByOne] = useState<NftTypes>();
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1200);
   }, []);
+
+  const collectionId = useMemo(() => {
+    let path = "";
+    if (pathname) {
+      path = pathname.split("/")[2] as string;
+    }
+    return path;
+  }, [pathname]);
+
+  const nftId = useMemo(() => {
+    let path = "";
+    if (pathname) {
+      path = pathname.split("/")[3] as string;
+    }
+    return path;
+  }, [pathname]);
+
+  useEffect(() => {
+    const getNftData = async () => {
+      const nft = await getNftByOne(nftId, collectionId);
+      setNftByOne(nft?.data);
+    };
+    getNftData();
+  }, [nftId, collectionId]);
+
   return (
     <>
       <MainLayout
@@ -55,7 +85,7 @@ export default function CollectionPage() {
       >
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
-            DEMO_NFTS[0] && <AssetOverview nft={DEMO_NFTS[0]} />
+            nftByOne && <AssetOverview nft={nftByOne} />
           ) : (
             <AssetOverviewLoader />
           )}
@@ -165,14 +195,14 @@ export default function CollectionPage() {
                   </Typography>
                 </div>
                 <div className="flex justify-center gap-[25px] min-h-[390px] flex-wrap">
-                  {DEMO_NFTS[0] && (
+                  {/* {DEMO_NFTS[0] && (
                     <>
                       <NftCard nft={DEMO_NFTS[0]} width={240} />
                       <NftCard nft={DEMO_NFTS[0]} width={240} />
                       <NftCard nft={DEMO_NFTS[0]} width={240} />
                       <NftCard nft={DEMO_NFTS[0]} width={240} />
                     </>
-                  )}
+                  )} */}
                 </div>
                 <div className="text-center mt-[30px] lg:mt-0">
                   <Link href={"/collection/opbunnies"}>
@@ -188,8 +218,9 @@ export default function CollectionPage() {
           )}
         </div>
       </MainLayout>
-      {DEMO_NFTS[0] && <OfferModal nft={DEMO_NFTS[0]} />}
-      {DEMO_NFTS[0] && <BuyModal nft={DEMO_NFTS[0]} />}
+      {nftByOne && <OfferModal nft={nftByOne} />}
+      {nftByOne && <BuyModal nft={nftByOne} />}
+      {nftByOne && <ListModal nft={nftByOne} />}
     </>
   );
 }
