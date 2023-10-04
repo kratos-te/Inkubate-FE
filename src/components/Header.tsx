@@ -31,7 +31,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const Header: FC = () => {
   const { openWalletModal, closeWalletModal } = useModal();
   const [isNotificationModal, setIsNotificationModal] = useState(false);
-  const { username, userAddress, profile } = useUser();
+  const { username, userAddress, profile, userData } = useUser();
   const { logout } = useAuth()
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
@@ -197,7 +197,7 @@ const Header: FC = () => {
                             className="rounded-full"
                           />
                           <div className="flex-col space-y-1">
-                            <p className="text-white text-lg">{username}</p>
+                            <p className="text-white text-lg">{userData.username}</p>
                             <p className="text-white text-[16px]">
                               {data?.formatted} ETH
                             </p>

@@ -10,8 +10,8 @@ import MainLayout from "@/layouts/MainLayout";
 import MintOverviewLoader from "@/components/Common/MintOverviewLoader";
 import Skeleton from "react-loading-skeleton";
 import { MintModal } from "@/components/MintModal";
-import { CollectionParam, LaunchpadParam } from "@/utils/types";
-import { getCollectionById, getLaunchpadById } from "@/actions";
+import { CollectionParam, LaunchpadParam, NftTypes } from "@/utils/types";
+import { getCollectionById, getLaunchpadById, getNft } from "@/actions";
 
 export default function CollectionPage() {
   const pathname = usePathname();
@@ -20,6 +20,7 @@ export default function CollectionPage() {
   // const collectionId = query?.get("collectionId");
   const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
+  const [nftByColletion, setNftByCollection] = useState<NftTypes[]>([])
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -41,8 +42,10 @@ export default function CollectionPage() {
       if ((pathname.split("/")[1] as string) === "mint" && collectionId) {
         const collection = await getCollectionById(collectionId);
         const launchpad = await getLaunchpadById(collection?.data.launchpadId);
+        const nfts = await getNft(collectionId)
         setLaunchPadById(launchpad?.data);
         setCollectionById(collection?.data);
+        setNftByCollection(nfts?.data)
       }
     };
     getCollection();
@@ -68,6 +71,7 @@ export default function CollectionPage() {
               <MintDetail
                 collection={collectionById}
                 launchpad={launchpadById}
+                nfts={nftByColletion}
               />
             )
           ) : (

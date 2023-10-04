@@ -24,14 +24,17 @@ const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
     getLaunchpad();
   }, [launchpadId]);
   return (
-    <Link href={`/collection/${id}`} className="inline-block min-w-[240px]">
+    <Link
+      href={`/collection/${id}`}
+      className="inline-block min-w-[240px] xl:min-w-[360px]"
+    >
       <div
         className={`bg-dark-200 rounded-xl shadow-card relative ${
           className ? className : ""
         }`}
       >
-        {banner && (
-          <div className="relative overflow-hidden rounded-t-xl h-[124px] xl:h-[235px]">
+        <div className="relative overflow-hidden rounded-t-xl h-[124px] xl:h-[235px]">
+          {banner ? (
             <Image
               src={banner.url}
               alt={banner.fileEntityId}
@@ -39,8 +42,10 @@ const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
               objectFit="cover"
               priority
             />
-          </div>
-        )}
+          ) : (
+            <div className="bg-[#222] absolute left-0 top-0 w-full h-full text-gray-400 grid place-content-center capitalize">no image</div>
+          )}
+        </div>
 
         <div className="px-4 xl:px-[30px] pt-[14px] pb-[18px]">
           <div className="py-0 xl:py-2">

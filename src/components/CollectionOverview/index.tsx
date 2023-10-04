@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   DiscordIcon,
@@ -12,8 +12,15 @@ import Typography from "../Typography";
 import Image from "next/image";
 import { DEMO_COLLECTIONS } from "@/config";
 import Loader from "./Loader";
+import { CollectionParam, NftTypes } from "@/utils/types";
 
-const CollectionOverview = () => {
+interface CollectionProps {
+  collection: CollectionParam;
+  nfts: NftTypes[];
+}
+
+const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
+  const { name, avatar } = collection
   const [showMoreDec, setShowMoreDec] = useState(false);
 
   const [loading, setIsLoading] = useState(true);
@@ -34,7 +41,7 @@ const CollectionOverview = () => {
         >
           <div className="relative w-[186px] xl:w-[286px] h-[186px] xl:h-[286px] rounded-lg xl:rounded-[19px] overflow-hidden">
             <Image
-              src={"/assets/images/pfp-demo.gif"}
+              src={avatar.url}
               fill
               objectFit="cover"
               priority
@@ -47,7 +54,7 @@ const CollectionOverview = () => {
             component="h2"
             className="text-[28px] lg:text-[30px] font-bold font-poppins flex gap-2 items-center leading-[1]"
           >
-            <span>OG Dread Zero</span>
+            <span>{name}</span>
             <VerifiedIcon color="#EA4492" className="w-7 h-7" />
           </Typography>
 
@@ -88,7 +95,7 @@ const CollectionOverview = () => {
                 Items
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5]">
-                3.4K
+                {nfts.length}
               </Typography>
             </div>
             <div className="flex flex-col-reverse lg:flex-col">

@@ -86,7 +86,7 @@ export async function createPhoto(image: File) {
     const accessToken = localStorage.getItem("accessToken");
     const headers = {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
+      "Content-Type": "multipart/form-data",
     };
     const formData = new FormData();
     formData.append("file", image);
@@ -112,7 +112,6 @@ export async function getPhoto(photoId: string) {
     const accessToken = localStorage.getItem("accessToken");
     const headers = {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
     };
     const response = await axios.get(`${API_BASE_URL}/api/file/${photoId}`, {
       headers,
@@ -136,7 +135,7 @@ export async function updatePhoto(image: File, photoId: string) {
     const accessToken = localStorage.getItem("accessToken");
     const headers = {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
+      "Content-Type": "multipart/form-data",
     };
     const formData = new FormData();
     formData.append("file", image);

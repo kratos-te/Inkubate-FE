@@ -2,7 +2,7 @@ import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { checkAuthorization } from ".";
 
-export async function listingNft(signature: string) {
+export async function listingNft(signature: string, listParam: string) {
   try {
     await checkAuthorization();
     const accessToken = localStorage.getItem("accessToken");
@@ -12,7 +12,7 @@ export async function listingNft(signature: string) {
     };
     const response = await axios.post(
       `${API_BASE_URL}/api/listing`,
-      { signature: signature },
+      { signature: signature, listParam: listParam },
       { headers }
     );
     console.log("listing", response);

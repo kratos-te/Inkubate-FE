@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useModal } from "@/contexts/ModalContext";
@@ -12,6 +12,7 @@ import { useUser } from "@/contexts/UserContext";
 import { SetDuration } from "./SetDuratoin";
 import { InputData } from "@/utils/types";
 import { date2UTC, numToWei } from "@/utils/util";
+import { LoadingPad } from "./LoadingPad";
 
 export const CreateModal: FC = () => {
   const { closeCreateModal, isOpenedCreateModal } = useModal();
@@ -26,6 +27,7 @@ export const CreateModal: FC = () => {
   const [addressList, setAddressList] = useState<InputData[]>([]);
   const [ownerList, setOwnerList] = useState<InputData[]>([]);
   const [feeList, setFeeList] = useState<InputData[]>([]);
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleInputChange = (
     event: any,
@@ -84,6 +86,7 @@ export const CreateModal: FC = () => {
 
   const onSubmit = async (data: any) => {
     try {
+      setIsLoading(false)
       const values: Record<string, string> = {};
       for (const key in data) {
         const value = data[key];
@@ -100,7 +103,7 @@ export const CreateModal: FC = () => {
         url: "",
         fileEntityId: "",
       };
-      
+
       if (selectedNftItemFile) {
         const createNftItem = await createPhoto(selectedNftItemFile);
         nftItem = createNftItem?.data;
@@ -118,7 +121,7 @@ export const CreateModal: FC = () => {
         values.maxPerWallet &&
         values.collectionUri
       ) {
-        
+
         const mintPrice = BigInt(numToWei(values.mintPrice));
         const supply = parseInt(values.totalSupply);
         const maxPerTx = parseInt(values.maxPerTx);
@@ -151,10 +154,18 @@ export const CreateModal: FC = () => {
           collectionUri: values.collectionUri,
         });
       }
+      setIsLoading(true)
     } catch (error) {
       console.log("error", error);
     }
   };
+
+  useEffect(() => {
+    if (isLoading === true) {
+      closeCreateModal()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (!isOpenedCreateModal) return null;
   return (
@@ -326,35 +337,35 @@ export const CreateModal: FC = () => {
                     </Typography>
                     {addressList.length > 0
                       ? addressList.map((_, index) => (
-                          <>
-                            <div key={index} className="flex gap-2 ">
-                              <input
-                                className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[85%] rounded-xl mt-2 p-[14px] placeholder:text-third"
-                                placeholder="Enter a name for the collection"
-                                onChange={event =>
-                                  handleInputChange(
-                                    event,
-                                    index,
-                                    ownerList,
-                                    setOwnerList
-                                  )
-                                }
-                              />
-                              <input
-                                className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[15%] rounded-xl mt-2 p-[14px] placeholder:text-third"
-                                placeholder="0.00%"
-                                onChange={event =>
-                                  handleInputChange(
-                                    event,
-                                    index,
-                                    feeList,
-                                    setFeeList
-                                  )
-                                }
-                              />
-                            </div>
-                          </>
-                        ))
+                        <>
+                          <div key={index} className="flex gap-2 ">
+                            <input
+                              className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[85%] rounded-xl mt-2 p-[14px] placeholder:text-third"
+                              placeholder="Enter a name for the collection"
+                              onChange={event =>
+                                handleInputChange(
+                                  event,
+                                  index,
+                                  ownerList,
+                                  setOwnerList
+                                )
+                              }
+                            />
+                            <input
+                              className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[15%] rounded-xl mt-2 p-[14px] placeholder:text-third"
+                              placeholder="0.00%"
+                              onChange={event =>
+                                handleInputChange(
+                                  event,
+                                  index,
+                                  feeList,
+                                  setFeeList
+                                )
+                              }
+                            />
+                          </div>
+                        </>
+                      ))
                       : ""}
 
                     <button
@@ -420,8 +431,9 @@ export const CreateModal: FC = () => {
                   </div>
                 </div>
               </div>
+              {!isLoading && <div className="flex justify-center"><LoadingPad title="Processing" description="Creating Launchpad for you" /></div>}
               <div className="flex flex-col gap-1 mt-6">
-                <button className="w-full bg-white rounded-[12px] py-3 text-black text-[16px] font-semibold">
+                <button className="w-full bg-white rounded-[12px] py-3 text-black text-[16px] font-semibold" >
                   Deploy New Mintable Collection
                 </button>
                 <button

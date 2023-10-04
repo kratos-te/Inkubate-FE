@@ -96,8 +96,8 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
     setMakeList(true);
     const signature = await handleSign();
     if (signature) {
-      const listing = await listingNft(signature);
-      console.log(listing);
+      // const listing = await listingNft(signature);
+      // console.log(listing);
     }
     setMakeList(false);
   };
