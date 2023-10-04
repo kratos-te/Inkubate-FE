@@ -1,7 +1,8 @@
 import { FC } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { CollectionParam, LaunchpadParam, NftTypes } from "@/utils/types";
 import Typography from "./Typography";
 import {
   DiscordIcon,
@@ -15,18 +16,22 @@ import useWindowSize from "@/utils/useWindowSize";
 import MintProgress from "./MintProgress";
 import { useModal } from "@/contexts/ModalContext";
 import { weiToNum } from "@/utils/util";
+import { getTime } from "date-fns";
 
 interface OverviewProps {
   collection: CollectionParam;
   launchpad: LaunchpadParam;
+  nfts: NftTypes[];
   className?: string;
 }
 
-const MintDetail: FC<OverviewProps> = ({ collection, launchpad }) => {
+const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
   // const { price, setPrice } = useState(launchpad.mintPrice)
+  const router = useRouter();
   const { openMintModal } = useModal();
   const { width } = useWindowSize();
   const price = launchpad.mintPrice;
+  const remainingTime = getTime(new Date()) - getTime(new Date(launchpad.startDate))
   const description =
     "The Cyber Droid NFTs are unique, algorithmically generated androids on the Ethereum blockchain. They can function as digital art, metaverse avatars, or blockchain game characters. Ownership may also unlock exclusive perks ithin the community.";
   return (
@@ -88,15 +93,16 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad }) => {
             </Link>
           </div>
           <div className="w-full sm:w-[400px]">
-            <MintProgress totalSupply={10000} minted={2856} className="mt-6" />
+            <MintProgress totalSupply={launchpad.supply} minted={nfts.length} className="mt-6" />
             <div className="grid grid-cols-1 sm:grid-cols-2 mt-5 gap-[14px] sm:gap-2.5">
               <button
                 className="py-[11px]  h-[42px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 justify-center hover:bg-[#bbb] duration-300"
                 onClick={openMintModal}
+                disabled={remainingTime > 0}
               >
-                <StarIcon className="mr-1" color="#161616" /> Mint Now
+                <StarIcon className="mr-1" color="#161616" /> Mint Now 
               </button>
-              <button className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300">
+              <button className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300" onClick={() => router.push(`/collection/${collection.id}`)}>
                 <GalleryIcon className="mr-1" color="#F2F3F4" />
                 View Collection
               </button>

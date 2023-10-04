@@ -9,7 +9,7 @@ import {
 // Define your backend API base URL in your environment variables
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
   ? process.env.NEXT_PUBLIC_API_BASE_URL
-  : "https://localhost:8080";
+  : "https://marketapi.5thweb.io";
 
 export const INFURN_APU_KEY = "dfb6591f687e4a37b958417070e73dab";
 

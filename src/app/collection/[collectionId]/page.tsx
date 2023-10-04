@@ -17,7 +17,8 @@ import SortDropdown from "@/components/SortDropdown";
 import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
 import { getNft } from "@/actions/nft";
-import { NftTypes } from "@/utils/types";
+import { CollectionParam, NftTypes } from "@/utils/types";
+import { getCollectionById } from "@/actions";
 
 export default function CollectionPage() {
   const router = useRouter();
@@ -25,6 +26,8 @@ export default function CollectionPage() {
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([])
+  const [collectionById, setCollectionById] = useState<CollectionParam>();
+
 
   const tab = useMemo(() => {
     let t = "1";
@@ -56,7 +59,9 @@ export default function CollectionPage() {
   useEffect(() => {
     const getNftByCollection = async () => {
       const nfts = await getNft(collectionId)
+      const collection = await getCollectionById(collectionId);
       setNftByCollection(nfts?.data)
+      setCollectionById(collection?.data)
     }
     getNftByCollection()
   }, [collectionId])
@@ -75,7 +80,7 @@ export default function CollectionPage() {
         }
       >
         <CoverBanner src="/assets/images/cover-demo.png" />
-        <CollectionOverview />
+        {collectionById && <CollectionOverview collection={collectionById} nfts={nftByCollection} />}
         <div className="max-w-[1600px] mx-5 2xl:mx-auto relative">
           <div className="border-b-[0.5px] py-9  border-light-400 relative z-10">
             <div className="flex gap-3">
@@ -142,16 +147,6 @@ export default function CollectionPage() {
               {tab === "2" && <ActivityDetail nftData={nftByCollection} />}
             </div>
           </div>
-          {/* {tab === "3" && (
-            <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
-              <Listings />
-            </div>
-          )}
-          {tab === "4" && (
-            <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
-              <Offer />
-            </div>
-          )} */}
         </div>
       </MainLayout>
     </>

@@ -41,7 +41,7 @@ const NotableCollections = () => {
       </div>
       <div className="relative z-10 grid place-content-center ">
         <div className="mt-4 xl:mt-[70px] flex gap-10  overflow-x-auto px-6 max-w-[1304px] mx-auto w-full">
-          {collections.map((item, key) => (
+          {collections.slice(0, 3).map((item, key) => (
             <CollectionCard collection={item} key={key} />
           ))}
         </div>

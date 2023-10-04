@@ -13,11 +13,13 @@ import {
   startOfWeek,
   addMonths,
   addDays,
+  getTime,
 } from "date-fns";
 import Typography from "./Typography";
 import { NextIcon, PrevIcon } from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
+import { date2UTC } from "@/utils/util";
 
 interface DatePrickerProps {
   type: string;
@@ -49,6 +51,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   const [currMonth, setCurrMonth] = useState(() => format(today, "MMM-yyyy"));
   const [startDay, setStartDay] = useState<Date>(today);
   const [endDay, setEndDay] = useState<Date>(addMonths(today, 3));
+  const [isValidTime, setIsValidTime] = useState(true)
   const firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
   const capitalizeFirstLetter = (query: string): string => {
@@ -95,7 +98,9 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   };
 
   const handleSetStartTime = (e: any) => {
+
     setStartTime(e.target.value);
+    console.log(format(new Date(), "kk:mm"))
   };
 
   const handleSetEndTime = (e: any) => {
@@ -115,6 +120,23 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
     setEndDate(endDay);
   }, [endDay, endTime, setEndDate, setStartDate, startDay, startTime]);
 
+  useEffect(() => {
+    const today = new Date()
+    if (format(today, "dd") === format(startDay, "dd")) {
+      if (getTime(today) > getTime(new Date(date2UTC(startDay, startTime)))) {
+        console.log("today", getTime(today))
+        console.log("starttime", getTime(new Date(date2UTC(startDay, startTime))))
+        setIsValidTime(false)
+        console.log("small")
+      } else {
+        setIsValidTime(true)
+        console.log("big")
+      }
+    } else {
+      setIsValidTime(true)
+    }
+  }, [today, startDay, startTime])
+
   return (
     <>
       <div className="flex mt-5 justify-between items-center">
@@ -124,7 +146,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
           </Typography>
 
           <input
-            className="bg-[#616161] w-full rounded-[8px] mt-2 px-3 py-[14px] max-sm:py-[12px] text-light-100 text-[14px]placeholder:text-third"
+            className={`bg-[#616161] w-full rounded-[8px] mt-2 px-3 py-[14px] max-sm:py-[12px] text-light-100 text-[14px]placeholder:text-third `}
             placeholder="--/--/----"
             value={format(startDay, "MM/dd/yyyy")}
             onChange={handleSetStartDay}
@@ -144,16 +166,20 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
         </div>
       </div>
       {isOpenedCreateModal && (
+        <>
         <div className="flex gap-[9px] mt-2 justify-between items-center w-full">
           <div className="flex-col gap-2 w-1/2">
             <Typography className="text-left text-[14px] text-white font-normal max-sm:text-[16px]">
               Start Time
             </Typography>
+              <div className={` mt-2 rounded-[8px] ${!isValidTime ? " border-secondary border-[2px]" : ""}`}>
             <input
-              className="bg-[#616161] text-[14px] text-white w-full rounded-[8px] mt-2 p-[14px] placeholder:text-third"
-              placeholder="01:00"
+                  className={`bg-[#616161] text-[14px] text-white w-full rounded-[8px] p-[14px] placeholder:text-third ${!isValidTime ? " border-secondary border-1" : ""} `}
+                  placeholder={(format(new Date(), "kk:mm"))}
               onChange={handleSetStartTime}
             />
+              </div>
+
           </div>
           <div className="border-b border-[#666666] h-1/2 w-[15px] mt-8"></div>
           <div className="flex-col gap-2 w-1/2">
@@ -167,6 +193,10 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
             />
           </div>
         </div>
+          {!isValidTime &&
+            <p className="text-[12px] text-white text-left mt-1">Please select a time later than the current time</p>
+          }
+        </>
       )}
 
       <div className="flex flex-col gap-[14px] px-[10px] mt-[40px]">
