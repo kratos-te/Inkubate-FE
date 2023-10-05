@@ -214,3 +214,27 @@ export type OrderParameters = {
 export type OrderComponents = OrderParameters & {
   counter: string /* BigNumber */;
 };
+
+export type ListingTypes = {
+  id: string;
+  nftId: string;
+  nft: NftTypes;
+  price: bigint;
+  sellerId: string;
+  status: string;
+  expiresAt: Date;
+};
+
+export type OfferTypes = {
+  id: string;
+  listingId: string;
+  buyerId: string;
+  sellerId: string;
+  nft: NftTypes;
+  nftId: string;
+  offerPrice: bigint;
+  txHash: string;
+  expiresAt: Date;
+  status: string;
+  createdAt: Date;
+};

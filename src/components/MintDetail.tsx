@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { CollectionParam, LaunchpadParam, NftTypes } from "@/utils/types";
 import Typography from "./Typography";
@@ -31,7 +31,7 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
   const { openMintModal } = useModal();
   const { width } = useWindowSize();
   const price = launchpad.mintPrice;
-  const remainingTime = getTime(new Date()) - getTime(new Date(launchpad.startDate))
+  const remainingTime = getTime(new Date(launchpad.startDate)) - getTime(new Date())
   const description =
     "The Cyber Droid NFTs are unique, algorithmically generated androids on the Ethereum blockchain. They can function as digital art, metaverse avatars, or blockchain game characters. Ownership may also unlock exclusive perks ithin the community.";
   return (
@@ -96,7 +96,7 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
             <MintProgress totalSupply={launchpad.supply} minted={nfts.length} className="mt-6" />
             <div className="grid grid-cols-1 sm:grid-cols-2 mt-5 gap-[14px] sm:gap-2.5">
               <button
-                className="py-[11px]  h-[42px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 justify-center hover:bg-[#bbb] duration-300"
+                className="py-[11px]  h-[42px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 justify-center hover:bg-[#bbb] duration-300 disabled:cursor-not-allowed"
                 onClick={openMintModal}
                 disabled={remainingTime > 0}
               >
@@ -104,7 +104,7 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
               </button>
               <button className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300" onClick={() => router.push(`/collection/${collection.id}`)}>
                 <GalleryIcon className="mr-1" color="#F2F3F4" />
-                View Collection
+                View Collection 
               </button>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { BigNumberish } from "ethers";
+// import { BigNumberish } from "ethers";
 
 export const SEAPORT_CONTRACT_NAME = "Inkubate";
 export const SEAPORT_CONTRACT_VERSION = "1.0";
@@ -106,8 +106,8 @@ export enum BasicOrderRouteType {
   ERC1155_TO_ERC20,
 }
 
-export const MAX_INT =
-  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" as BigNumberish;
+// export const MAX_INT =
+//   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" as BigNumberish;
 export const ONE_HUNDRED_PERCENT_BP = 10000;
 export const NO_CONDUIT =
   "0x0000000000000000000000000000000000000000000000000000000000000000";

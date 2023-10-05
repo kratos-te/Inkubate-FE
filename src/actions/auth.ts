@@ -27,7 +27,7 @@ export async function signIn(userAddress: string, signature: string) {
       walletAddress: userAddress,
       signature: signature,
     });
-    console.log("signIN", response);
+    console.log("signIn", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

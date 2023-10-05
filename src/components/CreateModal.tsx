@@ -431,7 +431,10 @@ export const CreateModal: FC = () => {
                   </div>
                 </div>
               </div>
-              {!isLoading && <div className="flex justify-center"><LoadingPad title="Processing" description="Creating Launchpad for you" /></div>}
+              {!isLoading &&
+                <div className="flex justify-center">
+                  <LoadingPad title="Processing" description="Creating Launchpad for you" />
+                </div>}
               <div className="flex flex-col gap-1 mt-6">
                 <button className="w-full bg-white rounded-[12px] py-3 text-black text-[16px] font-semibold" >
                   Deploy New Mintable Collection

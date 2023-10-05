@@ -10,3 +10,4 @@ export * from "./user";
 export * from "./collection";
 export * from "./listing";
 export * from "./nft";
+export * from "./offer";

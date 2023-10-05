@@ -22,9 +22,10 @@ import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
 import ActivityDetail from "@/components/ActivityDetail";
 import { useUser } from "@/contexts/UserContext";
 import { getNftbyOwner } from "@/actions/nft";
-import { NftTypes } from "@/utils/types";
+import { ListingTypes, NftTypes, OfferTypes } from "@/utils/types";
 import { Listings } from "@/components/Listings";
-import { Offer } from "@/components/Offer";
+import { Offers } from "@/components/Offers";
+import { getListByUser, getOfferByBuy, getOfferBySell } from "@/actions";
 // import { AcceptModal } from "@/components/AcceptModal";
 
 export default function ProfilePage() {
@@ -34,7 +35,7 @@ export default function ProfilePage() {
   const { userData } = useUser();
 
   // const tab = query?.get("tab");
-  const filter = query?.get("filter");
+  // const filter = query?.get("filter");
   const profileName = "My Profile";
 
   const { profile, getUserData, getProfileData } = useUser();
@@ -42,6 +43,9 @@ export default function ProfilePage() {
   const [isDense, setIsDense] = useState(true);
   const [loading, setLoading] = useState(true);
   const [nftByOwner, setNftByOwner] = useState<NftTypes[]>([]);
+  const [listByUser, setListByUSer] = useState<ListingTypes[]>([]);
+  const [offerByBuy, setOfferByBuy] = useState<OfferTypes[]>([]);
+  const [offerBySell, setOfferBySell] = useState<OfferTypes[]>([]);
 
   const tab = useMemo(() => {
     let t = "1";
@@ -66,7 +70,14 @@ export default function ProfilePage() {
   useEffect(() => {
     const getNftData = async () => {
       const nftData = await getNftbyOwner(userData.id);
-      console.log("NFTs", nftData);
+      const listingData = await getListByUser();
+      const buyOffer = await getOfferByBuy();
+      const sellOffer = await getOfferBySell();
+      console.log("buyOffer", buyOffer);
+      setListByUSer(listingData?.data);
+      setOfferByBuy(buyOffer?.data);
+      setOfferBySell(sellOffer?.data);
+      // setOff
       if (nftData) {
         setNftByOwner(nftData.data);
       }
@@ -109,13 +120,12 @@ export default function ProfilePage() {
                 <button
                   key={key}
                   onClick={() =>
-                    router.push(`?tab=${tab}&filter=${item.value}`)
+                    router.push(`?tab=${item.tab}`)
                   }
-                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${
-                    filter === item.value
+                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${tab === item.tab
                       ? "bg-secondary hover:bg-[#AE115B]"
                       : "bg-dark-400 hover:bg-[#444]"
-                  }`}
+                    }`}
                 >
                   {item.title}
                 </button>
@@ -131,49 +141,9 @@ export default function ProfilePage() {
               </Typography>
             </button>
           </div>
-          <div className="border-b-[0.5px] border-light-400 relative z-10">
-            <button
-              onClick={() => router.push(`?tab=1`)}
-              className={`text-[15px] font-semibold py-2 border-b-2 ${
-                tab === "1"
-                  ? "text-secondary border-secondary"
-                  : "text-light-200 border-transparent"
-              }`}
-            >
-              Items
-            </button>
-            <button
-              onClick={() => router.push(`?tab=2`)}
-              className={`text-[15px] font-semibold py-2 border-b-2 ml-[30px] ${
-                tab === "2"
-                  ? "text-secondary border-secondary"
-                  : "text-light-200 border-transparent"
-              }`}
-            >
-              Activity
-            </button>
-            <button
-              onClick={() => router.push(`?tab=3`)}
-              className={`text-[15px] font-semibold py-2 border-b-2 ml-[30px] ${
-                tab === "3"
-                  ? "text-secondary border-secondary"
-                  : "text-light-200 border-transparent"
-              }`}
-            >
-              Listings
-            </button>
-            <button
-              onClick={() => router.push(`?tab=4`)}
-              className={`text-[15px] font-semibold py-2 border-b-2 ml-[30px] ${
-                tab === "4"
-                  ? "text-secondary border-secondary"
-                  : "text-light-200 border-transparent"
-              }`}
-            >
-              Offer
-            </button>
+          <div className="border-b-[0.5px] border-light-400 relative z-10  mt-6">
           </div>
-          <div className="relative flex gap-3 mt-6 lg:mt-12 z-20">
+          <div className={`relative flex gap-3 mt-6 lg:mt-12 z-20 ${(tab === "7" || tab === "8" || tab === "9") ? "hidden" : "show"}`}>
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
               <Typography className="ml-2.5 text-[14px] leading-[20px] hidden lg:block">
@@ -206,9 +176,8 @@ export default function ProfilePage() {
             </div>
           </div>
           <div
-            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${
-              tab === "1" || tab === "2" ? "show" : "hidden"
-            }`}
+            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
+              }`}
           >
             <div className="hidden lg:block w-[300px]">
               <CollectionFilter />
@@ -221,17 +190,23 @@ export default function ProfilePage() {
                   isDense={isDense}
                 />
               )}
-              {tab === "2" && <ActivityDetail nftData={nftByOwner} />}
+              {tab === "6" && <ActivityDetail nftData={nftByOwner} />}
             </div>
           </div>
-          {tab === "3" && (
+          {
+            tab === "7" && (
+              <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
+                <Listings listData={listByUser} />
+              </div>
+            )}
+          {tab === "8" && (
             <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
-              <Listings />
+              <Offers offerData={offerByBuy} />
             </div>
           )}
-          {tab === "4" && (
+          {tab === "9" && (
             <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
-              <Offer />
+              <Offers offerData={offerBySell} />
             </div>
           )}
         </div>
@@ -243,27 +218,48 @@ export default function ProfilePage() {
 
 const tabs = [
   {
+    tab: "1",
     title: "NFTS",
     value: "nfts",
   },
   {
-    title: "ERC-115 NFTS",
-    value: "erc-115",
+    tab: "2",
+    title: "ERC-1155 NFTS",
+    value: "erc-1155",
   },
   {
+    tab: "3",
     title: "Created",
     value: "created",
   },
   {
+    tab: "4",
     title: "Favorite",
     value: "favorite",
   },
   {
+    tab: "5",
     title: "Hidden",
     value: "hidden",
   },
   {
+    tab: "6",
     title: "Activity",
     value: "activity",
+  },
+  {
+    tab: "7",
+    title: "Listing",
+    value: "listing",
+  },
+  {
+    tab: "8",
+    title: "Buy Offer",
+    value: "buyoffer",
+  },
+  {
+    tab: "9",
+    title: "Sell Offer",
+    value: "selloffer",
   },
 ];
