@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { NftTypes } from "@/utils/types";
+import { NftTypes, PhotoItem } from "@/utils/types";
 import Typography from "../Typography";
 import {
   AddCartIcon,
@@ -18,6 +18,7 @@ import {
 import useWindowSize from "@/utils/useWindowSize";
 import { useModal } from "@/contexts/ModalContext";
 import { useAccount } from "wagmi";
+import { getPhoto } from "@/actions";
 
 interface OverviewProps {
   nft: NftTypes;
@@ -27,8 +28,17 @@ interface OverviewProps {
 const AssetOverview: FC<OverviewProps> = ({ nft }) => {
   const { openOfferModal, openBuyModal, openListModal } = useModal();
   const { address } = useAccount();
+  const { imgUrl, name, owner, nftId, collection } = nft;
+  const [nftAvatar, setNftAvatar] = useState<PhotoItem>()
 
-  const { imgUrl, name, owner, royalty } = nft;
+  useEffect(() => {
+    const getAvatar = async () => {
+      const avatar = await getPhoto(collection.avatarId)
+      setNftAvatar(avatar?.data)
+    }
+    getAvatar()
+  }, [collection])
+
   const { width } = useWindowSize();
   return (
     <div className="flex flex-col lg:flex-row">
@@ -42,26 +52,30 @@ const AssetOverview: FC<OverviewProps> = ({ nft }) => {
         <image xlinkHref={imgUrl} className="relative z-0 object-cover" />
         <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
           <Typography className="font-semibold text-[15px] !text-white">
-            #{royalty}
+            #{nftId}
           </Typography>
         </div>
       </div>
       <div className="mt-7 lg:mt-[60px] xl:mt-[106px] w-full lg:w-[calc(100%-440px)] xl:w-[calc(100%-544px)]">
         <div className="flex justify-between">
           <div className="flex items-center bg-dark-200 rounded-full p-[3px] pr-2 lg:min-w-[200px]">
-            <div className="w-[33px] h-[33px] border-[1.5px] border-light-100 rounded-full relative">
-              <Image
-                src="/assets/images/pfp-demo.gif"
-                fill
-                objectFit="cover"
-                className="rounded-full"
-                alt=""
-              />
-            </div>
+            {nftAvatar &&
+              <div className="w-[33px] h-[33px] border-[1.5px] border-light-100 rounded-full relative">
+                <Image
+                  src={nftAvatar.url}
+                  fill
+                  objectFit="cover"
+                  className="rounded-full"
+                  alt=""
+                />
+              </div>
+            }
             <Typography className="text-[12px] leading-[15px] font-bold lg:text-[16px] lg:leading-[1.5] mx-2">
-              {"OG Dread Zero"}
+              {collection.name}
             </Typography>
-            <VerifiedIcon color="#EA4492" />
+            {collection.verified &&
+              <VerifiedIcon color="#EA4492" />
+            }
           </div>
           <div className="rounded-full bg-[#666] flex gap-5 py-[11.5px] px-[15px]">
             <Link href={"#"}>
@@ -89,7 +103,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft }) => {
             component="h1"
             className="lg:font-readex font-poppins text-[36px] leading-[44px] lg:text-[28px] lg:leading-[35px] font-bold"
           >
-            {name}
+            {`${name}#${nftId}`}
           </Typography>
           <Typography
             component="p"

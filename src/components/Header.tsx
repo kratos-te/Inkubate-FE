@@ -49,8 +49,8 @@ const Header: FC = () => {
     if (address) {
       setIsShowDropdown(false);
       disconnect();
-      closeWalletModal();
       router.push("/");
+      closeWalletModal();
       logout()
       // await signOut(accessToken);
       // await refresh(refreshToken);

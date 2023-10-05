@@ -28,24 +28,27 @@ import AssetContentLoader from "@/components/Common/AssetContentLoader";
 import { OfferModal } from "@/components/OfferModal";
 import { BuyModal } from "@/components/BuyModal";
 import { usePathname } from "next/navigation";
-import { getNftByOne } from "@/actions/nft";
+import { getNftByOne, getNft } from "@/actions/nft";
 import { NftTypes } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
+import NftCard from "@/components/NftCard";
 
 export default function CollectionPage() {
-  const name = "Galxe#1344";
-  const contract = "0x2f05e799C61b600c65238a9DF060cABA63Db8E78";
+  // const name = "Galxe#1344";
+  // const contract = "0x2f05e799C61b600c65238a9DF060cABA63Db8E78";
   const pathname = usePathname();
 
   const [loading, setLoading] = useState(true);
   const [nftByOne, setNftByOne] = useState<NftTypes>();
+  const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([])
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1200);
   }, []);
 
-  const collectionId = useMemo(() => {
+  const contract = useMemo(() => {
     let path = "";
     if (pathname) {
       path = pathname.split("/")[2] as string;
@@ -63,11 +66,13 @@ export default function CollectionPage() {
 
   useEffect(() => {
     const getNftData = async () => {
-      const nft = await getNftByOne(nftId, collectionId);
+      const nft = await getNftByOne(nftId, contract);
+      const nfts = await getNft(nft?.data.collectionId)
       setNftByOne(nft?.data);
+      setNftByCollection(nfts?.data)
     };
     getNftData();
-  }, [nftId, collectionId]);
+  }, [nftId, contract]);
 
   return (
     <>
@@ -191,7 +196,7 @@ export default function CollectionPage() {
                 <div className="p-5 flex gap-2.5 items-center">
                   <ListIcon />{" "}
                   <Typography className="text-[16px] font-semibold font-readex">
-                    More from {"Optimistic Bunnies"}
+                    More from {nftByOne?.collectionId}
                   </Typography>
                 </div>
                 <div className="flex justify-center gap-[25px] min-h-[390px] flex-wrap">
@@ -203,9 +208,12 @@ export default function CollectionPage() {
                       <NftCard nft={DEMO_NFTS[0]} width={240} />
                     </>
                   )} */}
+                  {nftByCollection.map((item, index) => (
+                    <NftCard key={index} nft={item} width={240} />
+                  ))}
                 </div>
                 <div className="text-center mt-[30px] lg:mt-0">
-                  <Link href={"/collection/opbunnies"}>
+                  <Link href={`/collection/${nftByOne?.collectionId}`}>
                     <Button className="!font-readex !rounded-full">
                       View Collection
                     </Button>

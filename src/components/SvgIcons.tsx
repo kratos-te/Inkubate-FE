@@ -2330,11 +2330,20 @@ export const UploadIcon: FC = () => {
   )
 }
 
-export const MinuPlusIcon = () => {
+export const MinuPlusIcon: FC = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path d="M6 12H18" stroke="#B3B3B3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
       <path d="M12 18V6" stroke="#B3B3B3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  )
+}
+
+export const LinkIcon: FC = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+      <path d="M13.9101 3L17.2031 6.293L10.2031 13.293L11.6171 14.707L18.6171 7.707L21.9101 11V3H13.9101Z" fill="#F2F2F2" />
+      <path d="M19.9102 19H5.91016V5H12.9102L10.9102 3H5.91016C4.80716 3 3.91016 3.897 3.91016 5V19C3.91016 20.103 4.80716 21 5.91016 21H19.9102C21.0132 21 21.9102 20.103 21.9102 19V14L19.9102 12V19Z" fill="#F2F2F2" />
     </svg>
   )
 }

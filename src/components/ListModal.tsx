@@ -7,7 +7,7 @@ import {
   VerifiedIcon,
 } from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
-import { ModalItem } from "@/utils/types";
+import { ModalItem, OrderParameters } from "@/utils/types";
 import Typography from "./Typography";
 import { LoadingPad } from "./LoadingPad";
 import { SetDuration } from "./SetDuratoin";
@@ -32,6 +32,7 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
   const [dateRange, setDateRange] = useState("");
   const [tab, setTab] = useState("eth");
   const [amount, setAmount] = useState("");
+  const [listParam, setListParam] = useState<OrderParameters>();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -84,7 +85,7 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
       salt: SALT,
       conduitKey: OPENSEA_CONDUIT_KEY,
     };
-
+    setListParam(orderParameters)
     const signature = await signOrder(orderParameters, "0");
     // const signature = useSignSeaportOrder();
 
@@ -95,9 +96,9 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
   const handleList = async () => {
     setMakeList(true);
     const signature = await handleSign();
-    if (signature) {
-      // const listing = await listingNft(signature);
-      // console.log(listing);
+    if (signature && listParam) {
+      const listing = await listingNft(signature, listParam);
+      console.log(listing);
     }
     setMakeList(false);
   };

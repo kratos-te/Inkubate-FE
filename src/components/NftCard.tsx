@@ -11,7 +11,7 @@ interface ItemProps {
 }
 
 const NftCard: FC<ItemProps> = ({ nft, width }) => {
-  const { imgUrl, name, owner, royalty, nftId, address } = nft;
+  const { imgUrl, name, owner, nftId, address } = nft;
   const favorited = false;
 
   const handleFavorite = () => {
@@ -36,7 +36,7 @@ const NftCard: FC<ItemProps> = ({ nft, width }) => {
           <image xlinkHref={imgUrl} name={name} className="object-cover" />
           <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
             <Typography className="font-[500] text-[12px]">
-              #{royalty}
+              #{nftId}
             </Typography>
           </div>
         </div>
