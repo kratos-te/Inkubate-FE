@@ -56,6 +56,13 @@ export type UserItem = {
   walletAddress: string;
 };
 
+export type UserTypes = {
+  id: string;
+  username: string;
+  walletAddress: string;
+  profile: ProfileItem;
+};
+
 export type ProfileItem = {
   bio: string;
   twitter: string;
@@ -221,8 +228,10 @@ export type ListingTypes = {
   nft: NftTypes;
   price: bigint;
   sellerId: string;
+  network: string;
   status: string;
   expiresAt: Date;
+  createdAt: Date;
 };
 
 export type OfferTypes = {
@@ -237,4 +246,18 @@ export type OfferTypes = {
   expiresAt: Date;
   status: string;
   createdAt: Date;
+};
+
+export type ActivityTypes = {
+  id: string;
+  actionType: string;
+  buyerId: string;
+  buyer: UserTypes;
+  nftId: string;
+  nft: NftTypes;
+  sellerId: string;
+  seller: UserTypes;
+  txHash: string;
+  createdAt: Date;
+  price: bigint;
 };

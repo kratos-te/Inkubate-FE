@@ -3,6 +3,8 @@ import {
   waitForTransaction,
   prepareWriteContract,
   PrepareWriteContractConfig,
+  readContract,
+  ReadContractConfig,
 } from "@wagmi/core";
 // import { useSignSeaportOrder } from "./useSignSeaportOrder";
 
@@ -14,3 +16,7 @@ export const write = async (config: PrepareWriteContractConfig) => {
   return await waitForTransaction({ hash });
 };
 
+export const read = async (config: ReadContractConfig) => {
+  const result = await readContract(config);
+  return result;
+};

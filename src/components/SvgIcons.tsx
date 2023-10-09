@@ -2347,3 +2347,18 @@ export const LinkIcon: FC = () => {
     </svg>
   )
 }
+
+export const CheckIcon: FC = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <g clip-path="url(#clip0_3393_10792)">
+        <path d="M12 0C5.40891 0 0 5.40891 0 12C0 18.5911 5.40891 24 12 24C18.5911 24 24 18.5911 24 12C24 5.40891 18.5911 0 12 0ZM10.5478 17.4581L5.29284 12.2032L7.28137 10.2147L10.6398 13.5731L17.382 7.44413L19.2743 9.52467L10.5478 17.4581Z" fill="#F2F3F4" />
+      </g>
+      <defs>
+        <clipPath id="clip0_3393_10792">
+          <rect width="24" height="24" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}

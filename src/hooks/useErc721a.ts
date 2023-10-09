@@ -2,6 +2,7 @@ import { getContract } from "wagmi/actions";
 import { write } from "./utils";
 import { Abi } from "viem";
 import { ERC721A_ABI } from "@/utils/abi";
+import { SEAPORT_CONTRACT_ADDRESS } from "@/utils/constants";
 // import { ethers } from "ethers";
 
 export function useErc721a() {
@@ -33,6 +34,17 @@ export function useErc721a() {
       gas: BigInt("3000000"),
       gasPrice: BigInt("20000000000"),
       value: BigInt(value),
+    });
+  };
+
+  const setApprove = async (address: string) => {
+    return await write({
+      address: address as `0x${string}`,
+      abi: ERC721A_ABI as Abi,
+      functionName: "setApprovalForAll",
+      args: [SEAPORT_CONTRACT_ADDRESS as `0x${string}`, true],
+      gas: BigInt("3000000"),
+      gasPrice: BigInt("20000000000"),
     });
   };
 
@@ -94,5 +106,6 @@ export function useErc721a() {
     getWhitelistMode,
     getMintingStartTime,
     getTokenUri,
+    setApprove,
   };
 }

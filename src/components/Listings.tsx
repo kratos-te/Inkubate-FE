@@ -25,7 +25,7 @@ export const Listings: FC<ListingProps> = ({ listData }) => {
         </tr>
       </thead>
       <tbody>
-        {listData.map((item, key) => (
+        {listData && listData.map((item, key) => (
           <Listing key={key} listing={item} />
         ))}
       </tbody>

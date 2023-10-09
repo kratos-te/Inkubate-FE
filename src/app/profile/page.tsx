@@ -22,10 +22,11 @@ import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
 import ActivityDetail from "@/components/ActivityDetail";
 import { useUser } from "@/contexts/UserContext";
 import { getNftbyOwner } from "@/actions/nft";
-import { ListingTypes, NftTypes, OfferTypes } from "@/utils/types";
+import { ActivityTypes, ListingTypes, NftTypes, OfferTypes } from "@/utils/types";
 import { Listings } from "@/components/Listings";
 import { Offers } from "@/components/Offers";
 import { getListByUser, getOfferByBuy, getOfferBySell } from "@/actions";
+import { getActivityByUser } from "@/actions/activity";
 // import { AcceptModal } from "@/components/AcceptModal";
 
 export default function ProfilePage() {
@@ -46,6 +47,7 @@ export default function ProfilePage() {
   const [listByUser, setListByUSer] = useState<ListingTypes[]>([]);
   const [offerByBuy, setOfferByBuy] = useState<OfferTypes[]>([]);
   const [offerBySell, setOfferBySell] = useState<OfferTypes[]>([]);
+  const [actByUser, setActByUser] = useState<ActivityTypes[]>([]);
 
   const tab = useMemo(() => {
     let t = "1";
@@ -73,10 +75,12 @@ export default function ProfilePage() {
       const listingData = await getListByUser();
       const buyOffer = await getOfferByBuy();
       const sellOffer = await getOfferBySell();
-      console.log("buyOffer", buyOffer);
+      const activity = await getActivityByUser()
+      console.log("activity", activity);
       setListByUSer(listingData?.data);
       setOfferByBuy(buyOffer?.data);
       setOfferBySell(sellOffer?.data);
+      setActByUser(activity?.data)
       // setOff
       if (nftData) {
         setNftByOwner(nftData.data);
@@ -190,7 +194,7 @@ export default function ProfilePage() {
                   isDense={isDense}
                 />
               )}
-              {tab === "6" && <ActivityDetail nftData={nftByOwner} />}
+              {tab === "6" && <ActivityDetail actData={actByUser} />}
             </div>
           </div>
           {

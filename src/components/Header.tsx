@@ -32,7 +32,7 @@ const Header: FC = () => {
   const { openWalletModal, closeWalletModal } = useModal();
   const [isNotificationModal, setIsNotificationModal] = useState(false);
   const { username, userAddress, profile, userData } = useUser();
-  const { logout } = useAuth()
+  const { logout, accessToken } = useAuth()
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
   const { data } = useBalance({ address: userAddress as `0x${string}` });
@@ -118,7 +118,7 @@ const Header: FC = () => {
                 </li> */}
               </ul>
             </nav>
-            {isConnected ? (
+            {isConnected && accessToken ? (
               <>
                 <div className="flex border-2 border-[#EA4492] rounded-full">
                   <div
@@ -277,10 +277,11 @@ const Header: FC = () => {
                         </p>
                       </button>
                     </div>
-                    {isConnected ? (
+                    {isConnected && accessToken ? (
                       <div className="flex items-center p-6 gap-[14px]">
                         <Image
-                          src="/assets/images/default-avatar.svg"
+                          src={profile?.avatar?.url ||
+                            "/assets/images/default-avatar.svg"}
                           width={40}
                           height={40}
                           alt=""
@@ -288,7 +289,7 @@ const Header: FC = () => {
                         />
                         <div className="flex-col space-y-1">
                           <p className="text-white text-lg">{username}</p>
-                          <p className="text-white text-[16px]">{0.52} ETH</p>
+                          <p className="text-white text-[16px]">{data?.formatted} ETH</p>
                         </div>
                       </div>
                     ) : (

@@ -9,13 +9,14 @@ import Link from "next/link";
 import ActivityMobileCard from "./ActivityMobileCard";
 import Skeleton from "react-loading-skeleton";
 import ActivityMobileCardLoader from "./Common/ActivityMobileCardLoader";
-import { NftTypes } from "@/utils/types";
+import { ActivityTypes } from "@/utils/types";
+import { weiToNum } from "@/utils/util";
 
 interface DetailProps {
-  nftData: NftTypes[];
+  actData: ActivityTypes[];
 }
 
-const ActivityDetail: FC<DetailProps> = ({ nftData }) => {
+const ActivityDetail: FC<DetailProps> = ({ actData }) => {
   const tags = [
     {
       title: "sale",
@@ -87,9 +88,9 @@ const ActivityDetail: FC<DetailProps> = ({ nftData }) => {
           </thead>
           {!loading && (
             <tbody>
-              {nftData &&
-                nftData.map(
-                  (row, key) =>
+              {actData &&
+                actData.map(
+                  (row, key) => 
                     row && (
                       <tr
                         className="border-t-[0.5px] border-[687681]"
@@ -98,60 +99,62 @@ const ActivityDetail: FC<DetailProps> = ({ nftData }) => {
                         <td>
                           <div className="flex items-center text-secondary font-readex text-[14px] font-medium capitalize">
                             <SalesIcon color="#EA4492" className="mr-1" />
-                            {row.name}
+                            {row.actionType}
                           </div>
                         </td>
                         <td>
                           <div className="py-[17px] flex items-center">
                             <image
-                              xlinkHref={row.imgUrl}
+                              xlinkHref={row.nft.imgUrl}
                               className="rounded-md mr-2.5 w-[40px] h-[40px]"
                             />
                             <div className="">
                               <Typography className="font-semibold leading-[1.5]">
-                                {row.name}
+                                {`${row.nft.name}#${row.nft.nftId}`}
                               </Typography>
                               <Typography className="text-[14px] font-medium leading-[1.5] !text-dark-700 mt-0.5">
-                                {row.owner.username}
+                                {row.nft.name}
                               </Typography>
                             </div>
                           </div>
                         </td>
                         <td className="">
                           <Typography className="text-[14px] font-bold">
-                            {/* ETH {row.price} */}
+                            ETH{weiToNum(row.price)}
                           </Typography>
                         </td>
                         <td>
                           <div className="flex items-center">
                             <UserAvatar
+                              src={row.seller.profile.avatar?.url || "/assets/images/default-avatar.svg"}
                               gradientFrom="red"
                               gradientTo="blue"
                               className="hidden xl:block mr-2"
                             />
                             <Typography className="text-[14px] font-bold ml-2">
-                              {row.owner.username}
+                              {row.seller.username}
                             </Typography>
                           </div>
                         </td>
                         <td>
                           <div className="flex items-center">
                             <UserAvatar
+                              src={row.buyer.profile.avatar?.url || "/assets/images/default-avatar.svg"}
                               gradientFrom="yellow"
                               gradientTo="blue"
                               className="hidden xl:block mr-2"
                             />
                             <Typography className="text-[14px] font-bold">
-                              {row.owner.username}
+                              {row.buyer.username}
                             </Typography>
                           </div>
                         </td>
                         <td>
                           <Link
-                            href={`https://Goerli.etherscan.io/tx/${row.address}`}
+                            href={`https://Goerli.etherscan.io/tx/${row.txHash}`}
                             target="_blank"
                           >
-                            <div className="flex items-center justify-end">
+                            <div className="flex items-center justify-start">
                               <Typography className="text-[14px] font-bold ml-2">
                                 {moment(new Date(row.createdAt)).fromNow()}
                               </Typography>
@@ -166,7 +169,7 @@ const ActivityDetail: FC<DetailProps> = ({ nftData }) => {
           )}
           {loading && (
             <tbody>
-              {nftData.map(
+              {actData && actData.map(
                 (row, key) =>
                   row && (
                     <tr className="border-t-[0.5px] border-[687681]" key={key}>
@@ -262,9 +265,9 @@ const ActivityDetail: FC<DetailProps> = ({ nftData }) => {
         </table>
         <div className="flex flex-col gap-3 lg:hidden mt-[30px]">
           {!loading &&
-            nftData.map((_, key) => <ActivityMobileCard key={key} />)}
+            actData.map((_, key) => <ActivityMobileCard key={key} />)}
           {loading &&
-            nftData.map((_, key) => <ActivityMobileCardLoader key={key} />)}
+            actData.map((_, key) => <ActivityMobileCardLoader key={key} />)}
         </div>
       </div>
     </>

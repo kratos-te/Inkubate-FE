@@ -15,7 +15,7 @@ export function useSignSeaportOrder() {
     async (orderParameters: OrderParameters, counter: string) => {
       if (!signer) {
         console.log("No Signer connected");
-        return "";
+        return { signature: "", data: "" };
       }
       // "EIP712Domain"
       const data: SignTypedDataArgs = {
@@ -36,9 +36,9 @@ export function useSignSeaportOrder() {
       );
 
       if (signature == null) {
-        return "";
+        return { signature: "", data };
       }
-      return signature;
+      return { signature, data };
     },
     [chain?.id, signTypedDataAsync, signer]
   );
