@@ -42,7 +42,7 @@ export const DROPDOWN_LINKS = [
   {
     icon: MenuUserIcon,
     title: "My Nfts",
-    link: "/",
+    link: "/profile?tab=1",
   },
   {
     icon: MenuFavorIcon,
@@ -52,12 +52,12 @@ export const DROPDOWN_LINKS = [
   {
     icon: MenuListIcon,
     title: "Listings",
-    link: "/",
+    link: "/profile?tab=7",
   },
   {
     icon: MenuOfferIcon,
     title: "Offers",
-    link: "/",
+    link: "/profile?tab=8",
   },
   {
     icon: MenuSettingIcon,

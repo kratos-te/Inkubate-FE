@@ -1,3 +1,4 @@
+"use client";
 import { FC, useState, useRef } from "react";
 import {
   ArrowLeftIcon,
@@ -7,7 +8,7 @@ import {
   VerifiedIcon,
 } from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
-import { ModalItem, OrderParameters } from "@/utils/types";
+import { ModalItem } from "@/utils/types";
 import Typography from "./Typography";
 import { LoadingPad } from "./LoadingPad";
 import { SetDuration } from "./SetDuratoin";
@@ -18,26 +19,28 @@ import { listingNft } from "@/actions/listing";
 import { SALT, TOKEN, ZERO_ADDRESS, ZERO_HASH } from "@/config";
 import { bytes20ToBytes32, date2UTC, numToWei } from "@/utils/util";
 import { useUser } from "@/contexts/UserContext";
+import { useErc721a } from "@/hooks/useErc721a";
+import { useInkubate } from "@/hooks/useInkubate";
 
 export const ListModal: FC<ModalItem> = ({ nft }) => {
   const { closeListModal, isOpenedListModal } = useModal();
-
+  const { setApprove } = useErc721a();
+  const { count } = useInkubate();
   const signOrder = useSignSeaportOrder();
   const { address } = useAccount();
 
-  const { imgUrl, name, nftId } = nft;
+  const { id, imgUrl, name, nftId } = nft;
   const { startDate, endDate, startTime, endTime } = useUser();
   const [makeList, setMakeList] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dateRange, setDateRange] = useState("");
   const [tab, setTab] = useState("eth");
   const [amount, setAmount] = useState("");
-  const [listParam, setListParam] = useState<OrderParameters>();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleSign = async () => {
-    if (!address) return;
+    if (!address) return { signature: "", data: "" };
     const startAmount = numToWei((parseFloat(amount) / 100) * 95);
     const feeAmount = numToWei(parseFloat(amount) / 20);
     const startDay = (
@@ -55,8 +58,8 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
           itemType: 2,
           token: bytes20ToBytes32(nft.address),
           identifierOrCriteria: nftId,
-          startAmount: "1",
-          endAmount: "1",
+          startAmount: startAmount,
+          endAmount: startAmount,
         },
       ],
       totalOriginalConsiderationItems: "2",
@@ -85,23 +88,37 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
       salt: SALT,
       conduitKey: OPENSEA_CONDUIT_KEY,
     };
-    setListParam(orderParameters)
-    const signature = await signOrder(orderParameters, "0");
+    const counter = await count(address)
+    const { signature, data } = await signOrder(orderParameters, counter as string);
+    if (signature === "") {
+      return { signature: "", data };
+    } else {
+      console.log("signature", signature);
+      return { signature, data };
+    }
     // const signature = useSignSeaportOrder();
 
-    console.log("signature", signature);
-    return signature;
+
   };
 
   const handleList = async () => {
     setMakeList(true);
-    const signature = await handleSign();
-    if (signature && listParam) {
-      const listing = await listingNft(signature, listParam);
-      console.log(listing);
+    // if (address) {
+    //   const counter = await count(address as `0x${string}`)
+    //   console.log("count", weiToNum(counter))
+    // }
+    const res = await setApprove(nft.address)
+    console.log("res", res)
+    if (res.status === "success") {
+      const { signature, data } = await handleSign();
+      if (signature) {
+        const listing = await listingNft(id, signature, JSON.stringify(data), nft.collection.network);
+        console.log(listing);
+      }
+      setMakeList(false);
     }
-    setMakeList(false);
   };
+
 
   const handelSetEther = () => {
     setTab("eth");
@@ -119,6 +136,7 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
   const handleChangeAmount = (event: any) => {
     setAmount(event.target.value);
   };
+
 
   if (!isOpenedListModal) return null;
   return (
@@ -158,28 +176,26 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
                   component="h1"
                   className="items-left lg:font-readex font-poppins text-[36px] leading-[44px] lg:text-[36px] lg:leading-[35px] font-bold max-sm:text-[24px]"
                 >
-                  {name}
+                  {`${name}#${nftId}`}
                 </Typography>
               </div>
             </div>
             <div className="flex justify-between border border-white rounded-3xl mt-12 overflow-hidden">
               <div
-                className={`flex h-12 space-x-1 justify-center border-white py-2 w-1/2 rounded-r-full items-center cursor-pointer ${
-                  tab === "eth"
-                    ? "bg-white text-black"
-                    : "bg-transparent text-white"
-                }`}
+                className={`flex h-12 space-x-1 justify-center border-white py-2 w-1/2 rounded-r-full items-center cursor-pointer ${tab === "eth"
+                  ? "bg-white text-black"
+                  : "bg-transparent text-white"
+                  }`}
                 onClick={handelSetEther}
               >
                 <EthIcon color={`${tab === "eth" ? "black" : "white"}`} />
                 <p className="text-[24px] font-bold"> ETH</p>
               </div>
               <div
-                className={`flex h-12 space-x-1 justify-center w-1/2 border-white py-2 px-4 rounded-l-full items-center cursor-pointer ${
-                  tab === "bnb"
-                    ? "bg-white text-black"
-                    : "bg-transparent text-white"
-                }`}
+                className={`flex h-12 space-x-1 justify-center w-1/2 border-white py-2 px-4 rounded-l-full items-center cursor-pointer ${tab === "bnb"
+                  ? "bg-white text-black"
+                  : "bg-transparent text-white"
+                  }`}
                 onClick={handleSetBnb}
               >
                 <BnbIcon color={`${tab === "bnb" ? "black" : "white"}`} />

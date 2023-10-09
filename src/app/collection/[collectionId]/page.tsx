@@ -17,16 +17,19 @@ import SortDropdown from "@/components/SortDropdown";
 import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
 import { getNft } from "@/actions/nft";
-import { CollectionParam, NftTypes } from "@/utils/types";
+import { ActivityTypes, CollectionParam, NftTypes } from "@/utils/types";
 import { getCollectionById } from "@/actions";
+import { getActivityByCollection } from "@/actions/activity";
+
 
 export default function CollectionPage() {
   const router = useRouter();
   const query = useSearchParams();
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
-  const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([])
+  const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
   const [collectionById, setCollectionById] = useState<CollectionParam>();
+  const [actByCollection, setActByCollection] = useState<ActivityTypes[]>([]);
 
 
   const tab = useMemo(() => {
@@ -60,8 +63,10 @@ export default function CollectionPage() {
     const getNftByCollection = async () => {
       const nfts = await getNft(collectionId)
       const collection = await getCollectionById(collectionId);
+      const activity = await getActivityByCollection(collectionId);
       setNftByCollection(nfts?.data)
       setCollectionById(collection?.data)
+      setActByCollection(activity?.data)
     }
     getNftByCollection()
   }, [collectionId])
@@ -144,7 +149,7 @@ export default function CollectionPage() {
               {tab === "1" && (
                 <NftGrid nftData={nftByCollection} collectionId={collectionId} isDense={isDense} />
               )}
-              {tab === "2" && <ActivityDetail nftData={nftByCollection} />}
+              {tab === "2" && <ActivityDetail actData={actByCollection} />}
             </div>
           </div>
         </div>

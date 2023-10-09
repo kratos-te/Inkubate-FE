@@ -29,9 +29,10 @@ import { OfferModal } from "@/components/OfferModal";
 import { BuyModal } from "@/components/BuyModal";
 import { usePathname } from "next/navigation";
 import { getNftByOne, getNft } from "@/actions/nft";
-import { NftTypes } from "@/utils/types";
+import { ListingTypes, NftTypes } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
 import NftCard from "@/components/NftCard";
+import { getListByNft } from "@/actions";
 
 export default function CollectionPage() {
   // const name = "Galxe#1344";
@@ -41,6 +42,7 @@ export default function CollectionPage() {
   const [loading, setLoading] = useState(true);
   const [nftByOne, setNftByOne] = useState<NftTypes>();
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([])
+  const [listByNft, setListByNft] = useState<ListingTypes>()
 
   useEffect(() => {
     setTimeout(() => {
@@ -68,8 +70,10 @@ export default function CollectionPage() {
     const getNftData = async () => {
       const nft = await getNftByOne(nftId, contract);
       const nfts = await getNft(nft?.data.collectionId)
+      const listing = await getListByNft(nft?.data.id)
       setNftByOne(nft?.data);
       setNftByCollection(nfts?.data)
+      setListByNft(listing?.data)
     };
     getNftData();
   }, [nftId, contract]);
@@ -90,7 +94,7 @@ export default function CollectionPage() {
       >
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
-            nftByOne && <AssetOverview nft={nftByOne} />
+            nftByOne && <AssetOverview nft={nftByOne} listing={listByNft} />
           ) : (
             <AssetOverviewLoader />
           )}

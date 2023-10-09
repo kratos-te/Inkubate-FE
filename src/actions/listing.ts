@@ -1,11 +1,12 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { checkAuthorization } from ".";
-import { OrderParameters } from "@/utils/types";
 
 export async function listingNft(
+  id: string,
   signature: string,
-  parameters: OrderParameters
+  parameters: string,
+  network: string
 ) {
   try {
     await checkAuthorization();
@@ -16,7 +17,12 @@ export async function listingNft(
     };
     const response = await axios.post(
       `${API_BASE_URL}/api/listing`,
-      { signature: signature, parameters: JSON.stringify(parameters) },
+      {
+        id,
+        signature,
+        parameters,
+        network,
+      },
       { headers }
     );
     console.log("listing", response);
@@ -61,8 +67,10 @@ export async function getlistingNft() {
 }
 
 export async function cancelList(
-  signature: string,
-  parameters: OrderParameters
+  id: string,
+  transactionHash: string,
+  parameters: string,
+  network: string
 ) {
   try {
     await checkAuthorization();
@@ -71,12 +79,16 @@ export async function cancelList(
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios.post(
-      `${API_BASE_URL}/api/cancel`,
-      { signature: signature, parameters: JSON.stringify(parameters) },
-      { headers }
-    );
-    console.log("listing", response);
+    const response = await axios.delete(`${API_BASE_URL}/api/listing`, {
+      headers: headers,
+      data: {
+        id: id,
+        transactionHash: transactionHash,
+        parameters: parameters,
+        network: network,
+      },
+    });
+    console.log("cancel slisting", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -103,6 +115,33 @@ export async function getListByUser() {
       headers,
     });
     console.log("listing", response);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
+      console.error(`Axios Error: ${error.message}`);
+    } else {
+      console.error(error);
+      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
+      console.error(error);
+    }
+    return null; // Return null when an error occurs
+  }
+}
+
+export async function getListByNft(nftId: string) {
+  try {
+    await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
+    const response = await axios.get(
+      `${API_BASE_URL}/api/listing/nft/${nftId}`,
+      { headers }
+    );
+    console.log("listing from NFT", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {

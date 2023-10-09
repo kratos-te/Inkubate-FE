@@ -31,7 +31,7 @@ export const Offers: FC<OfferProps> = ({ offerData }) => {
         </tr>
       </thead>
       <tbody>
-        {offerData.map((item, key) => (
+        {offerData && offerData.map((item, key) => (
           <Offer key={key} offer={item} />
         ))}
       </tbody>

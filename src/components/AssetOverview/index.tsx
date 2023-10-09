@@ -1,11 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { NftTypes, PhotoItem } from "@/utils/types";
+import { ListingTypes, NftTypes, PhotoItem } from "@/utils/types";
 import Typography from "../Typography";
 import {
   AddCartIcon,
+  CheckIcon,
   ClockIcon,
+  CloseCircleIcon,
+  EditIcon,
   ExplorerIcon,
   FavoriteSmIcon,
   MoreSmIcon,
@@ -18,18 +21,78 @@ import {
 import useWindowSize from "@/utils/useWindowSize";
 import { useModal } from "@/contexts/ModalContext";
 import { useAccount } from "wagmi";
-import { getPhoto } from "@/actions";
+import { cancelList, getPhoto } from "@/actions";
+import { format } from "date-fns";
+import { weiToNum } from "@/utils/util";
+import { useInkubate } from "@/hooks/useInkubate";
+import { SALT, ZERO_ADDRESS, ZERO_HASH } from "@/config";
+import { OPENSEA_CONDUIT_KEY } from "@/utils/constants";
 
 interface OverviewProps {
   nft: NftTypes;
+  listing?: ListingTypes;
   className?: string;
 }
 
-const AssetOverview: FC<OverviewProps> = ({ nft }) => {
+const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
   const { openOfferModal, openBuyModal, openListModal } = useModal();
+  const { count, cancelListing } = useInkubate();
   const { address } = useAccount();
-  const { imgUrl, name, owner, nftId, collection } = nft;
+  const { id, imgUrl, name, owner, nftId, collection } = nft;
+  // const { price } = listing
   const [nftAvatar, setNftAvatar] = useState<PhotoItem>()
+
+  const handleCancelList = async () => {
+    if (!address) return;
+    if (listing) {
+      // const startAmount = (weiToNum(listing.price) / 100) * 95;
+      const startDay = (
+        Math.round(new Date(listing.createdAt).getTime() / 1000)
+      ).toString();
+      const endDay = (
+        Math.round(new Date(listing.expiresAt).getTime() / 1000)
+      ).toString();
+      const counters = await count(address as `0x${string}`)
+      // const counter = weiToNum(counters)
+
+      const orders = {
+        offerer: address,
+        zone: ZERO_ADDRESS, // always this is a null address in listing
+        offer:
+          [{
+            itemType: 2,
+            token: nft.address,
+            identifierOrCriteria: nftId,
+            startAmount: listing.price.toString(),
+            endAmount: listing.price.toString(),
+          }],
+        totalOriginalConsiderationItems: "1",
+        consideration:
+          [{
+            itemType: 0,
+            token: ZERO_ADDRESS,
+            identifierOrCriteria: "0",
+            startAmount: listing.price.toString(), // 95% of amount -> price
+            endAmount: listing.price.toString(),
+            recipient: address, // price receiver -> token owner
+          }],
+        orderType: 0,
+        startTime: startDay,
+        endTime: endDay,
+        zoneHash: ZERO_HASH,
+        salt: SALT,
+        conduitKey: OPENSEA_CONDUIT_KEY,
+        counter: counters
+      };
+      console.log("orders", orders)
+
+      const res = await cancelListing([orders])
+
+      const cancel = await cancelList(id, res?.transactionHash as `0x${string}`, JSON.stringify(orders), listing.network)
+
+      console.log("cancel", cancel)
+    }
+  }
 
   useEffect(() => {
     const getAvatar = async () => {
@@ -112,34 +175,67 @@ const AssetOverview: FC<OverviewProps> = ({ nft }) => {
             Owned by
             <span className="ml-2 text-secondary">{owner.username}</span>
           </Typography>
-          <Typography className="text-[14px] font-medium mt-5">
-            Price
-          </Typography>
-          {/* <Typography className="text-[30px] lg:text-[28px] leading-[35px] font-bold mt-[5px]">
-            {price} ETH
-          </Typography> */}
-          <Typography className="text-[15px] mt-2.5 flex items-center text-light-200">
-            <ClockIcon className="mr-[5px]" />
-            <span className="text-light-200">
-              Sale ened Sep 19. 2023. 8:48 AM
-            </span>
-          </Typography>
+          {listing &&
+            <>
+            <Typography className="text-[14px] font-medium mt-5">
+              Price
+            </Typography>
+            <Typography className="text-[30px] lg:text-[28px] leading-[35px] font-bold mt-[5px]">
+              {weiToNum(listing.price)} ETH
+            </Typography>
+            <Typography className="text-[15px] mt-2.5 flex items-center text-light-200">
+              <ClockIcon className="mr-[5px]" />
+              <span className="text-light-200">
+                Sale ened {format(new Date(listing.expiresAt), "MMM dd, yyyy, hh:mm b")}
+              </span>
+            </Typography>
+            </>
+          }
+
           {address === owner.walletAddress ? (
-            <div className="flex flex-col mt-5 md:flex-row">
-              <button
-                className="px-10 py-[11px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
-                onClick={openListModal}
-              >
-                <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
-                Sell NFT
-              </button>
-              {/* <button
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col mt-5 md:flex-row">
+                {listing?.status === "ACTIVE" ?
+                  <button
+                    className="px-10 py-[11px] text-dark-200 font-readex flex !rounded-full items-center text-[16px] !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
+                    onClick={handleCancelList}
+                  >
+                    <CloseCircleIcon className="mr-2 w-[18px] h-[18px]" color="#161616" />
+                    Cancel Listing
+                  </button> :
+                  <button
+                    className="px-10 py-[11px] text-dark-200 font-readex flex !rounded-full items-center text-[16px] !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
+                    onClick={openListModal}
+                  >
+                    <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
+                    Sell NFT
+                  </button>
+                }
+
+                {listing?.status === "ACTIVE" &&
+                  <button
+                    className="px-10 py-[11p x] text-light-100 font-readex flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+                    onClick={openOfferModal}
+                  >
+                    <EditIcon className="mr-2 mt-[1px] w-[16px] h-[16px]" color="#F2F3F4" />
+                    Edit
+                  </button>
+                }
+                {/* <button
                 className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
                 onClick={openOfferModal}
               >
                 <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
                 Make Offer
               </button> */}
+              </div>
+              {listing?.status === "ACTIVE" &&
+                <div className="flex w-[314px] gap-[14px] items-center p-[14px] bg-[#161616] rounded-xl text-[16px] font-semibold font-readex text-white">
+                  <CheckIcon />
+                  Your Item is successfully listed
+
+                </div>
+              }
             </div>
           ) : (
             <div className="flex flex-col mt-5 md:flex-row">
