@@ -23,14 +23,20 @@ export function useInkubate() {
   };
 
   const cancelListing = async (orders: OrderComponents[]) => {
-    return await write({
-      address: SEAPORT_CONTRACT_ADDRESS as `0x${string}`,
-      abi: INK_ABI as Abi,
-      functionName: "cancel",
-      args: [orders],
-      gas: BigInt("3000000"),
-      gasPrice: BigInt("20000000000"),
-    });
+    try {
+      //   console.log("address", SEAPORT_CONTRACT_ADDRESS);
+      return await write({
+        address: "0x3Ce4E94C427D79376041d596e98a8B135e8a5c96",
+        abi: INK_ABI as Abi,
+        functionName: "cancel",
+        args: [orders],
+        gas: BigInt("3000000"),
+        gasPrice: BigInt("20000000000"),
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
   };
 
   return {

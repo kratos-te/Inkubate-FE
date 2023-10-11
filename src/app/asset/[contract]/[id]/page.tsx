@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { PROPERTIES } from "@/config";
 import AssetOverview from "@/components/AssetOverview";
 import AssetDetailBox from "@/components/AssetDetailBox";
 import {
@@ -135,20 +134,20 @@ export default function CollectionPage() {
                     defaultCollapsed={true}
                   >
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-2.5">
-                      {PROPERTIES.map((item, key) => (
+                      {nftByOne?.attributes.map((item, key) => (
                         <div
                           key={key}
                           className="rounded-md p-[15px] border-[0.5px] border-light-200"
                         >
                           <div className="font-readex text-[12px] font-medium text-secondary">
-                            {item.traitType}
+                            {item.trait_type}
                           </div>
                           <Typography className="text-[14px] leading-[17.5px] font-bold font-readex mt-[5px]">
                             {item.value}
                           </Typography>
-                          <span className="text-dark-700 font-readex leading-[16.25px] text-[13px]">
+                          {/* <span className="text-dark-700 font-readex leading-[16.25px] text-[13px]">
                             {item.description}
-                          </span>
+                          </span> */}
                         </div>
                       ))}
                     </div>
@@ -216,7 +215,7 @@ export default function CollectionPage() {
                     <NftCard key={index} nft={item} width={240} />
                   ))}
                 </div>
-                <div className="text-center mt-[30px] lg:mt-0">
+                <div className="text-center mt-[30px] lg:mt-5">
                   <Link href={`/collection/${nftByOne?.collectionId}`}>
                     <Button className="!font-readex !rounded-full">
                       View Collection

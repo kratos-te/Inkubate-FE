@@ -1,9 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
 import { FC } from "react";
 import Typography from "./Typography";
 import IconButton from "./IconButton";
 import { AddIcon, FavoriteIcon } from "./SvgIcons";
 import Link from "next/link";
 import { NftTypes } from "@/utils/types";
+import { ipfsToLink } from "@/utils/util";
+import { useModal } from "@/contexts/ModalContext";
+import { useAccount } from "wagmi";
 
 interface ItemProps {
   nft: NftTypes;
@@ -11,7 +15,9 @@ interface ItemProps {
 }
 
 const NftCard: FC<ItemProps> = ({ nft, width }) => {
-  const { imgUrl, name, owner, nftId, address } = nft;
+  const { imgUrl, name, owner, nftId } = nft;
+  const { openBuyModal } = useModal()
+  const { address } = useAccount();
   const favorited = false;
 
   const handleFavorite = () => {
@@ -20,9 +26,10 @@ const NftCard: FC<ItemProps> = ({ nft, width }) => {
   };
   const handleBuy = () => {
     console.log("Buy now");
+    openBuyModal()
   };
   return (
-    <Link href={`/asset/${address}/${nftId}`}>
+    <Link href={`/asset/${nft.address}/${nftId}`}>
       <div
         className="rounded-xl shadow-card group"
         style={{
@@ -33,7 +40,7 @@ const NftCard: FC<ItemProps> = ({ nft, width }) => {
           className="relative overflow-hidden rounded-t-xl"
           style={{ width: width, height: width }}
         >
-          <image xlinkHref={imgUrl} name={name} className="object-cover" />
+          <img src={ipfsToLink(imgUrl)} className="object-cover" alt="nft Image" />
           <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
             <Typography className="font-[500] text-[12px]">
               #{nftId}
@@ -74,7 +81,7 @@ const NftCard: FC<ItemProps> = ({ nft, width }) => {
             className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-bl-xl font-bold text-white w-[calc(100%-61px)] duration-300"
             onClick={handleBuy}
           >
-            Buy Now
+            {owner.walletAddress === address ? "Sell Now" : "Buy Now"} 
           </button>
           <button
             className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300"

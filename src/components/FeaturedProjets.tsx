@@ -1,21 +1,38 @@
 "use client";
 import { FC, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Typography from "./Typography";
 import Button from "./Button";
 import Link from "next/link";
-import { DEMO_COLLECTIONS } from "@/config";
 import CollectionCard from "./CollectionCard";
 import CollecionCardLoader from "./Common/CollecionCardLoader";
+import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { getAllCollections, getLaunchpad } from "@/actions";
 
 const FeaturedProjects: FC = () => {
-  const collections = Array(8).fill(DEMO_COLLECTIONS[0]);
-
+  const pathname = usePathname();
+  const [collections, setCollections] = useState<CollectionParam[]>([]);
+  const [launchpads, setLaunchPads] = useState<LaunchpadParam[]>([]);
   const [loading, setIsLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1200);
   }, []);
+
+  useEffect(() => {
+    const launchPad = async () => {
+      if (pathname === "/") {
+        const launchpadData = await getLaunchpad();
+        const collectionData = await getAllCollections();
+        if (launchpadData) {
+          setLaunchPads(launchpadData.data);
+          setCollections(collectionData);
+        }
+      }
+    };
+    launchPad();
+  }, [pathname]);
 
   return (
     <section className="mt-[72px] xl:mt-[180px] relative">

@@ -108,14 +108,6 @@ const Header: FC = () => {
                     </Link>
                   </li>
                 ))}
-
-                {/* <li>
-                  <button onClick={openLaunchpadModal}>
-                    <Typography className="font-semibold leading-[1.5]">
-                      Launchpad
-                    </Typography>
-                  </button>
-                </li> */}
               </ul>
             </nav>
             {isConnected && accessToken ? (
@@ -160,7 +152,7 @@ const Header: FC = () => {
                     width={44}
                     height={44}
                     alt=""
-                    className="rounded-full cursor-pointer"
+                    className="rounded-full cursor-pointer w-[44px] h-[44px]"
                     onClick={handleDropdown}
                   />
                   {isShowDropdown && (
@@ -285,7 +277,7 @@ const Header: FC = () => {
                           width={40}
                           height={40}
                           alt=""
-                          className="rounded-full cursor-pointer"
+                          className="rounded-full cursor-pointer w-[44px] h-[44px]"
                         />
                         <div className="flex-col space-y-1">
                           <p className="text-white text-lg">{username}</p>

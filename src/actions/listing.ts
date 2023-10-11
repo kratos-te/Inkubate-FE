@@ -18,7 +18,7 @@ export async function listingNft(
     const response = await axios.post(
       `${API_BASE_URL}/api/listing`,
       {
-        id,
+        nftId: id,
         signature,
         parameters,
         network,
@@ -68,7 +68,8 @@ export async function getlistingNft() {
 
 export async function cancelList(
   id: string,
-  transactionHash: string,
+  nftId: string,
+  txHash: string,
   parameters: string,
   network: string
 ) {
@@ -83,7 +84,8 @@ export async function cancelList(
       headers: headers,
       data: {
         id: id,
-        transactionHash: transactionHash,
+        nftId,
+        txHash,
         parameters: parameters,
         network: network,
       },

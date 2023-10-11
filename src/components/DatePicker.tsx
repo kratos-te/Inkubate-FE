@@ -167,32 +167,31 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
       </div>
       {isOpenedCreateModal && (
         <>
-        <div className="flex gap-[9px] mt-2 justify-between items-center w-full">
-          <div className="flex-col gap-2 w-1/2">
-            <Typography className="text-left text-[14px] text-white font-normal max-sm:text-[16px]">
-              Start Time
-            </Typography>
+          <div className="flex gap-[9px] mt-2 justify-between items-center w-full">
+            <div className="flex-col gap-2 w-1/2">
+              <Typography className="text-left text-[14px] text-white font-normal max-sm:text-[16px]">
+                Start Time
+              </Typography>
               <div className={` mt-2 rounded-[8px] ${!isValidTime ? " border-secondary border-[2px]" : ""}`}>
-            <input
+                <input
                   className={`bg-[#616161] text-[14px] text-white w-full rounded-[8px] p-[14px] placeholder:text-third ${!isValidTime ? " border-secondary border-1" : ""} `}
                   placeholder={(format(new Date(), "kk:mm"))}
-              onChange={handleSetStartTime}
-            />
+                  onChange={handleSetStartTime}
+                />
               </div>
-
+            </div>
+            <div className="border-b border-[#666666] h-1/2 w-[15px] mt-8"></div>
+            <div className="flex-col gap-2 w-1/2">
+              <Typography className="text-left text-[14px] text-white w-1/2 font-normal  max-sm:text-[16px]">
+                End Time
+              </Typography>
+              <input
+                className="bg-[#616161] text-[14px] text-white w-full rounded-[8px] mt-2 p-[14px] placeholder:text-third"
+                placeholder="23:59"
+                onChange={handleSetEndTime}
+              />
+            </div>
           </div>
-          <div className="border-b border-[#666666] h-1/2 w-[15px] mt-8"></div>
-          <div className="flex-col gap-2 w-1/2">
-            <Typography className="text-left text-[14px] text-white w-1/2 font-normal  max-sm:text-[16px]">
-              End Time
-            </Typography>
-            <input
-              className="bg-[#616161] text-[14px] text-white w-full rounded-[8px] mt-2 p-[14px] placeholder:text-third"
-              placeholder="23:59"
-              onChange={handleSetEndTime}
-            />
-          </div>
-        </div>
           {!isValidTime &&
             <p className="text-[12px] text-white text-left mt-1">Please select a time later than the current time</p>
           }
@@ -230,19 +229,16 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
             return (
               <div key={idx} className={colStartClasses[getDay(day)]}>
                 <button
-                  className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[16px] md:text-[20px] font-semibold h-9 w-9 md:h-12 md:w-12 rounded-md md:rounded-xl ${
-                    isToday(day)
+                  className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[16px] md:text-[20px] font-semibold h-9 w-9 md:h-12 md:w-12 rounded-md md:rounded-xl ${isToday(day)
                       ? " bg-secondary text-white"
                       : "text-[#CAC7C7] hover:bg-[#666666] hover:text-white active:bg-[#666666]"
-                  }  ${
-                    format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""
-                  } ${
-                    format(startDay, "MM/dd/yyyy") <=
+                    }  ${format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""
+                    } ${format(startDay, "MM/dd/yyyy") <=
                       format(day, "MM/dd/yyyy") &&
                     format(day, "MM/dd/yyyy") <= format(endDay, "MM/dd/yyyy")
                       ? "bg-[#666666]"
                       : ""
-                  }`}
+                    }`}
                   onClick={() => handleSetDate(day)}
                   disabled={day < today}
                 >

@@ -173,7 +173,7 @@ export interface NftTypes {
   id: string;
   address: string;
   assetUrl: string;
-  attributes: string[];
+  attributes: AttributesTypes[];
   collection: CollectionParam;
   collectionId: string;
   contractType: string;
@@ -185,6 +185,11 @@ export interface NftTypes {
   ownerId: string;
   royalty: number;
   createdAt: string;
+}
+
+export interface AttributesTypes {
+  trait_type: string;
+  value: string;
 }
 
 export interface OfferItem {
@@ -216,6 +221,20 @@ export type OrderParameters = {
   salt: string;
   totalOriginalConsiderationItems: string; // BigNumber
   conduitKey: string;
+};
+
+export type CancelParameters = {
+  offerer: string;
+  zone: string;
+  offer: OfferItem[];
+  consideration: ConsiderationItem[];
+  orderType: OrderType;
+  startTime: string; // BigNumber
+  endTime: string; //
+  zoneHash: string;
+  salt: string;
+  conduitKey: string;
+  counter: bigint;
 };
 
 export type OrderComponents = OrderParameters & {

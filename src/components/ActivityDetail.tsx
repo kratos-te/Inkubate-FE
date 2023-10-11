@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { FC, useEffect, useState } from "react";
 import { CloseIcon, ExtendIcon, SalesIcon } from "./SvgIcons";
@@ -10,7 +11,7 @@ import ActivityMobileCard from "./ActivityMobileCard";
 import Skeleton from "react-loading-skeleton";
 import ActivityMobileCardLoader from "./Common/ActivityMobileCardLoader";
 import { ActivityTypes } from "@/utils/types";
-import { weiToNum } from "@/utils/util";
+import { ipfsToLink, weiToNum } from "@/utils/util";
 
 interface DetailProps {
   actData: ActivityTypes[];
@@ -34,7 +35,7 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
   return (
     <>
       <div className="">
-        {tags.map((tag, key) => (
+        {tags && tags.map((tag, key) => (
           <button
             key={key}
             className="flex gap-1.5 px-2.5 py-3 text-light-300 items-center bg-dark-400 rounded-lg capitalize hover:bg-dark-500 duration-300"
@@ -104,9 +105,10 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                         </td>
                         <td>
                           <div className="py-[17px] flex items-center">
-                            <image
-                              xlinkHref={row.nft.imgUrl}
+                            <img
+                              src={ipfsToLink(row.nft.imgUrl)}
                               className="rounded-md mr-2.5 w-[40px] h-[40px]"
+                              alt="nft Mini Image"
                             />
                             <div className="">
                               <Typography className="font-semibold leading-[1.5]">
@@ -139,13 +141,13 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                         <td>
                           <div className="flex items-center">
                             <UserAvatar
-                              src={row.buyer.profile.avatar?.url || "/assets/images/default-avatar.svg"}
+                              src={row.buyer?.profile.avatar?.url || "/assets/images/default-avatar.svg"}
                               gradientFrom="yellow"
                               gradientTo="blue"
                               className="hidden xl:block mr-2"
                             />
                             <Typography className="text-[14px] font-bold">
-                              {row.buyer.username}
+                              {row.buyer?.username}
                             </Typography>
                           </div>
                         </td>

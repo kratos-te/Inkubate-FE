@@ -1,4 +1,3 @@
-"use client";
 import { FC, useState, useRef } from "react";
 import {
   ArrowLeftIcon,
