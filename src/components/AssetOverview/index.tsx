@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -23,7 +24,7 @@ import { useModal } from "@/contexts/ModalContext";
 import { useAccount } from "wagmi";
 import { cancelList, getPhoto } from "@/actions";
 import { format } from "date-fns";
-import { weiToNum } from "@/utils/util";
+import { ipfsToLink, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
 import { SALT, ZERO_ADDRESS, ZERO_HASH } from "@/config";
 import { OPENSEA_CONDUIT_KEY } from "@/utils/constants";
@@ -38,8 +39,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
   const { openOfferModal, openBuyModal, openListModal } = useModal();
   const { count, cancelListing } = useInkubate();
   const { address } = useAccount();
-  const { id, imgUrl, name, owner, nftId, collection } = nft;
-  // const { price } = listing
+  const { imgUrl, name, owner, nftId, collection } = nft;
   const [nftAvatar, setNftAvatar] = useState<PhotoItem>()
 
   const handleCancelList = async () => {
@@ -69,9 +69,9 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
         totalOriginalConsiderationItems: "1",
         consideration:
           [{
-            itemType: 0,
+            itemType: 2,
             token: ZERO_ADDRESS,
-            identifierOrCriteria: "0",
+            identifierOrCriteria: nftId,
             startAmount: listing.price.toString(), // 95% of amount -> price
             endAmount: listing.price.toString(),
             recipient: address, // price receiver -> token owner
@@ -88,7 +88,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
 
       const res = await cancelListing([orders])
 
-      const cancel = await cancelList(id, res?.transactionHash as `0x${string}`, JSON.stringify(orders), listing.network)
+      const cancel = await cancelList(listing.id, nft.id, res?.transactionHash as `0x${string}`, JSON.stringify(orders), listing.network)
 
       console.log("cancel", cancel)
     }
@@ -112,7 +112,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
           height: width - 60,
         }}
       >
-        <image xlinkHref={imgUrl} className="relative z-0 object-cover" />
+        <img src={ipfsToLink(imgUrl)} className="relative z-0 object-cover" alt="nft Image" />
         <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
           <Typography className="font-semibold text-[15px] !text-white">
             #{nftId}
@@ -221,19 +221,11 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
                     Edit
                   </button>
                 }
-                {/* <button
-                className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
-                onClick={openOfferModal}
-              >
-                <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
-                Make Offer
-              </button> */}
               </div>
               {listing?.status === "ACTIVE" &&
-                <div className="flex w-[314px] gap-[14px] items-center p-[14px] bg-[#161616] rounded-xl text-[16px] font-semibold font-readex text-white">
+                <div className="flex w-[314px] gap-[14px] items-center p-[14px] bg-[#161616] rounded-xl text-[16px] font-semibold font-readex text-white ">
                   <CheckIcon />
                   Your Item is successfully listed
-
                 </div>
               }
             </div>

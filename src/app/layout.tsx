@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { inter, poppins, readexPro } from "@/styles/fonts";
 import { WalletModal } from "@/components/WalletModal";
 import { UserProvider } from "@/contexts/UserContext";
-
 import "@/styles/globals.scss";
 import "react-loading-skeleton/dist/skeleton.css";
 import WagmiProvider from "@/contexts/WagmiConext";
@@ -54,9 +53,9 @@ export default function RootLayout({
               <AuthProvider>
                 <ModalProvider>
                   {children}
+                  <WalletModal />
                   <LaunchpadModal />
                   <SettingModal />
-                  <WalletModal />
                 </ModalProvider>
               </AuthProvider>
             </UserProvider>

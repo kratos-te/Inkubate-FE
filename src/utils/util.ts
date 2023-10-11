@@ -54,3 +54,8 @@ export const bytes20ToBytes32 = (addressValue: string) => {
   const padding = "0".repeat(24); // 32 bytes - 20 bytes = 12 bytes = 24 hexadecimal characters
   return `0x${padding}${addressBytes}`;
 };
+
+export const ipfsToLink = (url: string) => {
+  const link = url.split("//")[1];
+  return `https://ipfs.io/ipfs/${link}`;
+};

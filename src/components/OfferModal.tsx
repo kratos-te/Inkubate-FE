@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FC, useState, useRef } from "react";
 import Image from "next/image";
 import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
@@ -7,6 +8,7 @@ import Typography from "./Typography";
 import { CoinButton } from "./CoinButton";
 import { LoadingPad } from "./LoadingPad";
 import { SetDuration } from "./SetDuratoin";
+import { ipfsToLink } from "@/utils/util";
 
 export const OfferModal: FC<ModalItem> = ({ nft }) => {
   const { closeOfferModal, isOpenedOfferModal } = useModal();
@@ -43,13 +45,10 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
           </div>
           <div className="modal_body text-center">
             <div className="flex gap-[24px] items-center">
-              <Image
-                src={imgUrl}
-                className="relative z-0 rounded-xl w-[120px] h-[120px] max-sm:w-[90px] max-sm:h-[90px]"
-                alt=""
-                width={120}
-                height={120}
-                objectFit="cover"
+              <img
+                src={ipfsToLink(imgUrl)}
+                className="relative z-0 rounded-xl object-cover w-[120px] h-[120xp]"
+                alt="nft Image for Buy"
               />
               <div className="flex-col space-y-2">
                 <div className="flex items-left">

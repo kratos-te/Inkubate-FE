@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FC, useState } from "react"
 import Image from "next/image";
 import { useModal } from "@/contexts/ModalContext"
@@ -6,6 +7,7 @@ import Typography from "./Typography";
 import ClickAwayComponent from "./ClickAwayComponent";
 import { ModalItem } from "@/utils/types";
 import { LoadingPad } from "./LoadingPad";
+import { ipfsToLink } from "@/utils/util";
 
 export const BuyModal: FC<ModalItem> = ({ nft }) => {
     const { closeBuyModal, isOpenedBuyModal } = useModal()
@@ -39,13 +41,10 @@ export const BuyModal: FC<ModalItem> = ({ nft }) => {
                     </div>
                     <div className="modal_body text-center">
                         <div className="flex gap-[24px] items-center mt-[34px] pb-[14px]">
-                            <Image
-                                src={imgUrl}
-                                className="relative z-0 rounded-xl"
-                                alt=""
-                                width={120}
-                                height={120}
-                                objectFit="cover"
+                            <img
+                                src={ipfsToLink(imgUrl)}
+                                className="relative z-0 rounded-xl object-cover w-[120px] h-[120xp]"
+                                alt="nft Image for Buy"
                             />
                             <div className="flex-col space-y-1">
                                 <div className="flex items-center">
