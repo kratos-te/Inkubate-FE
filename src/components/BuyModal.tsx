@@ -11,7 +11,7 @@ import { ipfsToLink } from "@/utils/util";
 
 export const BuyModal: FC<ModalItem> = ({ nft }) => {
     const { closeBuyModal, isOpenedBuyModal } = useModal()
-    const { imgUrl, name } = nft;
+    const { imgUrl, name, nftId } = nft;
     const [isBuyStatus, setIsBuyStatus] = useState(false)
 
     const handleBuy = () => {
@@ -57,7 +57,7 @@ export const BuyModal: FC<ModalItem> = ({ nft }) => {
                                     component="h1"
                                     className="lg:font-readex font-poppins text-[36px] leading-[44px] max-sm:text-[24px] lg:leading-[35px] font-bold"
                                 >
-                                    {name}
+                                    {name}#{nftId}
                                 </Typography>
                                 {/* <p className="text-[18px] font-semibold text-[#666666] text-left">
                                     {price} ETH

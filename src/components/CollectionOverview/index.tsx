@@ -77,10 +77,10 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
             className="text-[14px] leading-5 text-light-200 max-w-[600px] xl:max-w-[700px] mt-[18px]"
           >
             {showMoreDec
-              ? `${DEMO_COLLECTIONS[0] && DEMO_COLLECTIONS[0].description} `
+              ? `${collection && collection.desc} `
               : `${
-                  DEMO_COLLECTIONS[0] &&
-                  DEMO_COLLECTIONS[0].description.slice(0, 180)
+              collection &&
+              collection.desc.slice(0, 180)
                 } ... `}
             <span
               className="cursor-pointer text-secondary"

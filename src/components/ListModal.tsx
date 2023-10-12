@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FC, useState, useRef } from "react";
 import {
   ArrowLeftIcon,
@@ -16,7 +17,7 @@ import { useSignSeaportOrder } from "@/hooks/useSignSeaportOrder";
 import { useAccount } from "wagmi";
 import { listingNft } from "@/actions/listing";
 import { SALT, TOKEN, ZERO_ADDRESS, ZERO_HASH } from "@/config";
-import { bytes20ToBytes32, date2UTC, numToWei } from "@/utils/util";
+import { bytes20ToBytes32, date2UTC, ipfsToLink, numToWei } from "@/utils/util";
 import { useUser } from "@/contexts/UserContext";
 import { useErc721a } from "@/hooks/useErc721a";
 import { useInkubate } from "@/hooks/useInkubate";
@@ -115,6 +116,7 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
         console.log(listing);
       }
       setMakeList(false);
+      closeListModal()
     }
   };
 
@@ -160,9 +162,10 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
           </div>
           <div className="modal_body text-center">
             <div className="flex gap-[24px] items-center">
-              <image
-                xlinkHref={imgUrl}
+              <img
+                src={ipfsToLink(imgUrl)}
                 className="relative z-0 rounded-xl w-[120px] h-[120px] max-sm:w-[90px] max-sm:h-[90px] object-cover"
+                alt="nft image"
               />
               <div className="flex-col space-y-2">
                 <div className="flex items-left">
