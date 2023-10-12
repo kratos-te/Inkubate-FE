@@ -12,7 +12,7 @@ import { ipfsToLink } from "@/utils/util";
 
 export const OfferModal: FC<ModalItem> = ({ nft }) => {
   const { closeOfferModal, isOpenedOfferModal } = useModal();
-  const { imgUrl, name } = nft;
+  const { imgUrl, name, nftId } = nft;
 
   const [makeOffer, setMakeOffer] = useState(false);
 
@@ -61,7 +61,7 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
                   component="h1"
                   className="items-left lg:font-readex font-poppins text-[36px] leading-[44px] lg:text-[36px] lg:leading-[35px] font-bold max-sm:text-[24px]"
                 >
-                  {name}
+                  {name}#{nftId}
                 </Typography>
               </div>
             </div>

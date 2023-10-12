@@ -45,7 +45,6 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
   const handleCancelList = async () => {
     if (!address) return;
     if (listing) {
-      // const startAmount = (weiToNum(listing.price) / 100) * 95;
       const startDay = (
         Math.round(new Date(listing.createdAt).getTime() / 1000)
       ).toString();
@@ -53,8 +52,6 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
         Math.round(new Date(listing.expiresAt).getTime() / 1000)
       ).toString();
       const counters = await count(address as `0x${string}`)
-      // const counter = weiToNum(counters)
-
       const orders = {
         offerer: address,
         zone: ZERO_ADDRESS, // always this is a null address in listing
@@ -192,7 +189,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
             </>
           }
 
-          {address === owner.walletAddress ? (
+          {address === owner.walletAddress && (
             <div className="flex flex-col gap-6">
               <div className="flex flex-col mt-5 md:flex-row">
                 {listing?.status === "ACTIVE" ?
@@ -214,7 +211,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
 
                 {listing?.status === "ACTIVE" &&
                   <button
-                    className="px-10 py-[11p x] text-light-100 font-readex flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+                    className="px-10 py-[11px] text-light-100 font-readex flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
                     onClick={openOfferModal}
                   >
                     <EditIcon className="mr-2 mt-[1px] w-[16px] h-[16px]" color="#F2F3F4" />
@@ -229,24 +226,37 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing }) => {
                 </div>
               }
             </div>
-          ) : (
-            <div className="flex flex-col mt-5 md:flex-row">
-              <button
-                className="px-10 py-[11px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
-                onClick={openBuyModal}
-              >
-                <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
-                Buy Now
-              </button>
-              <button
-                className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
-                onClick={openOfferModal}
-              >
-                <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
-                Make Offer
-              </button>
-            </div>
           )}
+          {address !== owner.walletAddress &&
+            <>
+              {!listing ?
+                <div className="flex flex-col mt-5 md:flex-row">
+                  <button
+                    className="px-10 py-[11px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
+                    onClick={openBuyModal}
+                  >
+                    <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
+                    Buy Now
+                  </button>
+                  <button
+                    className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+                    onClick={openOfferModal}
+                  >
+                    <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
+                    Make Offer
+                  </button>
+                </div>
+                : <div className="flex flex-col mt-5 md:flex-row">
+                  <button
+                    className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+                    onClick={openOfferModal}
+                  >
+                    <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
+                    Make Offer
+                  </button>
+                </div>}
+            </>
+          }
         </div>
       </div>
     </div>

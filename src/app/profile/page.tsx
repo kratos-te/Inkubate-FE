@@ -76,7 +76,6 @@ export default function ProfilePage() {
       const buyOffer = await getOfferByBuy();
       const sellOffer = await getOfferBySell();
       const activity = await getActivityByUser()
-      console.log("activity", activity);
       setListByUSer(listingData?.data);
       setOfferByBuy(buyOffer?.data);
       setOfferBySell(sellOffer?.data);

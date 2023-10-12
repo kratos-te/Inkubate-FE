@@ -84,7 +84,7 @@ export default function CollectionPage() {
           />
         }
       >
-        <CoverBanner src="/assets/images/cover-demo.png" />
+        <CoverBanner src={collectionById?.banner.url || "/assets/images/cover-demo.png"} />
         {collectionById && <CollectionOverview collection={collectionById} nfts={nftByCollection} />}
         <div className="max-w-[1600px] mx-5 2xl:mx-auto relative">
           <div className="border-b-[0.5px] py-9  border-light-400 relative z-10">

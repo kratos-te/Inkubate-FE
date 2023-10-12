@@ -34,10 +34,7 @@ import NftCard from "@/components/NftCard";
 import { getListByNft } from "@/actions";
 
 export default function CollectionPage() {
-  // const name = "Galxe#1344";
-  // const contract = "0x2f05e799C61b600c65238a9DF060cABA63Db8E78";
   const pathname = usePathname();
-
   const [loading, setLoading] = useState(true);
   const [nftByOne, setNftByOne] = useState<NftTypes>();
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([])
@@ -73,6 +70,9 @@ export default function CollectionPage() {
       setNftByOne(nft?.data);
       setNftByCollection(nfts?.data)
       setListByNft(listing?.data)
+
+      console.log("NFT", nft)
+      console.log("Listing", listing)
     };
     getNftData();
   }, [nftId, contract]);
@@ -203,14 +203,6 @@ export default function CollectionPage() {
                   </Typography>
                 </div>
                 <div className="flex justify-center gap-[25px] min-h-[390px] flex-wrap">
-                  {/* {DEMO_NFTS[0] && (
-                    <>
-                      <NftCard nft={DEMO_NFTS[0]} width={240} />
-                      <NftCard nft={DEMO_NFTS[0]} width={240} />
-                      <NftCard nft={DEMO_NFTS[0]} width={240} />
-                      <NftCard nft={DEMO_NFTS[0]} width={240} />
-                    </>
-                  )} */}
                   {nftByCollection.map((item, index) => (
                     <NftCard key={index} nft={item} width={240} />
                   ))}

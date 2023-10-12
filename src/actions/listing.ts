@@ -51,7 +51,7 @@ export async function getlistingNft() {
     const response = await axios.get(`${API_BASE_URL}/api/listing`, {
       headers,
     });
-    console.log("listing", response);
+    console.log("Listings", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -113,7 +113,7 @@ export async function getListByUser() {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios.get(`${API_BASE_URL}/api/listing/user`, {
+    const response = await axios.get(`${API_BASE_URL}/api/listing/mine`, {
       headers,
     });
     console.log("listing", response);
@@ -134,6 +134,7 @@ export async function getListByUser() {
 export async function getListByNft(nftId: string) {
   try {
     await checkAuthorization();
+    console.log("NFT id", nftId);
     const accessToken = localStorage.getItem("accessToken");
     const headers = {
       Authorization: `Bearer ${accessToken}`,
@@ -143,7 +144,6 @@ export async function getListByNft(nftId: string) {
       `${API_BASE_URL}/api/listing/nft/${nftId}`,
       { headers }
     );
-    console.log("listing from NFT", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
