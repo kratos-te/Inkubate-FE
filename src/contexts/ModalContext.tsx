@@ -174,6 +174,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
   };
   const closeListModal = () => {
     setIsOpenedListModal(false);
+    console.log("closed list modal")
     document.body.classList.remove("modal-open");
   };
 

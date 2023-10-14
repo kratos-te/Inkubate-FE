@@ -167,6 +167,8 @@ export interface NftParams {
   royalty: Number;
   contractType: string;
   attributes: string;
+  price: string;
+  txHash: string;
 }
 
 export interface NftTypes {
@@ -241,15 +243,44 @@ export type OrderComponents = OrderParameters & {
   counter: string /* BigNumber */;
 };
 
+export type BasicOrderParameters = {
+  considerationToken: string;
+  considerationIdentifier: string;
+  considerationAmount: string; // BigNumber / uint256
+  offerer: string;
+  zone: string;
+  offerToken: string;
+  offerIdentifier: string;
+  offerAmount: string;
+  basicOrderType: BasicOrderType;
+  startTime: string;
+  endTime: string;
+  zoneHash: string;
+  salt: string;
+  offererConduitKey: string;
+  fulfillerConduitKey: string;
+  totalOriginalAdditionalRecipients: string;
+  additionalRecipients: AdditionalRecipient[];
+  signature: string;
+};
+
+export type AdditionalRecipient = {
+  amount: string;
+  recipient: string;
+};
+
 export type ListingTypes = {
   id: string;
   nftId: string;
   nft: NftTypes;
   price: bigint;
   sellerId: string;
+  seller: UserItem;
   network: string;
   status: string;
-  expiresAt: Date;
+  startTime: Date;
+  endTime: Date;
+  signature: string;
   createdAt: Date;
 };
 
@@ -280,3 +311,30 @@ export type ActivityTypes = {
   createdAt: Date;
   price: bigint;
 };
+
+enum BasicOrderType {
+  ETH_TO_ERC721_FULL_OPEN,
+  ETH_TO_ERC721_PARTIAL_OPEN,
+  ETH_TO_ERC721_FULL_RESTRICTED,
+  ETH_TO_ERC721_PARTIAL_RESTRICTED,
+  ETH_TO_ERC1155_FULL_OPEN,
+  ETH_TO_ERC1155_PARTIAL_OPEN,
+  ETH_TO_ERC1155_FULL_RESTRICTED,
+  ETH_TO_ERC1155_PARTIAL_RESTRICTED,
+  ERC20_TO_ERC721_FULL_OPEN,
+  ERC20_TO_ERC721_PARTIAL_OPEN,
+  ERC20_TO_ERC721_FULL_RESTRICTED,
+  ERC20_TO_ERC721_PARTIAL_RESTRICTED,
+  ERC20_TO_ERC1155_FULL_OPEN,
+  ERC20_TO_ERC1155_PARTIAL_OPEN,
+  ERC20_TO_ERC1155_FULL_RESTRICTED,
+  ERC20_TO_ERC1155_PARTIAL_RESTRICTED,
+  ERC721_TO_ERC20_FULL_OPEN,
+  ERC721_TO_ERC20_PARTIAL_OPEN,
+  ERC721_TO_ERC20_FULL_RESTRICTED,
+  ERC721_TO_ERC20_PARTIAL_RESTRICTED,
+  ERC1155_TO_ERC20_FULL_OPEN,
+  ERC1155_TO_ERC20_PARTIAL_OPEN,
+  ERC1155_TO_ERC20_FULL_RESTRICTED,
+  ERC1155_TO_ERC20_PARTIAL_RESTRICTED,
+}

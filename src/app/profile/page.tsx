@@ -1,5 +1,15 @@
 "use client";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
+import Skeleton from "react-loading-skeleton";
+
+import {
+  getActivityByUser,
+  getListByUser,
+  getNftbyOwner,
+  getOfferByBuy,
+  getOfferBySell,
+} from "@/actions";
 import {
   EditIcon,
   FilterIcon,
@@ -13,37 +23,37 @@ import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
 import CoverBanner from "@/components/CoverBanner";
 import ProfileOverview from "@/components/ProfileOverview";
-import { useModal } from "@/contexts/ModalContext";
-import MainLayout from "@/layouts/MainLayout";
-import { Meta } from "@/layouts/Meta";
-import { useRouter, useSearchParams } from "next/navigation";
-import Skeleton from "react-loading-skeleton";
 import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
 import ActivityDetail from "@/components/ActivityDetail";
-import { useUser } from "@/contexts/UserContext";
-import { getNftbyOwner } from "@/actions/nft";
-import { ActivityTypes, ListingTypes, NftTypes, OfferTypes } from "@/utils/types";
 import { Listings } from "@/components/Listings";
 import { Offers } from "@/components/Offers";
-import { getListByUser, getOfferByBuy, getOfferBySell } from "@/actions";
-import { getActivityByUser } from "@/actions/activity";
-// import { AcceptModal } from "@/components/AcceptModal";
+import { PROFILE_TABS } from "@/config";
+import { useModal } from "@/contexts/ModalContext";
+import { useUser } from "@/contexts/UserContext";
+import MainLayout from "@/layouts/MainLayout";
+import { Meta } from "@/layouts/Meta";
+import {
+  ActivityTypes,
+  ListingTypes,
+  NftTypes,
+  OfferTypes,
+} from "@/utils/types";
+import { ListModal } from "@/components/ListModal";
+
+const profileName = "My Profile";
 
 export default function ProfilePage() {
   const query = useSearchParams();
   const router = useRouter();
   const { openSettingModal } = useModal();
-  const { userData } = useUser();
+  const { profile, userData, getUserData, getProfileData } = useUser();
 
-  // const tab = query?.get("tab");
-  // const filter = query?.get("filter");
-  const profileName = "My Profile";
-
-  const { profile, getUserData, getProfileData } = useUser();
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
   const [loading, setLoading] = useState(true);
   const [nftByOwner, setNftByOwner] = useState<NftTypes[]>([]);
+  const [activeListing, setActiveListing] = useState<NftTypes | undefined>(undefined);
+  const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined)
   const [listByUser, setListByUSer] = useState<ListingTypes[]>([]);
   const [offerByBuy, setOfferByBuy] = useState<OfferTypes[]>([]);
   const [offerBySell, setOfferBySell] = useState<OfferTypes[]>([]);
@@ -63,30 +73,40 @@ export default function ProfilePage() {
     }, 1200);
   }, []);
 
-  const handleEditProfile = async () => {
-    openSettingModal();
-    getProfileData();
-    getUserData();
-  };
-
   useEffect(() => {
     const getNftData = async () => {
       const nftData = await getNftbyOwner(userData.id);
       const listingData = await getListByUser();
       const buyOffer = await getOfferByBuy();
       const sellOffer = await getOfferBySell();
-      const activity = await getActivityByUser()
+      const activity = await getActivityByUser();
       setListByUSer(listingData?.data);
       setOfferByBuy(buyOffer?.data);
       setOfferBySell(sellOffer?.data);
-      setActByUser(activity?.data)
-      // setOff
+      setActByUser(activity?.data);
       if (nftData) {
         setNftByOwner(nftData.data);
       }
     };
     getNftData();
   }, [userData]);
+
+  const handleEditProfile = async () => {
+    openSettingModal();
+    getProfileData();
+    getUserData();
+  };
+
+  const selectActiveNftIdx = (nft: NftTypes) => {
+    setActiveListing(nft);
+  }
+
+  const selectBuyNftIdx = (nft: NftTypes) => {
+    setActiveBuy(nft);
+  }
+
+
+
   return (
     <>
       <MainLayout
@@ -119,15 +139,13 @@ export default function ProfilePage() {
         <div className="max-w-[1600px] mx-5 2xl:mx-auto relative z-10">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3 mb-[23px] flex-wrap">
-              {tabs.map((item, key) => (
+              {PROFILE_TABS.map((item, key) => (
                 <button
                   key={key}
-                  onClick={() =>
-                    router.push(`?tab=${item.tab}`)
-                  }
+                  onClick={() => router.push(`?tab=${item.tab}`)}
                   className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${tab === item.tab
-                      ? "bg-secondary hover:bg-[#AE115B]"
-                      : "bg-dark-400 hover:bg-[#444]"
+                    ? "bg-secondary hover:bg-[#AE115B]"
+                    : "bg-dark-400 hover:bg-[#444]"
                     }`}
                 >
                   {item.title}
@@ -144,9 +162,11 @@ export default function ProfilePage() {
               </Typography>
             </button>
           </div>
-          <div className="border-b-[0.5px] border-light-400 relative z-10  mt-6">
-          </div>
-          <div className={`relative flex gap-3 mt-6 lg:mt-12 z-20 ${(tab === "7" || tab === "8" || tab === "9") ? "hidden" : "show"}`}>
+          <div className="border-b-[0.5px] border-light-400 relative z-10  mt-6"></div>
+          <div
+            className={`relative flex gap-3 mt-6 lg:mt-12 z-20 ${tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
+              }`}
+          >
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
               <Typography className="ml-2.5 text-[14px] leading-[20px] hidden lg:block">
@@ -189,6 +209,8 @@ export default function ProfilePage() {
               {tab === "1" && (
                 <NftGrid
                   nftData={nftByOwner}
+                  setActiveListing={selectActiveNftIdx}
+                  setActiveBuy={selectBuyNftIdx}
                   collectionId="opbunnies"
                   isDense={isDense}
                 />
@@ -196,12 +218,11 @@ export default function ProfilePage() {
               {tab === "6" && <ActivityDetail actData={actByUser} />}
             </div>
           </div>
-          {
-            tab === "7" && (
-              <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
-                <Listings listData={listByUser} />
-              </div>
-            )}
+          {tab === "7" && (
+            <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
+              <Listings listData={listByUser} />
+            </div>
+          )}
           {tab === "8" && (
             <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
               <Offers offerData={offerByBuy} />
@@ -214,55 +235,7 @@ export default function ProfilePage() {
           )}
         </div>
       </MainLayout>
-      {/* {DEMO_NFTS[0] && <AcceptModal nft={DEMO_NFTS[0]} />} */}
+      {activeListing && <ListModal nft={activeListing} />}
     </>
   );
 }
-
-const tabs = [
-  {
-    tab: "1",
-    title: "NFTS",
-    value: "nfts",
-  },
-  {
-    tab: "2",
-    title: "ERC-1155 NFTS",
-    value: "erc-1155",
-  },
-  {
-    tab: "3",
-    title: "Created",
-    value: "created",
-  },
-  {
-    tab: "4",
-    title: "Favorite",
-    value: "favorite",
-  },
-  {
-    tab: "5",
-    title: "Hidden",
-    value: "hidden",
-  },
-  {
-    tab: "6",
-    title: "Activity",
-    value: "activity",
-  },
-  {
-    tab: "7",
-    title: "Listing",
-    value: "listing",
-  },
-  {
-    tab: "8",
-    title: "Buy Offer",
-    value: "buyoffer",
-  },
-  {
-    tab: "9",
-    title: "Sell Offer",
-    value: "selloffer",
-  },
-];

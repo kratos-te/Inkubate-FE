@@ -36,9 +36,9 @@ export function useSignSeaportOrder() {
       );
 
       if (signature == null) {
-        return { signature: "", data };
+        return { signature: "", data: data.message };
       }
-      return { signature, data };
+      return { signature, data: data.message };
     },
     [chain?.id, signTypedDataAsync, signer]
   );

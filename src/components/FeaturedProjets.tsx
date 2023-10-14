@@ -6,13 +6,12 @@ import Button from "./Button";
 import Link from "next/link";
 import CollectionCard from "./CollectionCard";
 import CollecionCardLoader from "./Common/CollecionCardLoader";
-import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { CollectionParam } from "@/utils/types";
 import { getAllCollections, getLaunchpad } from "@/actions";
 
 const FeaturedProjects: FC = () => {
   const pathname = usePathname();
   const [collections, setCollections] = useState<CollectionParam[]>([]);
-  const [launchpads, setLaunchPads] = useState<LaunchpadParam[]>([]);
   const [loading, setIsLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -26,7 +25,6 @@ const FeaturedProjects: FC = () => {
         const launchpadData = await getLaunchpad();
         const collectionData = await getAllCollections();
         if (launchpadData) {
-          setLaunchPads(launchpadData.data);
           setCollections(collectionData);
         }
       }

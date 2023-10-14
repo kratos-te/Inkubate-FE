@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { NftTypes } from "./types";
 
 const ETH_TO_WEI = 10 ** 18;
 
@@ -49,6 +50,11 @@ export const date2UTC = (startDate: Date, startTime: string) => {
   return utcDateTime;
 };
 
+export const date2Timestamp = (date: Date | string) => {
+  if (typeof date === "string") date = new Date(date);
+  return Math.round(date.getTime() / 1000);
+};
+
 export const bytes20ToBytes32 = (addressValue: string) => {
   const addressBytes = addressValue.slice(2); // Remove "0x" prefix
   const padding = "0".repeat(24); // 32 bytes - 20 bytes = 12 bytes = 24 hexadecimal characters
@@ -59,3 +65,12 @@ export const ipfsToLink = (url: string) => {
   const link = url.split("//")[1];
   return `https://ipfs.io/ipfs/${link}`;
 };
+
+
+// export const selectActiveNftIdx = (nft: NftTypes) => {
+//   setActiveListing(nft);
+// };
+
+// export const selectBuyNftIdx = (nft: NftTypes) => {
+//   setActiveBuy(nft);
+// };

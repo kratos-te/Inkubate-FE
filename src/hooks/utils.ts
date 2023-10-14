@@ -6,9 +6,6 @@ import {
   readContract,
   ReadContractConfig,
 } from "@wagmi/core";
-// import { useSignSeaportOrder } from "./useSignSeaportOrder";
-
-// import { OPENSEA_CONDUIT_ADDRESS } from "@/utils/constants";
 
 export const write = async (config: PrepareWriteContractConfig) => {
   const { request } = await prepareWriteContract(config);

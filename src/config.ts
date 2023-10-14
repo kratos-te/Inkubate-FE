@@ -18,7 +18,9 @@ export const ZERO_HASH =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
 export const SALT =
   "24446860302761739304752683030156737591518664810215442929804740456659635214915";
-  
+export const DEFAULT_GAS = BigInt("3000000");
+export const DEFAULT_GAS_PRICE = BigInt("20000000000");
+
 export const HEADER_LINKS = [
   {
     title: "Explore",
@@ -35,6 +37,54 @@ export const HEADER_LINKS = [
   {
     title: "Launchpad",
     link: "/launchpad",
+  },
+];
+
+export const PROFILE_TABS = [
+  {
+    tab: "1",
+    title: "NFTS",
+    value: "nfts",
+  },
+  {
+    tab: "2",
+    title: "ERC-1155 NFTS",
+    value: "erc-1155",
+  },
+  {
+    tab: "3",
+    title: "Created",
+    value: "created",
+  },
+  {
+    tab: "4",
+    title: "Favorite",
+    value: "favorite",
+  },
+  {
+    tab: "5",
+    title: "Hidden",
+    value: "hidden",
+  },
+  {
+    tab: "6",
+    title: "Activity",
+    value: "activity",
+  },
+  {
+    tab: "7",
+    title: "Listing",
+    value: "listing",
+  },
+  {
+    tab: "8",
+    title: "Buy Offer",
+    value: "buyoffer",
+  },
+  {
+    tab: "9",
+    title: "Sell Offer",
+    value: "selloffer",
   },
 ];
 

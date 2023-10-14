@@ -37,8 +37,13 @@ export default function CollectionPage() {
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [nftByOne, setNftByOne] = useState<NftTypes>();
-  const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([])
-  const [listByNft, setListByNft] = useState<ListingTypes>()
+  const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
+  const [listByNft, setListByNft] = useState<ListingTypes>();
+
+  const [isListed, setIsListed] = useState(false);
+  const [isNoticed, setIsNoticed] = useState(false);
+  const [activeListing, setActiveListing] = useState<NftTypes | undefined>(undefined);
+  const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined)
 
   useEffect(() => {
     setTimeout(() => {
@@ -65,17 +70,27 @@ export default function CollectionPage() {
   useEffect(() => {
     const getNftData = async () => {
       const nft = await getNftByOne(nftId, contract);
-      const nfts = await getNft(nft?.data.collectionId)
-      const listing = await getListByNft(nft?.data.id)
+      const nfts = await getNft(nft?.data.collectionId);
+      const listing = await getListByNft(nft?.data.id);
       setNftByOne(nft?.data);
-      setNftByCollection(nfts?.data)
-      setListByNft(listing?.data)
+      setNftByCollection(nfts?.data);
+      setListByNft(listing?.data);
 
-      console.log("NFT", nft)
-      console.log("Listing", listing)
+      console.log("NFT", nft);
+      console.log("Listing", listing);
     };
     getNftData();
   }, [nftId, contract]);
+
+
+  const selectActiveNftIdx = (nft: NftTypes) => {
+    setActiveListing(nft);
+  }
+
+  const selectBuyNftIdx = (nft: NftTypes) => {
+    setActiveBuy(nft);
+  }
+
 
   return (
     <>
@@ -93,7 +108,7 @@ export default function CollectionPage() {
       >
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
-            nftByOne && <AssetOverview nft={nftByOne} listing={listByNft} />
+            nftByOne && <AssetOverview nft={nftByOne} listing={listByNft} isListed={isListed} isNoticed={isNoticed} setIsNoticed={setIsNoticed} />
           ) : (
             <AssetOverviewLoader />
           )}
@@ -134,22 +149,23 @@ export default function CollectionPage() {
                     defaultCollapsed={true}
                   >
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-2.5">
-                      {nftByOne?.attributes.map((item, key) => (
-                        <div
-                          key={key}
-                          className="rounded-md p-[15px] border-[0.5px] border-light-200"
-                        >
-                          <div className="font-readex text-[12px] font-medium text-secondary">
-                            {item.trait_type}
-                          </div>
-                          <Typography className="text-[14px] leading-[17.5px] font-bold font-readex mt-[5px]">
-                            {item.value}
-                          </Typography>
-                          {/* <span className="text-dark-700 font-readex leading-[16.25px] text-[13px]">
+                      {nftByOne &&
+                        nftByOne?.attributes.map((item, key) => (
+                          <div
+                            key={key}
+                            className="rounded-md p-[15px] border-[0.5px] border-light-200"
+                          >
+                            <div className="font-readex text-[12px] font-medium text-secondary">
+                              {item.trait_type}
+                            </div>
+                            <Typography className="text-[14px] leading-[17.5px] font-bold font-readex mt-[5px]">
+                              {item.value}
+                            </Typography>
+                            {/* <span className="text-dark-700 font-readex leading-[16.25px] text-[13px]">
                             {item.description}
                           </span> */}
-                        </div>
-                      ))}
+                          </div>
+                        ))}
                     </div>
                   </AssetDetailBox>
                   <AssetDetailBox
@@ -204,7 +220,8 @@ export default function CollectionPage() {
                 </div>
                 <div className="flex justify-center gap-[25px] min-h-[390px] flex-wrap">
                   {nftByCollection.map((item, index) => (
-                    <NftCard key={index} nft={item} width={240} />
+                    <NftCard key={index} nft={item} width={240} setActiveListing={() => selectActiveNftIdx(item)}
+                      setActiveBuy={() => selectBuyNftIdx(item)} setIsNoticed={setIsNoticed} />
                   ))}
                 </div>
                 <div className="text-center mt-[30px] lg:mt-5">
@@ -222,8 +239,8 @@ export default function CollectionPage() {
         </div>
       </MainLayout>
       {nftByOne && <OfferModal nft={nftByOne} />}
-      {nftByOne && <BuyModal nft={nftByOne} />}
-      {nftByOne && <ListModal nft={nftByOne} />}
+      {nftByOne && <BuyModal nft={nftByOne} listing={listByNft} />}
+      {nftByOne && <ListModal nft={nftByOne} setIsListed={setIsListed} setIsNoticed={setIsNoticed} />}
     </>
   );
 }

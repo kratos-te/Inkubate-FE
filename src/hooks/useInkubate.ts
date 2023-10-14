@@ -1,9 +1,11 @@
 import { getContract } from "wagmi/actions";
-import { write } from "./utils";
-import { INK_ABI } from "@/utils/abi";
 import { Abi } from "viem";
-import { SEAPORT_CONTRACT_ADDRESS } from "@/utils/constants";
-import { OrderComponents } from "@/utils/types";
+
+import { DEFAULT_GAS, DEFAULT_GAS_PRICE } from "@/config";
+import { INK_ABI } from "@/utils/abi";
+import { INK_CONTRACT_ADDRESS } from "@/utils/constants";
+import { BasicOrderParameters, OrderComponents } from "@/utils/types";
+import { write } from "./utils";
 
 export function useInkubate() {
   //   const chain = useNetwork();
@@ -12,7 +14,7 @@ export function useInkubate() {
   const count = async (address: string) => {
     try {
       const contract: any = getContract({
-        address: SEAPORT_CONTRACT_ADDRESS as `0x${string}`,
+        address: INK_CONTRACT_ADDRESS as `0x${string}`,
         abi: INK_ABI as Abi,
       });
       const res = await contract.read.getCounter({ args: [address] });
@@ -22,16 +24,45 @@ export function useInkubate() {
     }
   };
 
+  const getOrderHash = async (orderComponents: OrderComponents) => {
+    try {
+      const contract: any = getContract({
+        address: INK_CONTRACT_ADDRESS as `0x${string}`,
+        abi: INK_ABI as Abi,
+      });
+      const res = await contract.read.getOrderHash({ args: [orderComponents] });
+      return res;
+    } catch (error) {
+      return { isError: true, msg: error };
+    }
+  };
+
   const cancelListing = async (orders: OrderComponents[]) => {
     try {
-      //   console.log("address", SEAPORT_CONTRACT_ADDRESS);
       return await write({
-        address: "0x3Ce4E94C427D79376041d596e98a8B135e8a5c96",
+        address: INK_CONTRACT_ADDRESS,
         abi: INK_ABI as Abi,
         functionName: "cancel",
         args: [orders],
-        gas: BigInt("3000000"),
-        gasPrice: BigInt("20000000000"),
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const buyListing = async (orders: BasicOrderParameters) => {
+    try {
+      return await write({
+        address: INK_CONTRACT_ADDRESS,
+        abi: INK_ABI as Abi,
+        functionName: "fulfillBasicOrder",
+        args: [orders],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+        value: BigInt(orders.considerationAmount),
       });
     } catch (e) {
       console.log("error", e);
@@ -40,7 +71,9 @@ export function useInkubate() {
   };
 
   return {
+    buyListing,
     count,
     cancelListing,
+    getOrderHash,
   };
 }
