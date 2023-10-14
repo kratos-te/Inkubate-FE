@@ -17,9 +17,10 @@ import SortDropdown from "@/components/SortDropdown";
 import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
 import { getNft } from "@/actions/nft";
-import { ActivityTypes, CollectionParam, NftTypes } from "@/utils/types";
-import { getCollectionById } from "@/actions";
+import { ActivityTypes, CollectionParam, ListingTypes, NftTypes } from "@/utils/types";
+import { getCollectionById, getListByNft } from "@/actions";
 import { getActivityByCollection } from "@/actions/activity";
+import { BuyModal } from "@/components/BuyModal";
 
 
 export default function CollectionPage() {
@@ -28,8 +29,11 @@ export default function CollectionPage() {
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
+  const [listByNft, setListByNft] = useState<ListingTypes>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
   const [actByCollection, setActByCollection] = useState<ActivityTypes[]>([]);
+  const [activeListing, setActiveListing] = useState<NftTypes | undefined>(undefined);
+  const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined)
 
 
   const tab = useMemo(() => {
@@ -64,12 +68,32 @@ export default function CollectionPage() {
       const nfts = await getNft(collectionId)
       const collection = await getCollectionById(collectionId);
       const activity = await getActivityByCollection(collectionId);
+
       setNftByCollection(nfts?.data)
       setCollectionById(collection?.data)
       setActByCollection(activity?.data)
     }
     getNftByCollection()
   }, [collectionId])
+
+  const selectActiveNftIdx = (nft: NftTypes) => {
+    setActiveListing(nft);
+  }
+
+  useEffect(() => {
+    const getLisiting = async () => {
+      if (activeBuy) {
+        const listing = await getListByNft(activeBuy?.id);
+        setListByNft(listing?.data)
+      }
+    }
+    getLisiting()
+  }, [activeBuy])
+
+  const selectBuyNftIdx = (nft: NftTypes) => {
+    setActiveBuy(nft);
+  }
+
   return (
     <>
       <MainLayout
@@ -147,13 +171,15 @@ export default function CollectionPage() {
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
               {tab === "1" && (
-                <NftGrid nftData={nftByCollection} collectionId={collectionId} isDense={isDense} />
+                <NftGrid nftData={nftByCollection} collectionId={collectionId} isDense={isDense} setActiveListing={selectActiveNftIdx}
+                  setActiveBuy={selectBuyNftIdx} />
               )}
               {tab === "2" && <ActivityDetail actData={actByCollection} />}
             </div>
           </div>
         </div>
       </MainLayout>
+      {activeBuy && <BuyModal nft={activeBuy} listing={listByNft} />}
     </>
   );
 }

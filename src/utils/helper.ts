@@ -1,14 +1,14 @@
 import {
-  SEAPORT_CONTRACT_ADDRESS,
-  SEAPORT_CONTRACT_NAME,
-  SEAPORT_CONTRACT_VERSION,
+  INK_CONTRACT_ADDRESS,
+  INK_CONTRACT_NAME,
+  INK_CONTRACT_VERSION,
 } from "@/utils/constants";
 
 export function getTypedDataDomain(chainId: number) {
   return {
-    name: SEAPORT_CONTRACT_NAME,
-    version: SEAPORT_CONTRACT_VERSION,
+    name: INK_CONTRACT_NAME,
+    version: INK_CONTRACT_VERSION,
     chainId,
-    verifyingContract: SEAPORT_CONTRACT_ADDRESS as `0x${string}`,
+    verifyingContract: INK_CONTRACT_ADDRESS as `0x${string}`,
   };
 }

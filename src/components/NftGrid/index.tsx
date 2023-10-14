@@ -1,18 +1,23 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
+
+import { NftTypes } from "@/utils/types";
 import useWindowSize from "@/utils/useWindowSize";
 import NftCard from "../NftCard";
 import NftCardLoader from "../Common/NftCardLoader";
-import { NftTypes } from "@/utils/types";
 
 interface GridProps {
   nftData: NftTypes[];
   collectionId: string;
   isDense: boolean;
+  setActiveListing: (nft: NftTypes) => void;
+  setActiveBuy: (nft: NftTypes) => void;
 }
 
-const NftGrid: FC<GridProps> = ({ isDense, nftData }) => {
+const NftGrid: FC<GridProps> = ({ isDense, nftData, setActiveListing, setActiveBuy }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const windowSize = useWindowSize();
+
+  const [loading, setLoading] = useState(true);
 
   const colCont = useMemo(() => {
     let cnt = 5;
@@ -40,12 +45,12 @@ const NftGrid: FC<GridProps> = ({ isDense, nftData }) => {
     return w;
   }, [colCont, windowSize.width]);
 
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1200);
   }, []);
+
   return (
     <div
       className={`grid w-full gap-y-10 gap-x-3 lg:gap-x-5`}
@@ -56,11 +61,12 @@ const NftGrid: FC<GridProps> = ({ isDense, nftData }) => {
     >
       {!loading
         ? nftData.map((item, key) => (
-            <NftCard nft={item} key={key} width={width} />
-          ))
+          <NftCard nft={item} key={key} width={width} setActiveListing={() => setActiveListing(item)}
+            setActiveBuy={() => setActiveBuy(item)} />
+        ))
         : Array.from({ length: 20 }).map((_, key) => (
-            <NftCardLoader key={key} width={width} />
-          ))}
+          <NftCardLoader key={key} width={width} />
+        ))}
     </div>
   );
 };

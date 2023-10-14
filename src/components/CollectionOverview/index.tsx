@@ -10,7 +10,6 @@ import {
 } from "../SvgIcons";
 import Typography from "../Typography";
 import Image from "next/image";
-import { DEMO_COLLECTIONS } from "@/config";
 import Loader from "./Loader";
 import { CollectionParam, NftTypes } from "@/utils/types";
 

@@ -10,6 +10,7 @@ import { useAccount } from "wagmi";
 
 import { getProfile, getUser } from "@/actions";
 import { UserItem, ProfileItem } from "@/utils/types";
+import { addMonths, startOfToday } from "date-fns";
 
 interface UserContextType {
   username: string;
@@ -88,10 +89,11 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+  const today = startOfToday();
   const [username, setUsername] = useState("");
   const [userAddress, setUserAddress] = useState("");
   const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(addMonths(today, 1));
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   // const [token, setToken] = useState("");

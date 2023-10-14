@@ -191,7 +191,7 @@ const Header: FC = () => {
                           <div className="flex-col space-y-1">
                             <p className="text-white text-lg">{userData.username}</p>
                             <p className="text-white text-[16px]">
-                              {data?.formatted} ETH
+                              {data?.formatted.slice(0, 7)} ETH
                             </p>
                           </div>
                         </div>

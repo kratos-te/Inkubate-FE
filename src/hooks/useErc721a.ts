@@ -1,9 +1,10 @@
 import { getContract } from "wagmi/actions";
-import { write } from "./utils";
 import { Abi } from "viem";
+
 import { ERC721A_ABI } from "@/utils/abi";
-import { SEAPORT_CONTRACT_ADDRESS } from "@/utils/constants";
-// import { ethers } from "ethers";
+import { DEFAULT_MERKLE_ROOT, INK_CONDUIT_ADDRESS } from "@/utils/constants";
+import { DEFAULT_GAS, DEFAULT_GAS_PRICE } from "@/config";
+import { write } from "./utils";
 
 export function useErc721a() {
   const approve = async (
@@ -21,30 +22,22 @@ export function useErc721a() {
 
   const mint = async (amount: number, value: string, address: string) => {
     return await write({
-      address: address as `0x${string}`, //tokenAddress as `0x${string}`,
+      address: address as `0x${string}`,
       abi: ERC721A_ABI as Abi,
       functionName: "mintNFT",
-      args: [
-        BigInt(amount),
-        ["0x473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8"],
-        // ethers.utils.formatBytes32String(
-        //   "Hello world"
-        // ),
-      ],
-      gas: BigInt("3000000"),
-      gasPrice: BigInt("20000000000"),
+      args: [BigInt(amount), [DEFAULT_MERKLE_ROOT]],
+      gas: DEFAULT_GAS,
+      gasPrice: DEFAULT_GAS_PRICE,
       value: BigInt(value),
     });
   };
 
-  const setApprove = async (address: string) => {
+  const setApprovalForAll = async (address: string) => {
     return await write({
       address: address as `0x${string}`,
       abi: ERC721A_ABI as Abi,
       functionName: "setApprovalForAll",
-      args: [SEAPORT_CONTRACT_ADDRESS as `0x${string}`, true],
-      gas: BigInt("3000000"),
-      gasPrice: BigInt("20000000000"),
+      args: [INK_CONDUIT_ADDRESS as `0x${string}`, true],
     });
   };
 
@@ -61,22 +54,21 @@ export function useErc721a() {
     }
   };
 
-  const enableWhitelistMode = async () => {
-    // only creator function
+  const enableWhitelistMode = async (tokenAddress: string) => {
     return await write({
-      address: "0x9AC3b5616B37543d88aC539994e36F6b7974c744", //tokenAddress as `0x${string}`,
+      address: tokenAddress as `0x${string}`,
       abi: ERC721A_ABI as Abi,
       functionName: "enableWhitelistMode",
       args: [true],
-      gas: BigInt("3000000"),
+      gas: DEFAULT_GAS,
       gasPrice: BigInt(20),
     });
   };
 
-  const getWhitelistMode = async () => {
+  const getWhitelistMode = async (tokenAddress: string) => {
     try {
       const contract: any = getContract({
-        address: "0x9AC3b5616B37543d88aC539994e36F6b7974c744",
+        address: tokenAddress as `0x${string}`,
         abi: ERC721A_ABI as Abi,
       });
       const res = await contract.read.whitelistMode();
@@ -106,6 +98,6 @@ export function useErc721a() {
     getWhitelistMode,
     getMintingStartTime,
     getTokenUri,
-    setApprove,
+    setApprovalForAll,
   };
 }

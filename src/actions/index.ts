@@ -3,6 +3,7 @@ BigInt.prototype.toJSON = function () {
   return this.toString();
 };
 
+export * from "./activity";
 export * from "./auth";
 export * from "./launchpad";
 export * from "./profile";

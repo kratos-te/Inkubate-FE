@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { FC, useState, useRef } from "react";
-import Image from "next/image";
 import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
 import { ModalItem } from "@/utils/types";

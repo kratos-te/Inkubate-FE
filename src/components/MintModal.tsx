@@ -17,13 +17,7 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
   const { closeMintModal, isOpenedMintModal } = useModal();
   const [mintValue, setMintValue] = useState<number>(1);
   const [mintStatus, setMintStatus] = useState<boolean>(false);
-  // const [asset, setAsset] = useState("")
   const [mintSuccess] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   console.log('====>')
-  //   handleGetTokenURI("0x31ed3477ad7598e1024d01dfbf6239b43d6066bc", "2")
-  // }, [])
 
   const handleMinus = () => {
     setMintValue(mintValue - 1);
@@ -54,11 +48,6 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
       const rept = await mint(amount, value.toString(), collection.address);
       console.log("transaction result is ", rept);
       if (rept.status === "success") {
-        // if (
-        //   rept.logs[0].topics[0] ===
-        //   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
-        // ) {
-        // }
         rept.logs.map(async item => {
           const decimalValue = parseInt(item.topics[3] as `0x${string}`, 16);
           const nftData = await handleGetTokenURI(
@@ -81,8 +70,11 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
             royalty: 0,
             contractType: "ERC721",
             attributes: nftData.attributes,
+            price: launchpad.mintPrice.toString(),
+            txHash: item.transactionHash || "",
           });
           console.log("created Nft,", createNFT);
+          return createNFT;
         });
       }
     } catch (e) {

@@ -1,5 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { FC, useState, useRef } from "react";
+import { FC, useState, useRef, Dispatch, SetStateAction, useEffect } from "react";
+import { useAccount } from "wagmi";
+
+import { LoadingPad } from "./LoadingPad";
 import {
   ArrowLeftIcon,
   BnbIcon,
@@ -7,24 +10,27 @@ import {
   EthIcon,
   VerifiedIcon,
 } from "./SvgIcons";
-import { useModal } from "@/contexts/ModalContext";
-import { ModalItem } from "@/utils/types";
-import Typography from "./Typography";
-import { LoadingPad } from "./LoadingPad";
 import { SetDuration } from "./SetDuratoin";
-import { OPENSEA_CONDUIT_KEY } from "@/utils/constants";
-import { useSignSeaportOrder } from "@/hooks/useSignSeaportOrder";
-import { useAccount } from "wagmi";
+import Typography from "./Typography";
+
 import { listingNft } from "@/actions/listing";
 import { SALT, TOKEN, ZERO_ADDRESS, ZERO_HASH } from "@/config";
-import { bytes20ToBytes32, date2UTC, ipfsToLink, numToWei } from "@/utils/util";
+import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
+import { useSignSeaportOrder } from "@/hooks/useSignSeaportOrder";
 import { useErc721a } from "@/hooks/useErc721a";
 import { useInkubate } from "@/hooks/useInkubate";
+import { INK_CONDUIT_KEY } from "@/utils/constants";
+import { NftTypes } from "@/utils/types";
+import { date2UTC, numToWei, ipfsToLink } from "@/utils/util";
 
-export const ListModal: FC<ModalItem> = ({ nft }) => {
+export const ListModal: FC<{
+  nft: NftTypes,
+  setIsListed?: Dispatch<SetStateAction<boolean>>
+  setIsNoticed?: Dispatch<SetStateAction<boolean>>
+}> = ({ nft, setIsListed, setIsNoticed }) => {
   const { closeListModal, isOpenedListModal } = useModal();
-  const { setApprove } = useErc721a();
+  const { setApprovalForAll } = useErc721a();
   const { count } = useInkubate();
   const signOrder = useSignSeaportOrder();
   const { address } = useAccount();
@@ -41,8 +47,9 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
 
   const handleSign = async () => {
     if (!address) return { signature: "", data: "" };
-    const startAmount = numToWei((parseFloat(amount) / 100) * 95);
-    const feeAmount = numToWei(parseFloat(amount) / 20);
+    const startAmount = numToWei(parseFloat(amount));
+    // const startAmount = numToWei((parseFloat(amount) / 100) * 95);
+    // const feeAmount = numToWei(parseFloat(amount) / 20);
     const startDay = (
       new Date(date2UTC(startDate, startTime)).getTime() / 1000
     ).toString();
@@ -56,13 +63,13 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
       offer: [
         {
           itemType: 2,
-          token: bytes20ToBytes32(nft.address),
+          token: nft.address,
           identifierOrCriteria: nftId,
-          startAmount: startAmount,
-          endAmount: startAmount,
+          startAmount: "1",
+          endAmount: "1",
         },
       ],
-      totalOriginalConsiderationItems: "2",
+      totalOriginalConsiderationItems: "1",
       consideration: [
         {
           itemType: 0,
@@ -72,54 +79,59 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
           endAmount: startAmount,
           recipient: address, // price receiver -> token owner
         },
-        {
-          itemType: 0,
-          token: ZERO_ADDRESS,
-          identifierOrCriteria: "0",
-          startAmount: feeAmount.toString(), // 5% of amount -> fee
-          endAmount: feeAmount.toString(),
-          recipient: address, // fee receiver -> platform trasury wallet
-        },
+        // {
+        //   itemType: 0,
+        //   token: ZERO_ADDRESS,
+        //   identifierOrCriteria: '0',
+        //   startAmount: feeAmount.toString(), // 5% of amount -> fee
+        //   endAmount: feeAmount.toString(),
+        //   recipient: address, // fee receiver -> platform trasury wallet
+        // },
       ],
       startTime: startDay,
       endTime: endDay,
-      zone: ZERO_ADDRESS, // always this is a null address in listing
+      zone: ZERO_ADDRESS,
       zoneHash: ZERO_HASH,
       salt: SALT,
-      conduitKey: OPENSEA_CONDUIT_KEY,
+      conduitKey: INK_CONDUIT_KEY,
     };
-    const counter = await count(address)
-    const { signature, data } = await signOrder(orderParameters, counter as string);
+    const counter = await count(address);
+    const { signature, data } = await signOrder(
+      orderParameters,
+      counter as string
+    );
     if (signature === "") {
       return { signature: "", data };
     } else {
-      console.log("signature", signature);
       return { signature, data };
     }
-    // const signature = useSignSeaportOrder();
-
-
   };
 
   const handleList = async () => {
-    setMakeList(true);
-    // if (address) {
-    //   const counter = await count(address as `0x${string}`)
-    //   console.log("count", weiToNum(counter))
+    // setMakeList(true);
+    // const res = await setApprovalForAll(nft.address);
+    // if (res.status === "success") {
+    //   const { signature, data } = await handleSign();
+    //   if (signature) {
+    //     const listing = await listingNft(
+    //       id,
+    //       signature,
+    //       JSON.stringify(data),
+    //       nft.collection.network
+    //     );
+    //     console.log(listing);
+    //   }
+    //   setMakeList(false);
+    //   closeListModal();
+    //   if (setIsListed && setIsNoticed) {
+    //     setIsListed(true);
+    //     setIsNoticed(true);
+    //     setTimeout(() => {
+    //       setIsListed(false)
+    //     }, 4000);
+    //   }
     // }
-    const res = await setApprove(nft.address)
-    console.log("res", res)
-    if (res.status === "success") {
-      const { signature, data } = await handleSign();
-      if (signature) {
-        const listing = await listingNft(id, signature, JSON.stringify(data), nft.collection.network);
-        console.log(listing);
-      }
-      setMakeList(false);
-      closeListModal()
-    }
   };
-
 
   const handelSetEther = () => {
     setTab("eth");
@@ -137,7 +149,6 @@ export const ListModal: FC<ModalItem> = ({ nft }) => {
   const handleChangeAmount = (event: any) => {
     setAmount(event.target.value);
   };
-
 
   if (!isOpenedListModal) return null;
   return (

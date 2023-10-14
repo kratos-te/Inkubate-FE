@@ -1,13 +1,14 @@
 // import { BigNumberish } from "ethers";
 
-export const SEAPORT_CONTRACT_NAME = "Inkubate";
-export const SEAPORT_CONTRACT_VERSION = "1.0";
-export const SEAPORT_CONTRACT_ADDRESS =
+export const INK_CONTRACT_NAME = "Inkubate";
+export const INK_CONTRACT_VERSION = "1.0";
+export const INK_CONTRACT_ADDRESS =
   "0x3Ce4E94C427D79376041d596e98a8B135e8a5c96";
-export const OPENSEA_CONDUIT_KEY =
-  "0xb1fb84570e4d8ec32e1f9a646f7c479025ba3dffc9775d141c0bd6811401ebfe";
-export const OPENSEA_CONDUIT_ADDRESS =
-  "0x14Bc68c38c516abc835644d2feF69629aef21E5e";
+export const INK_CONDUIT_KEY =
+  "0x20affbfd4603a6e7fd25e35b7c81cfe9fde1de6c1c2b64aa9b24ffa1c80f53a1";
+export const INK_CONDUIT_ADDRESS = "0x2a3B2DEdf3A01CC70892514eA53f10dC4B3C2e88";
+export const DEFAULT_MERKLE_ROOT = "0x473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8";
+
 export const EIP_712_ORDER_TYPE = {
   OrderComponents: [
     { name: "offerer", type: "address" },
@@ -114,7 +115,7 @@ export const NO_CONDUIT =
 
 // Supply here any known conduit keys as well as their conduits
 export const KNOWN_CONDUIT_KEYS_TO_CONDUIT = {
-  [OPENSEA_CONDUIT_KEY]: OPENSEA_CONDUIT_ADDRESS,
+  [INK_CONDUIT_KEY]: INK_CONDUIT_ADDRESS,
 };
 
 export const CROSS_CHAIN_SEAPORT_V1_4_ADDRESS =
