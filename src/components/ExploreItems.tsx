@@ -49,7 +49,13 @@ const ExploreItems: FC = () => {
           <CollectionFilter />
         </div>
         <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
-          <NftGrid collectionId="opbunnies" isDense={isDense} nftData={[]} />
+          <NftGrid
+            collectionId="opbunnies"
+            isDense={isDense}
+            nftData={[]}
+            setActiveBuy={() => {}}
+            setActiveListing={() => {}}
+          />
         </div>
       </div>
     </>

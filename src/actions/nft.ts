@@ -5,16 +5,7 @@ import { NftParams } from "@/utils/types";
 
 export async function getNft(collectionId: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.get(
-      `${API_BASE_URL}/api/nft/${collectionId}`,
-      { headers }
-    );
+    const response = await axios.get(`${API_BASE_URL}/api/nft/${collectionId}`);
     console.log("nfts", response);
     return response;
   } catch (error) {
@@ -32,15 +23,7 @@ export async function getNft(collectionId: string) {
 export async function getNftbyOwner(userId: string) {
   try {
     await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.get(
-      `${API_BASE_URL}/api/nft/owner/${userId}`,
-      { headers }
-    );
+    const response = await axios.get(`${API_BASE_URL}/api/nft/owner/${userId}`);
     console.log("nft by owner", response);
     return response;
   } catch (error) {
@@ -57,15 +40,8 @@ export async function getNftbyOwner(userId: string) {
 
 export async function getNftByMinter(userId: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
     const response = await axios.get(
-      `${API_BASE_URL}/api/nft/minter/${userId}`,
-      { headers }
+      `${API_BASE_URL}/api/nft/minter/${userId}`
     );
     console.log("nft by owner", response);
     return response;
@@ -107,17 +83,10 @@ export async function createNft(createData: NftParams) {
 
 export async function getNftByOne(nftId: string, address: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.post(
-      `${API_BASE_URL}/api/nft/get`,
-      { nftId: nftId, address: address },
-      { headers }
-    );
+    const response = await axios.post(`${API_BASE_URL}/api/nft/get`, {
+      nftId: nftId,
+      address: address,
+    });
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {

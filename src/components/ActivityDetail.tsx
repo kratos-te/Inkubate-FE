@@ -35,14 +35,15 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
   return (
     <>
       <div className="">
-        {tags && tags.map((tag, key) => (
-          <button
-            key={key}
-            className="flex gap-1.5 px-2.5 py-3 text-light-300 items-center bg-dark-400 rounded-lg capitalize hover:bg-dark-500 duration-300"
-          >
-            {tag.icon} {tag.title} <CloseIcon />
-          </button>
-        ))}
+        {tags &&
+          tags.map((tag, key) => (
+            <button
+              key={key}
+              className="flex gap-1.5 px-2.5 py-3 text-light-300 items-center bg-dark-400 rounded-lg capitalize hover:bg-dark-500 duration-300"
+            >
+              {tag.icon} {tag.title} <CloseIcon />
+            </button>
+          ))}
         <div className="">
           <ActivityChart />
         </div>
@@ -91,7 +92,7 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
             <tbody>
               {actData &&
                 actData.map(
-                  (row, key) => 
+                  (row, key) =>
                     row && (
                       <tr
                         className="border-t-[0.5px] border-[687681]"
@@ -128,7 +129,10 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                         <td>
                           <div className="flex items-center">
                             <UserAvatar
-                              src={row.seller.profile.avatar?.url || "/assets/images/default-avatar.svg"}
+                              src={
+                                row.seller?.profile?.avatar?.url ||
+                                "/assets/images/default-avatar.svg"
+                              }
                               gradientFrom="red"
                               gradientTo="blue"
                               className="hidden xl:block mr-2"
@@ -141,7 +145,10 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                         <td>
                           <div className="flex items-center">
                             <UserAvatar
-                              src={row.buyer?.profile.avatar?.url || "/assets/images/default-avatar.svg"}
+                              src={
+                                row.buyer?.profile.avatar?.url ||
+                                "/assets/images/default-avatar.svg"
+                              }
                               gradientFrom="yellow"
                               gradientTo="blue"
                               className="hidden xl:block mr-2"
@@ -171,97 +178,101 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
           )}
           {loading && (
             <tbody>
-              {actData && actData.map(
-                (row, key) =>
-                  row && (
-                    <tr className="border-t-[0.5px] border-[687681]" key={key}>
-                      <td>
-                        <Skeleton
-                          width={40}
-                          height={20}
-                          baseColor="#333"
-                          highlightColor="#444"
-                        />
-                      </td>
-                      <td>
-                        <div className="py-[17px] flex items-center">
+              {actData &&
+                actData.map(
+                  (row, key) =>
+                    row && (
+                      <tr
+                        className="border-t-[0.5px] border-[687681]"
+                        key={key}
+                      >
+                        <td>
                           <Skeleton
                             width={40}
-                            height={40}
+                            height={20}
                             baseColor="#333"
                             highlightColor="#444"
                           />
-                          <div className="ml-3">
+                        </td>
+                        <td>
+                          <div className="py-[17px] flex items-center">
                             <Skeleton
-                              width={60}
-                              height={20}
+                              width={40}
+                              height={40}
                               baseColor="#333"
                               highlightColor="#444"
                             />
-                            <Skeleton
-                              width={50}
-                              height={18}
-                              baseColor="#333"
-                              highlightColor="#444"
-                            />
+                            <div className="ml-3">
+                              <Skeleton
+                                width={60}
+                                height={20}
+                                baseColor="#333"
+                                highlightColor="#444"
+                              />
+                              <Skeleton
+                                width={50}
+                                height={18}
+                                baseColor="#333"
+                                highlightColor="#444"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="">
-                        <Skeleton
-                          width={60}
-                          height={20}
-                          baseColor="#333"
-                          highlightColor="#444"
-                        />
-                      </td>
-                      <td>
-                        <div className="flex items-center">
+                        </td>
+                        <td className="">
                           <Skeleton
-                            width={30}
-                            height={30}
+                            width={60}
+                            height={20}
                             baseColor="#333"
                             highlightColor="#444"
                           />
-                          <div className="ml-3">
+                        </td>
+                        <td>
+                          <div className="flex items-center">
                             <Skeleton
-                              width={60}
-                              height={20}
+                              width={30}
+                              height={30}
                               baseColor="#333"
                               highlightColor="#444"
                             />
+                            <div className="ml-3">
+                              <Skeleton
+                                width={60}
+                                height={20}
+                                baseColor="#333"
+                                highlightColor="#444"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="flex items-center">
+                        </td>
+                        <td>
+                          <div className="flex items-center">
+                            <Skeleton
+                              width={30}
+                              height={30}
+                              baseColor="#333"
+                              highlightColor="#444"
+                            />
+                            <div className="ml-3">
+                              <Skeleton
+                                width={60}
+                                height={20}
+                                baseColor="#333"
+                                highlightColor="#444"
+                              />
+                            </div>
+                          </div>
+                        </td>
+                        <td>
                           <Skeleton
-                            width={30}
-                            height={30}
+                            width={60}
+                            height={20}
                             baseColor="#333"
                             highlightColor="#444"
                           />
-                          <div className="ml-3">
-                            <Skeleton
-                              width={60}
-                              height={20}
-                              baseColor="#333"
-                              highlightColor="#444"
-                            />
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <Skeleton
-                          width={60}
-                          height={20}
-                          baseColor="#333"
-                          highlightColor="#444"
-                        />
-                      </td>
-                    </tr>
-                  )
-              )}
+                        </td>
+                      </tr>
+                    )
+                )}
             </tbody>
           )}
         </table>

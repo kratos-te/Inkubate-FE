@@ -19,7 +19,9 @@ export const ZERO_HASH =
 export const SALT =
   "24446860302761739304752683030156737591518664810215442929804740456659635214915";
 export const DEFAULT_GAS = BigInt("3000000");
+export const MIN_GAS = BigInt("500000");
 export const DEFAULT_GAS_PRICE = BigInt("20000000000");
+export const MIN_GAS_PRICE = BigInt("1000000000");
 
 export const HEADER_LINKS = [
   {

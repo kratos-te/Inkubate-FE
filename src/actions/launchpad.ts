@@ -33,15 +33,7 @@ export async function createLaunchpad(createData: CreateLaunchpadParam) {
 
 export async function getLaunchpad() {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.get(`${API_BASE_URL}/api/launchpad`, {
-      headers,
-    });
+    const response = await axios.get(`${API_BASE_URL}/api/launchpad`);
     console.log("launchpad", response);
     return response;
   } catch (error) {
@@ -59,15 +51,7 @@ export async function getLaunchpad() {
 
 export async function getLaunchpadById(id: number) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.get(`${API_BASE_URL}/api/launchpad/${id}`, {
-      headers,
-    });
+    const response = await axios.get(`${API_BASE_URL}/api/launchpad/${id}`);
     console.log("launchpad by Id", response);
     return response;
   } catch (error) {

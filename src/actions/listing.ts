@@ -42,15 +42,7 @@ export async function listingNft(
 
 export async function getlistingNft() {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.get(`${API_BASE_URL}/api/listing`, {
-      headers,
-    });
+    const response = await axios.get(`${API_BASE_URL}/api/listing`);
     console.log("Listings", response);
     return response;
   } catch (error) {
@@ -79,15 +71,18 @@ export async function cancelList(
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios.delete(`${API_BASE_URL}/api/listing`, {
-      headers: headers,
-      data: {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/listing/cancel`,
+      {
         id: id,
         nftId,
         txHash,
         network,
       },
-    });
+      {
+        headers: headers,
+      }
+    );
     console.log("cancel listing", response);
     return response;
   } catch (error) {
@@ -131,16 +126,8 @@ export async function getListByUser() {
 
 export async function getListByNft(nftId: string) {
   try {
-    await checkAuthorization();
-    console.log("NFT id", nftId);
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
     const response = await axios.get(
-      `${API_BASE_URL}/api/listing/nft/${nftId}`,
-      { headers }
+      `${API_BASE_URL}/api/listing/nft/${nftId}`
     );
     return response;
   } catch (error) {
@@ -169,15 +156,18 @@ export async function buyNow(
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios.post(`${API_BASE_URL}/api/listing/buy`, {
-      headers: headers,
-      data: {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/listing/buy`,
+      {
         id,
         nftId,
         txHash,
         network,
       },
-    });
+      {
+        headers: headers,
+      }
+    );
     console.log("direct buy listing", response);
     return response;
   } catch (error) {

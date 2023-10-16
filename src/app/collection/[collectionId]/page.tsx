@@ -17,11 +17,15 @@ import SortDropdown from "@/components/SortDropdown";
 import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
 import { getNft } from "@/actions/nft";
-import { ActivityTypes, CollectionParam, ListingTypes, NftTypes } from "@/utils/types";
+import {
+  ActivityTypes,
+  CollectionParam,
+  ListingTypes,
+  NftTypes,
+} from "@/utils/types";
 import { getCollectionById, getListByNft } from "@/actions";
 import { getActivityByCollection } from "@/actions/activity";
 import { BuyModal } from "@/components/BuyModal";
-
 
 export default function CollectionPage() {
   const router = useRouter();
@@ -32,9 +36,10 @@ export default function CollectionPage() {
   const [listByNft, setListByNft] = useState<ListingTypes>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
   const [actByCollection, setActByCollection] = useState<ActivityTypes[]>([]);
-  const [activeListing, setActiveListing] = useState<NftTypes | undefined>(undefined);
-  const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined)
-
+  const [_activeListing, setActiveListing] = useState<NftTypes | undefined>(
+    undefined
+  );
+  const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
 
   const tab = useMemo(() => {
     let t = "1";
@@ -65,34 +70,34 @@ export default function CollectionPage() {
 
   useEffect(() => {
     const getNftByCollection = async () => {
-      const nfts = await getNft(collectionId)
+      const nfts = await getNft(collectionId);
       const collection = await getCollectionById(collectionId);
       const activity = await getActivityByCollection(collectionId);
 
-      setNftByCollection(nfts?.data)
-      setCollectionById(collection?.data)
-      setActByCollection(activity?.data)
-    }
-    getNftByCollection()
-  }, [collectionId])
+      setNftByCollection(nfts?.data);
+      setCollectionById(collection?.data);
+      setActByCollection(activity?.data);
+    };
+    getNftByCollection();
+  }, [collectionId]);
 
   const selectActiveNftIdx = (nft: NftTypes) => {
     setActiveListing(nft);
-  }
+  };
 
   useEffect(() => {
     const getLisiting = async () => {
       if (activeBuy) {
         const listing = await getListByNft(activeBuy?.id);
-        setListByNft(listing?.data)
+        setListByNft(listing?.data);
       }
-    }
-    getLisiting()
-  }, [activeBuy])
+    };
+    getLisiting();
+  }, [activeBuy]);
 
   const selectBuyNftIdx = (nft: NftTypes) => {
     setActiveBuy(nft);
-  }
+  };
 
   return (
     <>
@@ -108,32 +113,45 @@ export default function CollectionPage() {
           />
         }
       >
-        <CoverBanner src={collectionById?.banner.url || "/assets/images/cover-demo.png"} />
-        {collectionById && <CollectionOverview collection={collectionById} nfts={nftByCollection} />}
+        <CoverBanner
+          src={collectionById?.banner.url || "/assets/images/cover-demo.png"}
+        />
+        {collectionById && (
+          <CollectionOverview
+            collection={collectionById}
+            nfts={nftByCollection}
+          />
+        )}
         <div className="max-w-[1600px] mx-5 2xl:mx-auto relative">
           <div className="border-b-[0.5px] py-9  border-light-400 relative z-10">
             <div className="flex gap-3">
               <button
                 onClick={() => router.push(`${collectionId}?tab=1`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "1"
-                  ? " border-secondary bg-secondary"
-                  : "border-transparent"
-                  }`}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${
+                  tab === "1"
+                    ? " border-secondary bg-secondary"
+                    : "border-transparent"
+                }`}
               >
                 Items
               </button>
               <button
                 onClick={() => router.push(`${collectionId}?tab=2`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "2"
-                  ? " border-secondary bg-secondary"
-                  : "border-transparent"
-                  }`}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${
+                  tab === "2"
+                    ? " border-secondary bg-secondary"
+                    : "border-transparent"
+                }`}
               >
                 Activity
               </button>
             </div>
           </div>
-          <div className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${(tab === "1" || tab === "2") ? "show" : "hidden"}`}>
+          <div
+            className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${
+              tab === "1" || tab === "2" ? "show" : "hidden"
+            }`}
+          >
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
               <Typography className="ml-2.5 text-[14px] leading-[20px] hidden lg:block">
@@ -165,14 +183,23 @@ export default function CollectionPage() {
               </button>
             </div>
           </div>
-          <div className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${(tab === "1" || tab === "2") ? "show" : "hidden"}`}>
+          <div
+            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${
+              tab === "1" || tab === "2" ? "show" : "hidden"
+            }`}
+          >
             <div className="hidden lg:block w-[300px]">
               <CollectionFilter />
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
               {tab === "1" && (
-                <NftGrid nftData={nftByCollection} collectionId={collectionId} isDense={isDense} setActiveListing={selectActiveNftIdx}
-                  setActiveBuy={selectBuyNftIdx} />
+                <NftGrid
+                  nftData={nftByCollection}
+                  collectionId={collectionId}
+                  isDense={isDense}
+                  setActiveListing={selectActiveNftIdx}
+                  setActiveBuy={selectBuyNftIdx}
+                />
               )}
               {tab === "2" && <ActivityDetail actData={actByCollection} />}
             </div>

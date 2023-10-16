@@ -7,13 +7,14 @@ import ClickAwayComponent from "./ClickAwayComponent";
 import { useErc721a } from "@/hooks/useErc721a";
 import { CollectionParam, LaunchpadParam } from "@/utils/types";
 import { createNft } from "@/actions/nft";
+import axios from "axios";
 
 interface MintModalProps {
   collection: CollectionParam;
   launchpad: LaunchpadParam;
 }
 export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
-  const { mint, getMintingStartTime, getTokenUri } = useErc721a();
+  const { mintNFT, getMintingStartTime, getTokenUri } = useErc721a();
   const { closeMintModal, isOpenedMintModal } = useModal();
   const [mintValue, setMintValue] = useState<number>(1);
   const [mintStatus, setMintStatus] = useState<boolean>(false);
@@ -29,13 +30,22 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
   const handleGetTokenURI = async (address: string, id: string) => {
     try {
       const tokenUri = await getTokenUri(address, id);
-      console.log("tokenUri", tokenUri);
-      // setAsset(tokenUri as string)
-      const response = await fetch(tokenUri as string);
-      const data = await response.json();
+      const config = {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await axios.get(tokenUri, config);
+      const data = await response.data;
       return data;
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log(err);
+      return {
+        image: "fetching-failed",
+        attributes: [],
+      };
     }
   };
   const handleMint = async (amount: number) => {
@@ -45,16 +55,17 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
       if (startTimeRes?.res) console.log("here", startTimeRes.res);
       const value = Number(launchpad.mintPrice) * amount;
       console.log("value", value, collection.address);
-      const rept = await mint(amount, value.toString(), collection.address);
+      const rept = await mintNFT(amount, value.toString(), collection.address);
       console.log("transaction result is ", rept);
       if (rept.status === "success") {
-        rept.logs.map(async item => {
+        rept.logs.map(async (item) => {
           const decimalValue = parseInt(item.topics[3] as `0x${string}`, 16);
-          const nftData = await handleGetTokenURI(
+
+          const tokenUri = await getTokenUri(
             collection.address,
             decimalValue.toString()
           );
-          const asset = await getTokenUri(
+          const nftData = await handleGetTokenURI(
             collection.address,
             decimalValue.toString()
           );
@@ -65,7 +76,7 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
             name: collection.name,
             nftId: decimalValue.toString(),
             address: collection.address,
-            assetUrl: asset as string,
+            assetUrl: tokenUri,
             imgUrl: nftData.image,
             royalty: 0,
             contractType: "ERC721",

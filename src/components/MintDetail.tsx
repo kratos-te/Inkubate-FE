@@ -16,7 +16,7 @@ import useWindowSize from "@/utils/useWindowSize";
 import MintProgress from "./MintProgress";
 import { useModal } from "@/contexts/ModalContext";
 import { weiToNum } from "@/utils/util";
-import { getTime } from "date-fns";
+
 
 interface OverviewProps {
   collection: CollectionParam;
@@ -27,13 +27,28 @@ interface OverviewProps {
 
 const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
   // const { price, setPrice } = useState(launchpad.mintPrice)
+  // const [supply, setSupply] = useState<string>("0")
   const router = useRouter();
   const { openMintModal } = useModal();
+  // const { getTotalSupply } = useErc721a();
   const { width } = useWindowSize();
+
   const price = launchpad.mintPrice;
-  const remainingTime = getTime(new Date(launchpad.startDate)) - getTime(new Date())
+  const remainingTime = Math.floor(
+    (new Date(launchpad.startDate).getTime() - Date.now()) / 1000
+  );
   const description =
     "The Cyber Droid NFTs are unique, algorithmically generated androids on the Ethereum blockchain. They can function as digital art, metaverse avatars, or blockchain game characters. Ownership may also unlock exclusive perks ithin the community.";
+
+  // useEffect(()=> {
+  //   const fetchSupply = async () => {
+  //     const supply = await getTotalSupply();
+  //     setSupply(supply);
+  // };
+
+  // fetchSupply();
+  // },[])
+
   return (
     <div className="flex flex-col lg:flex-row">
       <div
@@ -93,21 +108,33 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
             </Link>
           </div>
           <div className="w-full sm:w-[400px]">
-            <MintProgress totalSupply={launchpad.supply} minted={nfts.length} className="mt-6" />
+            <MintProgress
+              totalSupply={launchpad.supply}
+              minted={nfts.length}
+              className="mt-6"
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 mt-5 gap-[14px] sm:gap-2.5">
               <button
                 className="py-[11px]  h-[42px] text-dark-200 flex !rounded-full items-center !font-bold bg-light-100 justify-center hover:bg-[#bbb] duration-300 disabled:cursor-not-allowed"
                 onClick={openMintModal}
                 disabled={remainingTime > 0}
               >
-                <StarIcon className="mr-1" color="#161616" /> Mint Now 
+                <StarIcon className="mr-1" color="#161616" /> Mint Now
               </button>
-              <button className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300" onClick={() => router.push(`/collection/${collection.id}`)}>
+              <button
+                className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300"
+                onClick={() => router.push(`/collection/${collection.id}`)}
+              >
                 <GalleryIcon className="mr-1" color="#F2F3F4" />
-                View Collection 
+                View Collection
               </button>
             </div>
           </div>
+          {remainingTime > 0 && (
+            <div className="w-full sm:w-[400px] text-light-100 mt-8 flex gap-8">
+              <span>{remainingTime}s remaining</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { OrderType } from "./constants";
+import { OrderType, Side } from "./constants";
 export type VariantSize =
   | "2xs"
   | "xs"
@@ -221,7 +221,7 @@ export type OrderParameters = {
   zone: string;
   zoneHash: string;
   salt: string;
-  totalOriginalConsiderationItems: string; // BigNumber
+  totalOriginalConsiderationItems?: string; // BigNumber
   conduitKey: string;
 };
 
@@ -264,6 +264,32 @@ export type BasicOrderParameters = {
   signature: string;
 };
 
+export type AdvancedOrder = {
+  parameters: OrderParameters;
+  numerator: string;
+  denominator: string;
+  signature: string;
+  extraData: string;
+};
+
+export type CriteriaResolver = {
+  orderIndex: string;
+  side: Side;
+  index: string;
+  identifier: string;
+  criteriaProof: string;
+};
+
+export type FulfillmentComponent = {
+  orderIndex: string;
+  itemIndex: string;
+};
+
+export type Fulfillment = {
+  offerComponents: FulfillmentComponent[];
+  considerationComponents: FulfillmentComponent[];
+};
+
 export type AdditionalRecipient = {
   amount: string;
   recipient: string;
@@ -292,10 +318,12 @@ export type OfferTypes = {
   nft: NftTypes;
   nftId: string;
   offerPrice: bigint;
-  txHash: string;
+  signature: string;
+  parameters: string;
   expiresAt: Date;
   status: string;
   createdAt: Date;
+  buyer?: UserTypes;
 };
 
 export type ActivityTypes = {

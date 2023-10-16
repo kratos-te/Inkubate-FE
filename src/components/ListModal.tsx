@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { FC, useState, useRef, Dispatch, SetStateAction, useEffect } from "react";
+import { FC, useState, useRef, Dispatch, SetStateAction } from "react";
 import { useAccount } from "wagmi";
 
 import { LoadingPad } from "./LoadingPad";
@@ -25,9 +25,9 @@ import { NftTypes } from "@/utils/types";
 import { date2UTC, numToWei, ipfsToLink } from "@/utils/util";
 
 export const ListModal: FC<{
-  nft: NftTypes,
-  setIsListed?: Dispatch<SetStateAction<boolean>>
-  setIsNoticed?: Dispatch<SetStateAction<boolean>>
+  nft: NftTypes;
+  setIsListed?: Dispatch<SetStateAction<boolean>>;
+  setIsNoticed?: Dispatch<SetStateAction<boolean>>;
 }> = ({ nft, setIsListed, setIsNoticed }) => {
   const { closeListModal, isOpenedListModal } = useModal();
   const { setApprovalForAll } = useErc721a();
@@ -108,29 +108,29 @@ export const ListModal: FC<{
   };
 
   const handleList = async () => {
-    // setMakeList(true);
-    // const res = await setApprovalForAll(nft.address);
-    // if (res.status === "success") {
-    //   const { signature, data } = await handleSign();
-    //   if (signature) {
-    //     const listing = await listingNft(
-    //       id,
-    //       signature,
-    //       JSON.stringify(data),
-    //       nft.collection.network
-    //     );
-    //     console.log(listing);
-    //   }
-    //   setMakeList(false);
-    //   closeListModal();
-    //   if (setIsListed && setIsNoticed) {
-    //     setIsListed(true);
-    //     setIsNoticed(true);
-    //     setTimeout(() => {
-    //       setIsListed(false)
-    //     }, 4000);
-    //   }
-    // }
+    setMakeList(true);
+    const res = await setApprovalForAll(nft.address);
+    if (res.status === "success") {
+      const { signature, data } = await handleSign();
+      if (signature) {
+        const listing = await listingNft(
+          id,
+          signature,
+          JSON.stringify(data),
+          nft.collection.network
+        );
+        console.log(listing);
+      }
+      setMakeList(false);
+      closeListModal();
+      if (setIsListed && setIsNoticed) {
+        setIsListed(true);
+        setIsNoticed(true);
+        setTimeout(() => {
+          setIsListed(false);
+        }, 4000);
+      }
+    }
   };
 
   const handelSetEther = () => {
@@ -177,6 +177,11 @@ export const ListModal: FC<{
                 src={ipfsToLink(imgUrl)}
                 className="relative z-0 rounded-xl w-[120px] h-[120px] max-sm:w-[90px] max-sm:h-[90px] object-cover"
                 alt="nft image"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = "/assets/images/shit.jpg";
+                }}
               />
               <div className="flex-col space-y-2">
                 <div className="flex items-left">
@@ -195,20 +200,22 @@ export const ListModal: FC<{
             </div>
             <div className="flex justify-between border border-white rounded-3xl mt-12 overflow-hidden">
               <div
-                className={`flex h-12 space-x-1 justify-center border-white py-2 w-1/2 rounded-r-full items-center cursor-pointer ${tab === "eth"
-                  ? "bg-white text-black"
-                  : "bg-transparent text-white"
-                  }`}
+                className={`flex h-12 space-x-1 justify-center border-white py-2 w-1/2 rounded-r-full items-center cursor-pointer ${
+                  tab === "eth"
+                    ? "bg-white text-black"
+                    : "bg-transparent text-white"
+                }`}
                 onClick={handelSetEther}
               >
                 <EthIcon color={`${tab === "eth" ? "black" : "white"}`} />
                 <p className="text-[24px] font-bold"> ETH</p>
               </div>
               <div
-                className={`flex h-12 space-x-1 justify-center w-1/2 border-white py-2 px-4 rounded-l-full items-center cursor-pointer ${tab === "bnb"
-                  ? "bg-white text-black"
-                  : "bg-transparent text-white"
-                  }`}
+                className={`flex h-12 space-x-1 justify-center w-1/2 border-white py-2 px-4 rounded-l-full items-center cursor-pointer ${
+                  tab === "bnb"
+                    ? "bg-white text-black"
+                    : "bg-transparent text-white"
+                }`}
                 onClick={handleSetBnb}
               >
                 <BnbIcon color={`${tab === "bnb" ? "black" : "white"}`} />
@@ -222,7 +229,7 @@ export const ListModal: FC<{
               <div className="flex gap-[5px] justify-between items-center mt-2 max-sm:py-2">
                 {/* <input className="text-[14px] text-white" placeholder="Amount" /> */}
                 <input
-                  className="bg-dark-400 rounded-[8px] text-[14px] text-white w-full p-[14px]  mt-2 placeholder:text-white"
+                  className="bg-dark-400 rounded-[8px] text-[14px] text-white w-full p-[14px] mt-2 placeholder:text-white"
                   placeholder="Amount"
                   onChange={handleChangeAmount}
                   value={amount}

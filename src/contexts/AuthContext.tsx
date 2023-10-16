@@ -1,6 +1,13 @@
 "use client";
 import { signIn, signOut, signUp } from "@/actions";
-import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+  useEffect,
+} from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useUser } from "./UserContext";
 // import { useAccount, useSignMessage } from "wagmi";
@@ -28,9 +35,9 @@ const AuthContext = createContext<AuthContextType>({
   signature: "",
   setSignature: () => {},
   accessToken: "",
-  setAccessToken: () => { },
+  setAccessToken: () => {},
   refreshToken: "",
-  setRefreshToken: () => { },
+  setRefreshToken: () => {},
 });
 
 export const useAuth = () => {
@@ -66,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     console.log("logout");
-    signOut(accessToken)
+    signOut();
     setAccessToken("");
     setRefreshToken("");
     localStorage.removeItem("accessToken");
@@ -101,18 +108,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       .then(async (sign) => {
         const token = await signIn(userAddress, sign.toString());
         if (token) {
-          console.log("token", token.accessToken)
+          console.log("token", token.accessToken);
           setAccessToken(token.accessToken);
           localStorage.setItem("accessToken", token.accessToken);
           setRefreshToken(token.refreshToken);
-          localStorage.setItem("refreshToken", token.refreshToken)
+          localStorage.setItem("refreshToken", token.refreshToken);
           getUserData();
         }
       })
       .catch((e) => {
         console.log("====", e);
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userAddress]);
 
   useEffect(() => {
@@ -122,11 +129,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return;
     }
     signInWallet();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, userAddress]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
-

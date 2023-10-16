@@ -127,6 +127,11 @@ const NftCard: FC<ItemProps> = ({ nft, width, setActiveListing, setActiveBuy, se
             src={ipfsToLink(imgUrl)}
             className="object-cover"
             alt="nft Image"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = "/assets/images/shit.jpg";
+            }}
           />
           <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
             <Typography className="font-[500] text-[12px]">#{nftId}</Typography>
