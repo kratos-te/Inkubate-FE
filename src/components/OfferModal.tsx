@@ -1,24 +1,142 @@
 /* eslint-disable @next/next/no-img-element */
-import { FC, useState, useRef } from "react";
-import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
+import { FC, useState, useRef, Dispatch, SetStateAction } from "react";
+import { useAccount } from "wagmi";
+import { ZeroAddress, ZeroHash } from "ethers";
+
+import { createOffer } from "@/actions";
+import { SALT } from "@/config";
 import { useModal } from "@/contexts/ModalContext";
-import { ModalItem } from "@/utils/types";
-import Typography from "./Typography";
+import { useErc20 } from "@/hooks/useErc20";
+import { useInkubate } from "@/hooks/useInkubate";
+import { useSignSeaportOrder } from "@/hooks/useSignSeaportOrder";
+import {
+  GOERLI_WETH_ADDRESS,
+  INK_CONDUIT_ADDRESS,
+  INK_CONDUIT_KEY,
+  OrderType,
+} from "@/utils/constants";
+import { ListingTypes, NftTypes } from "@/utils/types";
+import { date2UTC, ipfsToLink, numToWei } from "@/utils/util";
 import { CoinButton } from "./CoinButton";
 import { LoadingPad } from "./LoadingPad";
 import { SetDuration } from "./SetDuratoin";
-import { ipfsToLink } from "@/utils/util";
+import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
+import Typography from "./Typography";
+import { useUser } from "@/contexts/UserContext";
 
-export const OfferModal: FC<ModalItem> = ({ nft }) => {
+export const OfferModal: FC<{
+  nft: NftTypes;
+  listing?: ListingTypes;
+  className?: string;
+  setIsOffer: Dispatch<SetStateAction<boolean>>;
+}> = ({ nft, listing, setIsOffer }) => {
+  const { address: walletAddress } = useAccount();
   const { closeOfferModal, isOpenedOfferModal } = useModal();
+  const { approve } = useErc20();
+  const { count } = useInkubate();
+  const signOrder = useSignSeaportOrder();
   const { imgUrl, name, nftId } = nft;
 
   const [makeOffer, setMakeOffer] = useState(false);
-
+  const [amount, setAmount] = useState<string>("");
+  const { endDate, endTime } = useUser();
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const handleOffer = () => {
-    setMakeOffer(!makeOffer);
+  // const startDay = (
+  //   new Date(date2UTC(startDate, startTime)).getTime() / 1000
+  // ).toString();
+  const endDay = (
+    new Date(date2UTC(endDate, endTime)).getTime() / 1000
+  ).toString();
+
+  const handleSign = async () => {
+    if (!walletAddress) return { signature: "", data: "" };
+    console.log("endaday", endDay)
+    const startAmount = numToWei(parseFloat(amount));
+    const consideration = [
+      {
+        itemType: 2,
+        token: nft.address,
+        identifierOrCriteria: nftId,
+        startAmount: "1",
+        endAmount: "1",
+        recipient: walletAddress,
+      },
+      // {
+      //   itemType: 0,
+      //   token: ZERO_ADDRESS,
+      //   identifierOrCriteria: '0',
+      //   startAmount: feeAmount.toString(), // 5% of amount -> fee
+      //   endAmount: feeAmount.toString(),
+      //   recipient: address, // fee receiver -> platform trasury wallet
+      // },
+    ];
+
+    const orderParameters = {
+      offerer: walletAddress,
+      offer: [
+        {
+          itemType: 1,
+          token: GOERLI_WETH_ADDRESS,
+          identifierOrCriteria: "0",
+          startAmount: startAmount,
+          endAmount: startAmount,
+        },
+      ],
+      consideration,
+      startTime: "0", // 1970-01-01T00:00:00.000Z
+      endTime: endDay, // TODO:Set end time from input // 2038-01-19T03:14:07.000Z
+      orderType: OrderType.FULL_OPEN,
+      zone: ZeroAddress,
+      zoneHash: ZeroHash,
+      salt: SALT,
+      conduitKey: INK_CONDUIT_KEY,
+      totalOriginalConsiderationItems: consideration.length.toString(),
+    };
+    const counter = await count(walletAddress);
+    const { signature, data } = await signOrder(
+      orderParameters,
+      counter as string
+    );
+    if (signature === "") {
+      return { signature: "", data };
+    } else {
+      return { signature, data };
+    }
+  };
+
+  const handleOffer = async () => {
+    if (!listing || !walletAddress) return;
+
+    setMakeOffer(true);
+    const startAmount = numToWei(parseFloat(amount));
+    // TODO: notify insuffcient wETH Balance
+    // const balance = await balanceOf(GOERLI_WETH_ADDRESS, walletAddress!);
+    // console.log(balance);
+    const res = await approve(
+      GOERLI_WETH_ADDRESS,
+      INK_CONDUIT_ADDRESS,
+      BigInt(startAmount)
+    );
+    if (res.status === "success") {
+      const { signature, data } = await handleSign();
+      if (signature) {
+        const res = await createOffer(
+          listing.id,
+          signature,
+          JSON.stringify(data),
+          nft.collection.network
+        );
+        console.log(res);
+      }
+      setMakeOffer(false);
+      closeOfferModal();
+      setIsOffer(true)
+    }
+  };
+
+  const handleChangeAmount = (event: any) => {
+    setAmount(event.target.value);
   };
 
   if (!isOpenedOfferModal) return null;
@@ -48,6 +166,11 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
                 src={ipfsToLink(imgUrl)}
                 className="relative z-0 rounded-xl object-cover w-[120px] h-[120xp]"
                 alt="nft Image for Buy"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = "/assets/images/shit.jpg";
+                }}
               />
               <div className="flex-col space-y-2">
                 <div className="flex items-left">
@@ -68,8 +191,13 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
               <Typography className="text-[24px] font-semibold text-left max-sm:text-[18px]">
                 {"Price"}
               </Typography>
-              <div className="flex justify-between rounded-[8px] bg-dark-400 px-3 py-4 items-center mt-2 max-sm:py-2">
-                <p className="text-[14px] text-white">34</p>
+              <div className="flex justify-between rounded-[8px] bg-dark-400 px-3 items-center mt-2 max-sm:py-2">
+                <input
+                  className="bg-dark-400 rounded-[8px] text-[14px] text-white w-full py-[14px] placeholder:text-white outline-none"
+                  placeholder="Amount"
+                  onChange={handleChangeAmount}
+                  value={amount}
+                />
                 <CoinButton
                   icon="/assets/icons/eth.png"
                   symbol="ETH"
@@ -77,7 +205,7 @@ export const OfferModal: FC<ModalItem> = ({ nft }) => {
                 />
               </div>
               <p className="text-[16px] text-[#B3B3B3] mt-2 text-left max-sm:text-[14px]">
-                Balance: 0.0600 ETH
+                Balance: 0.0600 wETH
               </p>
             </div>
             <SetDuration />

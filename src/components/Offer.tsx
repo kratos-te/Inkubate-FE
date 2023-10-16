@@ -2,10 +2,8 @@ import { OfferTypes } from "@/utils/types"
 import { FC } from "react"
 import Typography from "./Typography";
 import { weiToNum } from "@/utils/util";
-import { getDayOfYear, getHours } from "date-fns";
+import { getDayOfYear } from "date-fns";
 import { useModal } from "@/contexts/ModalContext";
-import { LinkIcon } from "./SvgIcons";
-import Link from "next/link";
 
 interface OfferProps {
     offer: OfferTypes;
@@ -13,9 +11,9 @@ interface OfferProps {
 
 export const Offer: FC<OfferProps> = ({ offer }) => {
     const { openAcceptModal } = useModal();
-    const { expiresAt, createdAt, txHash } = offer
+    const { expiresAt } = offer
     const duraion = getDayOfYear(new Date(expiresAt)) - getDayOfYear(new Date())
-    const received = 24 * (getDayOfYear(new Date()) - getDayOfYear(new Date(createdAt))) + (getHours(new Date(createdAt)) - getHours(new Date()))
+    // const received = 24 * (getDayOfYear(new Date()) - getDayOfYear(new Date(createdAt))) + (getHours(new Date(createdAt)) - getHours(new Date()))
     return (
         <>
             <tr
@@ -63,7 +61,7 @@ export const Offer: FC<OfferProps> = ({ offer }) => {
                         </p>
                     </div>
                 </td>
-                <td className="max-xl:hidden">
+                {/* <td className="max-xl:hidden">
                     <Link
                         href={`https://Goerli.etherscan.io/tx/${txHash}`}
                         target="_blank"
@@ -74,12 +72,12 @@ export const Offer: FC<OfferProps> = ({ offer }) => {
                             </p>
                             <LinkIcon />
                         </div>
-                    </Link> 
-                </td>
+                    </Link>
+                </td> */}
                 <td className="">
                     <div className="flex items-center justify-end">
                         <button
-                            className=" bg-secondary rounded-xl text-white text-[20px] font-semibold px-6 py-3 max-[640px]:text-[12px] max-sm:text-[8px]"
+                            className="bg-secondary rounded-xl text-white text-[20px] font-semibold px-6 py-3 max-[640px]:text-[12px] max-sm:text-[8px]"
                             onClick={openAcceptModal}
                         >
                             Accept

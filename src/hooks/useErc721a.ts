@@ -3,7 +3,7 @@ import { Abi } from "viem";
 
 import { ERC721A_ABI } from "@/utils/abi";
 import { DEFAULT_MERKLE_ROOT, INK_CONDUIT_ADDRESS } from "@/utils/constants";
-import { DEFAULT_GAS, DEFAULT_GAS_PRICE } from "@/config";
+import { DEFAULT_GAS, MIN_GAS, MIN_GAS_PRICE } from "@/config";
 import { write } from "./utils";
 
 export function useErc721a() {
@@ -20,14 +20,14 @@ export function useErc721a() {
     });
   };
 
-  const mint = async (amount: number, value: string, address: string) => {
+  const mintNFT = async (amount: number, value: string, address: string) => {
     return await write({
       address: address as `0x${string}`,
       abi: ERC721A_ABI as Abi,
       functionName: "mintNFT",
       args: [BigInt(amount), [DEFAULT_MERKLE_ROOT]],
-      gas: DEFAULT_GAS,
-      gasPrice: DEFAULT_GAS_PRICE,
+      gas: MIN_GAS,
+      gasPrice: MIN_GAS_PRICE,
       value: BigInt(value),
     });
   };
@@ -54,7 +54,15 @@ export function useErc721a() {
     }
   };
 
-  const enableWhitelistMode = async (tokenAddress: string) => {
+  const getTotalSupply = async (address: string) => {
+    const contract: any = getContract({
+      address: address as `0x${string}`,
+      abi: ERC721A_ABI as Abi,
+    });
+    return await contract.read.tokenURI();
+  };
+
+  const getEnableWhitelistMode = async (tokenAddress: string) => {
     return await write({
       address: tokenAddress as `0x${string}`,
       abi: ERC721A_ABI as Abi,
@@ -93,11 +101,12 @@ export function useErc721a() {
 
   return {
     approve,
-    mint,
-    enableWhitelistMode,
+    mintNFT,
+    setApprovalForAll,
+    getEnableWhitelistMode,
     getWhitelistMode,
     getMintingStartTime,
     getTokenUri,
-    setApprovalForAll,
+    getTotalSupply,
   };
 }

@@ -29,15 +29,8 @@ export async function getActivityByUser() {
 
 export async function getActivityByCollection(collectionId: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
     const response = await axios.get(
-      `${API_BASE_URL}/api/activity/collection/${collectionId}`,
-      { headers }
+      `${API_BASE_URL}/api/activity/collection/${collectionId}`
     );
     console.log("activity by collection", response);
     return response;
@@ -55,15 +48,8 @@ export async function getActivityByCollection(collectionId: string) {
 
 export async function getActivityByNft(nftId: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
     const response = await axios.get(
-      `${API_BASE_URL}/api/activity/nft/${nftId}`,
-      { headers }
+      `${API_BASE_URL}/api/activity/nft/${nftId}`
     );
     console.log("activity by nft", response);
     return response;

@@ -34,18 +34,10 @@ export async function availableUsername(
   username: string
 ): Promise<string | null> {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
     const response = await axios
-      .post(
-        `${API_BASE_URL}/api/user/available-username`,
-        { username: username },
-        { headers }
-      )
+      .post(`${API_BASE_URL}/api/user/available-username`, {
+        username: username,
+      })
       .then((res) => res.data)
       .catch((e) => {
         throw e;

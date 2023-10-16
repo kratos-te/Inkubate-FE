@@ -28,22 +28,46 @@ import { OfferModal } from "@/components/OfferModal";
 import { BuyModal } from "@/components/BuyModal";
 import { usePathname } from "next/navigation";
 import { getNftByOne, getNft } from "@/actions/nft";
-import { ListingTypes, NftTypes } from "@/utils/types";
+import {
+  AdvancedOrder,
+  CriteriaResolver,
+  Fulfillment,
+  ListingTypes,
+  NftTypes,
+  OfferItem,
+  OfferTypes,
+  OrderComponents,
+} from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
 import NftCard from "@/components/NftCard";
-import { getListByNft } from "@/actions";
+import { acceptListingOffer, getListByNft, getOffersByNftId } from "@/actions";
+import { weiToNum } from "@/utils/util";
+import { useInkubate } from "@/hooks/useInkubate";
+import { useAccount } from "wagmi";
+import { INK_CONDUIT_KEY } from "@/utils/constants";
+import { SALT } from "@/config";
+import { ZeroAddress, ZeroHash } from "ethers";
+import { useUser } from "@/contexts/UserContext";
 
 export default function CollectionPage() {
   const pathname = usePathname();
+  const { address: walletAddress } = useAccount();
+  const { userData } = useUser()
+  const { acceptOffer } = useInkubate();
   const [loading, setLoading] = useState(true);
   const [nftByOne, setNftByOne] = useState<NftTypes>();
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
   const [listByNft, setListByNft] = useState<ListingTypes>();
-
+  // const [user]
+  const [offers, setOffers] = useState<OfferTypes[]>([]);
+  const [offer, setOffer] = useState<OfferTypes>()
   const [isListed, setIsListed] = useState(false);
   const [isNoticed, setIsNoticed] = useState(false);
-  const [activeListing, setActiveListing] = useState<NftTypes | undefined>(undefined);
-  const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined)
+  const [isOffer, setIsOffer] = useState(false);
+  const [_activeListing, setActiveListing] = useState<NftTypes | undefined>(
+    undefined
+  );
+  const [_activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
 
   useEffect(() => {
     setTimeout(() => {
@@ -67,6 +91,93 @@ export default function CollectionPage() {
     return path;
   }, [pathname]);
 
+  const handleAccept = async (offer: OfferTypes) => {
+    if (!walletAddress || !listByNft) return;
+    const parameters: OrderComponents = JSON.parse(offer.parameters);
+    const orders: AdvancedOrder[] = [
+      {
+        parameters,
+        numerator: "1",
+        denominator: "1",
+        signature: offer.signature,
+        extraData: "0x",
+      },
+      {
+        parameters: {
+          offerer: walletAddress,
+          offer: parameters.consideration as OfferItem[],
+          consideration: parameters.offer.map((item) => ({
+            ...item,
+            recipient: walletAddress,
+          })),
+          orderType: 0,
+          startTime: parameters.startTime,
+          endTime: parameters.endTime,
+          zone: ZeroAddress,
+          zoneHash: ZeroHash,
+          salt: SALT,
+          conduitKey: INK_CONDUIT_KEY,
+          totalOriginalConsiderationItems: "1",
+        },
+        numerator: "1",
+        denominator: "1",
+        signature: "0x",
+        extraData: "0x",
+      },
+    ];
+    const criteriaResolvers: CriteriaResolver[] = [];
+
+    const fulfillments: Fulfillment[] = [
+      {
+        offerComponents: [
+          {
+            orderIndex: "1",
+            itemIndex: "0",
+          },
+        ],
+        considerationComponents: [
+          {
+            orderIndex: "0",
+            itemIndex: "0",
+          },
+        ],
+      },
+      {
+        offerComponents: [
+          {
+            orderIndex: "0",
+            itemIndex: "0",
+          },
+        ],
+        considerationComponents: [
+          {
+            orderIndex: "1",
+            itemIndex: "0",
+          },
+        ],
+      },
+    ];
+
+    const recipient: string = walletAddress;
+    console.log(orders);
+
+    const res = await acceptOffer(
+      orders,
+      criteriaResolvers,
+      fulfillments,
+      recipient
+    );
+    console.log(res);
+
+    if (res?.status !== "success") return;
+
+    await acceptListingOffer(
+      offer.id,
+      res?.transactionHash,
+      listByNft?.network
+    );
+  };
+
   useEffect(() => {
     const getNftData = async () => {
       const nft = await getNftByOne(nftId, contract);
@@ -78,19 +189,34 @@ export default function CollectionPage() {
 
       console.log("NFT", nft);
       console.log("Listing", listing);
+
+      // ********* Get offers by nft id ************ //
+      const newOffers = await getOffersByNftId(nft?.data.id);
+      setOffers(newOffers);
     };
     getNftData();
   }, [nftId, contract]);
 
+  useEffect(() => {
+    const getOffer = async () => {
+      if (listByNft) {
+        offers.map((offer) => {
+          if (offer.listingId === listByNft.id) {
+            setOffer(offer)
+          }
+        })
+      }
+    }
+    getOffer()
+  }, [listByNft, offers])
 
   const selectActiveNftIdx = (nft: NftTypes) => {
     setActiveListing(nft);
-  }
+  };
 
   const selectBuyNftIdx = (nft: NftTypes) => {
     setActiveBuy(nft);
-  }
-
+  };
 
   return (
     <>
@@ -108,7 +234,18 @@ export default function CollectionPage() {
       >
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
-            nftByOne && <AssetOverview nft={nftByOne} listing={listByNft} isListed={isListed} isNoticed={isNoticed} setIsNoticed={setIsNoticed} />
+            nftByOne && (
+              <AssetOverview
+                nft={nftByOne}
+                listing={listByNft}
+                isListed={isListed}
+                isNoticed={isNoticed}
+                setIsNoticed={setIsNoticed}
+                setIsOffer={setIsOffer}
+                isOffer={isOffer}
+                offer={offer}
+              />
+            )
           ) : (
             <AssetOverviewLoader />
           )}
@@ -183,9 +320,37 @@ export default function CollectionPage() {
                     title="Offers"
                     defaultCollapsed={true}
                   >
-                    <div className="h-20 grid place-content-center text-light-100 text-[15px] font-readex !font-400">
-                      No offers yet
-                    </div>
+                    {offers.length > 0 ? (
+                      <table className="w-full text-light-100">
+                        <thead className="">
+                          <th className=" text-secondary text-left">offerer</th>
+                          <th className=" text-secondary text-left">price</th>
+                          <th className={` text-secondary text-left ${offer?.sellerId !== userData?.id ? "hidden" : "show"}`}>action</th>
+                        </thead>
+                        <tbody>
+                          {offers.map((offer) => (
+                            <tr key={offer.id}>
+                              <td>{offer.buyer?.username}</td>
+                              <td>
+                                {weiToNum(offer.offerPrice.toString())} eth
+                              </td>
+                              <td
+                                className="w-[20%] cursor-pointer hover:text-light-400"
+                              >
+                                <button className={`bg-secondary px-4 py-2 rounded-[8px] ${offer.sellerId !== userData?.id ? "hidden" : "show"}`} onClick={() => handleAccept(offer)}>
+                                  Accept
+                                </button>
+
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                        <div className="h-20 grid place-content-center text-light-100 text-[15px] font-readex !font-400">
+                          No offers yet
+                        </div>
+                    )}
                   </AssetDetailBox>
                 </div>
               </div>
@@ -220,8 +385,14 @@ export default function CollectionPage() {
                 </div>
                 <div className="flex justify-center gap-[25px] min-h-[390px] flex-wrap">
                   {nftByCollection.map((item, index) => (
-                    <NftCard key={index} nft={item} width={240} setActiveListing={() => selectActiveNftIdx(item)}
-                      setActiveBuy={() => selectBuyNftIdx(item)} setIsNoticed={setIsNoticed} />
+                    <NftCard
+                      key={index}
+                      nft={item}
+                      width={240}
+                      setActiveListing={() => selectActiveNftIdx(item)}
+                      setActiveBuy={() => selectBuyNftIdx(item)}
+                      setIsNoticed={setIsNoticed}
+                    />
                   ))}
                 </div>
                 <div className="text-center mt-[30px] lg:mt-5">
@@ -238,9 +409,15 @@ export default function CollectionPage() {
           )}
         </div>
       </MainLayout>
-      {nftByOne && <OfferModal nft={nftByOne} />}
+      {nftByOne && <OfferModal nft={nftByOne} listing={listByNft} setIsOffer={setIsOffer} />}
       {nftByOne && <BuyModal nft={nftByOne} listing={listByNft} />}
-      {nftByOne && <ListModal nft={nftByOne} setIsListed={setIsListed} setIsNoticed={setIsNoticed} />}
+      {nftByOne && (
+        <ListModal
+          nft={nftByOne}
+          setIsListed={setIsListed}
+          setIsNoticed={setIsNoticed}
+        />
+      )}
     </>
   );
 }

@@ -2,7 +2,7 @@
 import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ListingTypes, NftTypes, PhotoItem } from "@/utils/types";
+import { ListingTypes, NftTypes, OfferTypes, PhotoItem } from "@/utils/types";
 import Typography from "../Typography";
 import {
   AddCartIcon,
@@ -22,7 +22,7 @@ import {
 import useWindowSize from "@/utils/useWindowSize";
 import { useModal } from "@/contexts/ModalContext";
 import { useAccount } from "wagmi";
-import { cancelList, getPhoto } from "@/actions";
+import { cancelList, cancelOffer, getPhoto } from "@/actions";
 import { format } from "date-fns";
 import { date2Timestamp, ipfsToLink, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
@@ -36,9 +36,12 @@ interface OverviewProps {
   isListed?: boolean;
   isNoticed?: boolean;
   setIsNoticed: Function;
+  isOffer?: boolean;
+  setIsOffer: Function;
+  offer?: OfferTypes;
 }
 
-const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed = false, isNoticed = false }) => {
+const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed = false, isNoticed = false, isOffer, setIsOffer, offer }) => {
   const { openOfferModal, openBuyModal, openListModal } = useModal();
 
   const { count, cancelListing } = useInkubate();
@@ -102,6 +105,15 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
     }
   };
 
+  const handleCancelOffer = async () => {
+    if (offer && listing) {
+      const res = await cancelOffer(offer.id, listing.network)
+      if (res.status === "success") {
+        setIsOffer(false)
+      }
+    }
+  }
+
   useEffect(() => {
     const getAvatar = async () => {
       const avatar = await getPhoto(collection.avatarId);
@@ -124,6 +136,11 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
           src={ipfsToLink(imgUrl)}
           className="relative z-0 object-cover"
           alt="nft Image"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.onerror = null;
+            target.src = "/assets/images/shit.jpg";
+          }}
         />
         <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
           <Typography className="font-semibold text-[15px] !text-white">
@@ -185,19 +202,19 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
             Owned by
             <span className="ml-2 text-secondary">{owner.username}</span>
           </Typography>
-          {listing && isNoticed && (
+          {(listing || isNoticed) && (
             <>
               <Typography className="text-[14px] font-medium mt-5">
                 Price
               </Typography>
               <Typography className="text-[30px] lg:text-[28px] leading-[35px] font-bold mt-[5px]">
-                {weiToNum(listing.price)} ETH
+                {listing && weiToNum(listing.price)} ETH
               </Typography>
               <Typography className="text-[15px] mt-2.5 flex items-center text-light-200">
                 <ClockIcon className="mr-[5px]" />
                 <span className="text-light-200">
                   Sale ened{" "}
-                  {format(new Date(listing.endTime), "MMM dd, yyyy, hh:mm b")}
+                  {listing && format(new Date(listing.endTime), "MMM dd, yyyy, hh:mm b")}
                 </span>
               </Typography>
             </>
@@ -206,7 +223,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
           {address === owner.walletAddress && (
             <div className="flex flex-col gap-6">
               <div className="flex flex-col mt-5 md:flex-row">
-                {isNoticed ? (
+                {(isNoticed || listing) ? (
                   <button
                     className="px-10 py-[11px] text-dark-200 font-readex flex !rounded-full items-center text-[16px] !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
                     onClick={handleCancelList}
@@ -225,9 +242,10 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
                     <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
                     Sell NFT
                   </button>
+
                 )}
 
-                {isNoticed && (
+                {(isNoticed || listing) && (
                   <button
                     className="px-10 py-[11px] text-light-100 font-readex flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
                     onClick={openOfferModal}
@@ -257,15 +275,31 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
                     onClick={openBuyModal}
                   >
                     <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
-                    Buy Now
+                    Buy Now {isOffer && isOffer.toString()}
                   </button>
-                  <button
+                  {(isOffer || offer) ?
+                    <button
+                      className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+                      onClick={handleCancelOffer}
+                    >
+                      <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
+                      Cancel Offer
+                    </button>
+                    :
+                    <button
+                      className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
+                      onClick={openOfferModal}
+                    >
+                      <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
+                      Make Offer
+                    </button>}
+                  {/* <button
                     className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
                     onClick={openOfferModal}
                   >
                     <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
                     Make Offer
-                  </button>
+                  </button> */}
                 </div>
               ) : (
                 <div className="flex flex-col mt-5 md:flex-row">

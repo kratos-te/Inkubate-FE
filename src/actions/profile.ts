@@ -108,14 +108,7 @@ export async function createPhoto(image: File) {
 
 export async function getPhoto(photoId: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-    const response = await axios.get(`${API_BASE_URL}/api/file/${photoId}`, {
-      headers,
-    });
+    const response = await axios.get(`${API_BASE_URL}/api/file/${photoId}`);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {

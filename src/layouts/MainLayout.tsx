@@ -33,7 +33,9 @@ const MainLayout: FC<Props> = ({
         {children}
       </main>
       <Footer />
-      {bgSrc && !pageLoading && <img src={bgSrc} className={bgClass} alt="" />}
+      {bgSrc && !pageLoading && (
+        <img src={bgSrc} className={bgClass} alt="nft image" />
+      )}
     </div>
   );
 };

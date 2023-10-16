@@ -1,11 +1,8 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
-import { checkAuthorization } from ".";
 
 export async function getAllCollections() {
   try {
-    await checkAuthorization();
-
     const response = await axios
       .get(`${API_BASE_URL}/api/collection`)
       .then((res) => res.data);
@@ -25,15 +22,7 @@ export async function getAllCollections() {
 
 export async function getCollectionById(id: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.get(`${API_BASE_URL}/api/collection/${id}`, {
-      headers,
-    });
+    const response = await axios.get(`${API_BASE_URL}/api/collection/${id}`);
     console.log("collection by Id", response);
     return response;
   } catch (error) {
@@ -50,17 +39,8 @@ export async function getCollectionById(id: string) {
 
 export async function getCollectionByContract(contract: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
     const response = await axios.get(
-      `${API_BASE_URL}/api/collection/${contract}`,
-      {
-        headers,
-      }
+      `${API_BASE_URL}/api/collection/${contract}`
     );
     console.log("collection by Id", response);
     return response;

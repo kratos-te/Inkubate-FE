@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { NftTypes } from "./types";
 
 const ETH_TO_WEI = 10 ** 18;
 
@@ -65,7 +64,6 @@ export const ipfsToLink = (url: string) => {
   const link = url.split("//")[1];
   return `https://ipfs.io/ipfs/${link}`;
 };
-
 
 // export const selectActiveNftIdx = (nft: NftTypes) => {
 //   setActiveListing(nft);

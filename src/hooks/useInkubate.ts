@@ -4,7 +4,13 @@ import { Abi } from "viem";
 import { DEFAULT_GAS, DEFAULT_GAS_PRICE } from "@/config";
 import { INK_ABI } from "@/utils/abi";
 import { INK_CONTRACT_ADDRESS } from "@/utils/constants";
-import { BasicOrderParameters, OrderComponents } from "@/utils/types";
+import {
+  AdvancedOrder,
+  BasicOrderParameters,
+  CriteriaResolver,
+  Fulfillment,
+  OrderComponents,
+} from "@/utils/types";
 import { write } from "./utils";
 
 export function useInkubate() {
@@ -70,10 +76,52 @@ export function useInkubate() {
     }
   };
 
+  const acceptOffer = async (
+    orders: AdvancedOrder[],
+    criteriaResolvers: CriteriaResolver[],
+    fulfillments: Fulfillment[],
+    recipient: string
+  ) => {
+    try {
+      return await write({
+        address: INK_CONTRACT_ADDRESS,
+        abi: INK_ABI as Abi,
+        functionName: "matchAdvancedOrders",
+        args: [orders, criteriaResolvers, fulfillments, recipient],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const matchOrders = async (
+    orders: AdvancedOrder[],
+    fulfillments: Fulfillment[]
+  ) => {
+    try {
+      return await write({
+        address: INK_CONTRACT_ADDRESS,
+        abi: INK_ABI as Abi,
+        functionName: "matchOrders",
+        args: [orders, fulfillments],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
   return {
     buyListing,
     count,
     cancelListing,
     getOrderHash,
+    acceptOffer,
+    matchOrders,
   };
 }

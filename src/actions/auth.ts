@@ -41,9 +41,12 @@ export async function signIn(userAddress: string, signature: string) {
   }
 }
 
-export async function signOut(accessToken: string): Promise<string | null> {
+export async function signOut(): Promise<string | null> {
   try {
     await checkAuthorization();
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return "failed";
+
     const headers = {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
