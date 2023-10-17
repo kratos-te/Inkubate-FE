@@ -42,7 +42,7 @@ const ActivityChart = () => {
     const interval = setInterval(modifyPathAttributes, 500);
 
     return () => {
-      clearInterval(interval); // Clear the interval when the component unmounts 
+      clearInterval(interval); // Clear the interval when the component unmounts
     };
   }, []);
 
@@ -71,7 +71,7 @@ const ActivityChart = () => {
       {!loading && (
         <div
           className="bg-dark-400 rounded-xl mt-6"
-          style={{ 
+          style={{
             opacity: loading ? 0 : 1,
           }}
         >

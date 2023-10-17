@@ -16,7 +16,7 @@ const Footer: FC = () => {
               component="p"
               className="text-[14px] xl:text-[18px] !font-[400] leading-7 mt-[15px]"
             >
-              Discover, collect, and sell digital items on thelargest NFT
+              Discover, collect, and sell digital items on the largest NFT
               marketplace on Ethereum
             </Typography>
           </div>

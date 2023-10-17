@@ -78,9 +78,13 @@ const ProfileForms: FC = () => {
       console.log("newPfp", selectedPfpFile);
       console.log("newBanner", selectedBannerFile);
       if (userData.username !== values.username && values.username) {
-        const res = await availableUsername(values.username === "" ? userData.username : values.username);
+        const res = await availableUsername(
+          values.username === "" ? userData.username : values.username
+        );
         if (res) {
-          await updateUsername(values.username === "" ? userData.username : values.username);
+          await updateUsername(
+            values.username === "" ? userData.username : values.username
+          );
         }
       }
       if (selectedPfpFile) {

@@ -51,7 +51,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   const [currMonth, setCurrMonth] = useState(() => format(today, "MMM-yyyy"));
   const [startDay, setStartDay] = useState<Date>(today);
   const [endDay, setEndDay] = useState<Date>(addMonths(today, 3));
-  const [isValidTime, setIsValidTime] = useState(true)
+  const [isValidTime, setIsValidTime] = useState(true);
   const firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
   const capitalizeFirstLetter = (query: string): string => {
@@ -98,9 +98,8 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   };
 
   const handleSetStartTime = (e: any) => {
-
     setStartTime(e.target.value);
-    console.log(format(new Date(), "kk:mm"))
+    console.log(format(new Date(), "kk:mm"));
   };
 
   const handleSetEndTime = (e: any) => {
@@ -121,21 +120,24 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   }, [endDay, endTime, setEndDate, setStartDate, startDay, startTime]);
 
   useEffect(() => {
-    const today = new Date()
+    const today = new Date();
     if (format(today, "dd") === format(startDay, "dd")) {
       if (getTime(today) > getTime(new Date(date2UTC(startDay, startTime)))) {
-        console.log("today", getTime(today))
-        console.log("starttime", getTime(new Date(date2UTC(startDay, startTime))))
-        setIsValidTime(false)
-        console.log("small")
+        console.log("today", getTime(today));
+        console.log(
+          "starttime",
+          getTime(new Date(date2UTC(startDay, startTime)))
+        );
+        setIsValidTime(false);
+        console.log("small");
       } else {
-        setIsValidTime(true)
-        console.log("big")
+        setIsValidTime(true);
+        console.log("big");
       }
     } else {
-      setIsValidTime(true)
+      setIsValidTime(true);
     }
-  }, [today, startDay, startTime])
+  }, [today, startDay, startTime]);
 
   return (
     <>
@@ -172,10 +174,16 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
               <Typography className="text-left text-[14px] text-white font-normal max-sm:text-[16px]">
                 Start Time
               </Typography>
-              <div className={` mt-2 rounded-[8px] ${!isValidTime ? " border-secondary border-[2px]" : ""}`}>
+              <div
+                className={` mt-2 rounded-[8px] ${
+                  !isValidTime ? " border-secondary border-[2px]" : ""
+                }`}
+              >
                 <input
-                  className={`bg-[#616161] text-[14px] text-white w-full rounded-[8px] p-[14px] placeholder:text-third ${!isValidTime ? " border-secondary border-1" : ""} `}
-                  placeholder={(format(new Date(), "kk:mm"))}
+                  className={`bg-[#616161] text-[14px] text-white w-full rounded-[8px] p-[14px] placeholder:text-third ${
+                    !isValidTime ? " border-secondary border-1" : ""
+                  } `}
+                  placeholder={format(new Date(), "kk:mm")}
                   onChange={handleSetStartTime}
                 />
               </div>
@@ -192,9 +200,11 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
               />
             </div>
           </div>
-          {!isValidTime &&
-            <p className="text-[12px] text-white text-left mt-1">Please select a time later than the current time</p>
-          }
+          {!isValidTime && (
+            <p className="text-[12px] text-white text-left mt-1">
+              Please select a time later than the current time
+            </p>
+          )}
         </>
       )}
 
@@ -229,16 +239,19 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
             return (
               <div key={idx} className={colStartClasses[getDay(day)]}>
                 <button
-                  className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[16px] md:text-[20px] font-semibold h-9 w-9 md:h-12 md:w-12 rounded-md md:rounded-xl ${isToday(day)
+                  className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[16px] md:text-[20px] font-semibold h-9 w-9 md:h-12 md:w-12 rounded-md md:rounded-xl ${
+                    isToday(day)
                       ? " bg-secondary text-white"
                       : "text-[#CAC7C7] hover:bg-[#666666] hover:text-white active:bg-[#666666]"
-                    }  ${format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""
-                    } ${format(startDay, "MM/dd/yyyy") <=
+                  }  ${
+                    format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""
+                  } ${
+                    format(startDay, "MM/dd/yyyy") <=
                       format(day, "MM/dd/yyyy") &&
                     format(day, "MM/dd/yyyy") <= format(endDay, "MM/dd/yyyy")
                       ? "bg-[#666666]"
                       : ""
-                    }`}
+                  }`}
                   onClick={() => handleSetDate(day)}
                   disabled={day < today}
                 >

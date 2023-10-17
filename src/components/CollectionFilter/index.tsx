@@ -1,7 +1,6 @@
 "use client";
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
-import { ArrowDownLineIcon, EthIcon } from "../SvgIcons";
-import Image from "next/image";
+import { ArrowDownLineIcon, BnbIcon, EthIcon } from "../SvgIcons";
 import Loader from "./Loader";
 
 const CollectionFilter: FC = ({}) => {
@@ -72,17 +71,12 @@ const CollectionFilter: FC = ({}) => {
         <FilterItem
           title={
             <div className="flex gap-[5px] items-center">
-              <Image
-                src="/assets/icons/op.png"
-                width={15}
-                height={15}
-                alt="eth icon"
-              />
-              OP
+              <BnbIcon color="#ff0" />
+              BNB
             </div>
           }
-          value="op"
-          isCurrent={currency === "op"}
+          value="bnb"
+          isCurrent={currency === "bnb"}
           setValue={setCurrency}
         />
       </FilterGroup>

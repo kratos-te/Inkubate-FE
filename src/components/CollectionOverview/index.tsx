@@ -19,7 +19,7 @@ interface CollectionProps {
 }
 
 const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
-  const { name, avatar } = collection
+  const { name, avatar } = collection;
   const [showMoreDec, setShowMoreDec] = useState(false);
 
   const [loading, setIsLoading] = useState(true);
@@ -39,13 +39,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
           }}
         >
           <div className="relative w-[186px] xl:w-[286px] h-[186px] xl:h-[286px] rounded-lg xl:rounded-[19px] overflow-hidden">
-            <Image
-              src={avatar.url}
-              fill
-              objectFit="cover"
-              priority
-              alt=""
-            />
+            <Image src={avatar.url} fill objectFit="cover" priority alt="" />
           </div>
         </div>
         <div className="">
@@ -77,10 +71,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
           >
             {showMoreDec
               ? `${collection && collection.desc} `
-              : `${
-              collection &&
-              collection.desc.slice(0, 180)
-                } ... `}
+              : `${collection && collection.desc.slice(0, 180)} ... `}
             <span
               className="cursor-pointer text-secondary"
               onClick={() => setShowMoreDec(!showMoreDec)}

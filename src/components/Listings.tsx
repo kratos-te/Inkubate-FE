@@ -7,7 +7,6 @@ interface ListingProps {
 }
 
 export const Listings: FC<ListingProps> = ({ listData }) => {
-
   return (
     <table className="w-full">
       <thead>
@@ -25,9 +24,8 @@ export const Listings: FC<ListingProps> = ({ listData }) => {
         </tr>
       </thead>
       <tbody>
-        {listData && listData.map((item, key) => (
-          <Listing key={key} listing={item} />
-        ))}
+        {listData &&
+          listData.map((item, key) => <Listing key={key} listing={item} />)}
       </tbody>
     </table>
   );

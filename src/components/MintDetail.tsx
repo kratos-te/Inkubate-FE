@@ -17,7 +17,6 @@ import MintProgress from "./MintProgress";
 import { useModal } from "@/contexts/ModalContext";
 import { weiToNum } from "@/utils/util";
 
-
 interface OverviewProps {
   collection: CollectionParam;
   launchpad: LaunchpadParam;
