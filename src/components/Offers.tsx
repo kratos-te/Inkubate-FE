@@ -7,7 +7,6 @@ interface OfferProps {
 }
 
 export const Offers: FC<OfferProps> = ({ offerData }) => {
-
   return (
     <table className="w-full">
       <thead>
@@ -31,9 +30,8 @@ export const Offers: FC<OfferProps> = ({ offerData }) => {
         </tr>
       </thead>
       <tbody>
-        {offerData && offerData.map((item, key) => (
-          <Offer key={key} offer={item} />
-        ))}
+        {offerData &&
+          offerData.map((item, key) => <Offer key={key} offer={item} />)}
       </tbody>
     </table>
   );

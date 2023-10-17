@@ -31,8 +31,7 @@ const HomeCta = () => {
           component="p"
           className="text-[12px] leading-[18px] lg:text-[18px] lg:laeding-[28px] mt-1 lg:mt-2.5"
         >
-          Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-          vulputate libero et velit interdum, ac aliquet odio mattis.
+          Deploy, own, create your own collection
         </Typography>
         <Button className="mt-[14px] xl:mt-9" onClick={openCreateModal}>
           Create Now

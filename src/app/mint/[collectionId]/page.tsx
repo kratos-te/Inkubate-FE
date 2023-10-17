@@ -20,7 +20,7 @@ export default function CollectionPage() {
   // const collectionId = query?.get("collectionId");
   const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
-  const [nftByColletion, setNftByCollection] = useState<NftTypes[]>([])
+  const [nftByColletion, setNftByCollection] = useState<NftTypes[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -42,10 +42,10 @@ export default function CollectionPage() {
       if ((pathname.split("/")[1] as string) === "mint" && collectionId) {
         const collection = await getCollectionById(collectionId);
         const launchpad = await getLaunchpadById(collection?.data.launchpadId);
-        const nfts = await getNft(collectionId)
+        const nfts = await getNft(collectionId);
         setLaunchPadById(launchpad?.data);
         setCollectionById(collection?.data);
-        setNftByCollection(nfts?.data)
+        setNftByCollection(nfts?.data);
       }
     };
     getCollection();

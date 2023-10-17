@@ -14,10 +14,18 @@ const LaunchpadCard: FC<ItemProps> = ({ collection, className }) => {
   return (
     <Link href={`/mint/${id}`} className="">
       <div
-        className={`relative w-[294px] xl:w-[385px] text-left  ${className ? className : ""}`}
+        className={`relative w-[294px] xl:w-[385px] text-left  ${
+          className ? className : ""
+        }`}
       >
         <div className="relative w-full overflow-hidden h-[234px] xl:h-[235px] rounded-xl">
-          <Image src={avatar.url} alt={avatar.id} fill objectFit="cover" priority />
+          <Image
+            src={avatar.url}
+            alt={avatar.id}
+            fill
+            objectFit="cover"
+            priority
+          />
         </div>
         <Typography
           component="h3"

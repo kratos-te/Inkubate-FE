@@ -52,7 +52,7 @@ import { useUser } from "@/contexts/UserContext";
 export default function CollectionPage() {
   const pathname = usePathname();
   const { address: walletAddress } = useAccount();
-  const { userData } = useUser()
+  const { userData } = useUser();
   const { acceptOffer } = useInkubate();
   const [loading, setLoading] = useState(true);
   const [nftByOne, setNftByOne] = useState<NftTypes>();
@@ -60,7 +60,7 @@ export default function CollectionPage() {
   const [listByNft, setListByNft] = useState<ListingTypes>();
   // const [user]
   const [offers, setOffers] = useState<OfferTypes[]>([]);
-  const [offer, setOffer] = useState<OfferTypes>()
+  const [offer, setOffer] = useState<OfferTypes>();
   const [isListed, setIsListed] = useState(false);
   const [isNoticed, setIsNoticed] = useState(false);
   const [isOffer, setIsOffer] = useState(false);
@@ -202,13 +202,13 @@ export default function CollectionPage() {
       if (listByNft) {
         offers.map((offer) => {
           if (offer.listingId === listByNft.id) {
-            setOffer(offer)
+            setOffer(offer);
           }
-        })
+        });
       }
-    }
-    getOffer()
-  }, [listByNft, offers])
+    };
+    getOffer();
+  }, [listByNft, offers]);
 
   const selectActiveNftIdx = (nft: NftTypes) => {
     setActiveListing(nft);
@@ -325,7 +325,15 @@ export default function CollectionPage() {
                         <thead className="">
                           <th className=" text-secondary text-left">offerer</th>
                           <th className=" text-secondary text-left">price</th>
-                          <th className={` text-secondary text-left ${offer?.sellerId !== userData?.id ? "hidden" : "show"}`}>action</th>
+                          <th
+                            className={` text-secondary text-left ${
+                              offer?.sellerId !== userData?.id
+                                ? "hidden"
+                                : "show"
+                            }`}
+                          >
+                            action
+                          </th>
                         </thead>
                         <tbody>
                           {offers.map((offer) => (
@@ -334,22 +342,26 @@ export default function CollectionPage() {
                               <td>
                                 {weiToNum(offer.offerPrice.toString())} eth
                               </td>
-                              <td
-                                className="w-[20%] cursor-pointer hover:text-light-400"
-                              >
-                                <button className={`bg-secondary px-4 py-2 rounded-[8px] ${offer.sellerId !== userData?.id ? "hidden" : "show"}`} onClick={() => handleAccept(offer)}>
+                              <td className="w-[20%] cursor-pointer hover:text-light-400">
+                                <button
+                                  className={`bg-secondary px-4 py-2 rounded-[8px] ${
+                                    offer.sellerId !== userData?.id
+                                      ? "hidden"
+                                      : "show"
+                                  }`}
+                                  onClick={() => handleAccept(offer)}
+                                >
                                   Accept
                                 </button>
-
                               </td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     ) : (
-                        <div className="h-20 grid place-content-center text-light-100 text-[15px] font-readex !font-400">
-                          No offers yet
-                        </div>
+                      <div className="h-20 grid place-content-center text-light-100 text-[15px] font-readex !font-400">
+                        No offers yet
+                      </div>
                     )}
                   </AssetDetailBox>
                 </div>
@@ -409,7 +421,13 @@ export default function CollectionPage() {
           )}
         </div>
       </MainLayout>
-      {nftByOne && <OfferModal nft={nftByOne} listing={listByNft} setIsOffer={setIsOffer} />}
+      {nftByOne && (
+        <OfferModal
+          nft={nftByOne}
+          listing={listByNft}
+          setIsOffer={setIsOffer}
+        />
+      )}
       {nftByOne && <BuyModal nft={nftByOne} listing={listByNft} />}
       {nftByOne && (
         <ListModal

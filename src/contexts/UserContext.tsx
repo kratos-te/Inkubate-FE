@@ -73,7 +73,7 @@ const UserContext = createContext<UserContextType>({
     },
   },
   setProfile: () => {},
-  getProfileData: () => { },
+  getProfileData: () => {},
 });
 
 export const useUser = () => {

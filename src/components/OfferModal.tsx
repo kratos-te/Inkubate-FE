@@ -51,7 +51,7 @@ export const OfferModal: FC<{
 
   const handleSign = async () => {
     if (!walletAddress) return { signature: "", data: "" };
-    console.log("endaday", endDay)
+    console.log("endaday", endDay);
     const startAmount = numToWei(parseFloat(amount));
     const consideration = [
       {
@@ -131,7 +131,7 @@ export const OfferModal: FC<{
       }
       setMakeOffer(false);
       closeOfferModal();
-      setIsOffer(true)
+      setIsOffer(true);
     }
   };
 

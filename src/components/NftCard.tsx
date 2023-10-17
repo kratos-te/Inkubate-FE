@@ -25,7 +25,13 @@ interface ItemProps {
   setIsNoticed?: Function;
 }
 
-const NftCard: FC<ItemProps> = ({ nft, width, setActiveListing, setActiveBuy, setIsNoticed }) => {
+const NftCard: FC<ItemProps> = ({
+  nft,
+  width,
+  setActiveListing,
+  setActiveBuy,
+  setIsNoticed,
+}) => {
   const { id, imgUrl, name, owner, nftId, address } = nft;
   const favorited = false;
   const pathname = usePathname();
@@ -103,7 +109,7 @@ const NftCard: FC<ItemProps> = ({ nft, width, setActiveListing, setActiveBuy, se
         );
 
         if (cancel && setIsNoticed) {
-          setIsNoticed(false)
+          setIsNoticed(false);
         }
         console.log("cancel", cancel);
       }
@@ -112,7 +118,6 @@ const NftCard: FC<ItemProps> = ({ nft, width, setActiveListing, setActiveBuy, se
       openListModal();
     }
   };
-
 
   return (
     <div className="group">
@@ -151,10 +156,13 @@ const NftCard: FC<ItemProps> = ({ nft, width, setActiveListing, setActiveBuy, se
               <Typography className="text-[10px] lg:text-[12px] text-light-200 font-[400] mb-[5px]">
                 Price:
               </Typography>
-              {listByNft?.price ? <Typography className="text-[12px] leading-[18px] text-[#666666] font-readex">
-                {weiToNum(listByNft?.price)} ETH
-              </Typography> : ""}
-
+              {listByNft?.price ? (
+                <Typography className="text-[12px] leading-[18px] text-[#666666] font-readex">
+                  {weiToNum(listByNft?.price)} ETH
+                </Typography>
+              ) : (
+                ""
+              )}
             </div>{" "}
             <div className="w-1/2">
               <Typography className="text-[10px] lg:text-[12px] text-light-200 font-[400] mb-[5px]">
@@ -185,35 +193,41 @@ const NftCard: FC<ItemProps> = ({ nft, width, setActiveListing, setActiveBuy, se
           </>
         ) : (
           <>
-            {owner.walletAddress === walletAddress ?
+            {owner.walletAddress === walletAddress ? (
               <>
                 <button
                   className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-bl-xl font-bold text-white w-[calc(100%-61px)] duration-300"
                   onClick={handleBuy}
                 >
-                    {listByNft?.nftId === id ? "Cancel List" : "Sell Now"}
-                  </button>
-                  <button
-                    className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300"
-                    onClick={handleBuy}
-                  >
-                    <AddIcon />
-                  </button>
-                </> : <>
-                  <button
-                    className={`text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-bl-xl font-bold text-white w-[calc(100%-61px)] duration-300 ${listByNft?.nftId === id ? "show" : "hidden"}`}
-                    onClick={handleBuy}
-                  >
-                    {listByNft?.nftId === id ? "Buy Now" : "Make Offer"}
-                  </button>
-                  <button
-                    className={`text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300 ${listByNft?.nftId === id ? "show" : "hidden"}`}
-                    onClick={handleBuy}
-                  >
-                    <AddIcon />
-                  </button>
-                </>}
-
+                  {listByNft?.nftId === id ? "Cancel List" : "Sell Now"}
+                </button>
+                <button
+                  className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300"
+                  onClick={handleBuy}
+                >
+                  <AddIcon />
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className={`text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-bl-xl font-bold text-white w-[calc(100%-61px)] duration-300 ${
+                    listByNft?.nftId === id ? "show" : "hidden"
+                  }`}
+                  onClick={handleBuy}
+                >
+                  {listByNft?.nftId === id ? "Buy Now" : "Make Offer"}
+                </button>
+                <button
+                  className={`text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300 ${
+                    listByNft?.nftId === id ? "show" : "hidden"
+                  }`}
+                  onClick={handleBuy}
+                >
+                  <AddIcon />
+                </button>
+              </>
+            )}
           </>
         )}
       </div>

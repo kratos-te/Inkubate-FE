@@ -13,7 +13,12 @@ interface GridProps {
   setActiveBuy: (nft: NftTypes) => void;
 }
 
-const NftGrid: FC<GridProps> = ({ isDense, nftData, setActiveListing, setActiveBuy }) => {
+const NftGrid: FC<GridProps> = ({
+  isDense,
+  nftData,
+  setActiveListing,
+  setActiveBuy,
+}) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const windowSize = useWindowSize();
 
@@ -61,12 +66,17 @@ const NftGrid: FC<GridProps> = ({ isDense, nftData, setActiveListing, setActiveB
     >
       {!loading
         ? nftData.map((item, key) => (
-          <NftCard nft={item} key={key} width={width} setActiveListing={() => setActiveListing(item)}
-            setActiveBuy={() => setActiveBuy(item)} />
-        ))
+            <NftCard
+              nft={item}
+              key={key}
+              width={width}
+              setActiveListing={() => setActiveListing(item)}
+              setActiveBuy={() => setActiveBuy(item)}
+            />
+          ))
         : Array.from({ length: 20 }).map((_, key) => (
-          <NftCardLoader key={key} width={width} />
-        ))}
+            <NftCardLoader key={key} width={width} />
+          ))}
     </div>
   );
 };

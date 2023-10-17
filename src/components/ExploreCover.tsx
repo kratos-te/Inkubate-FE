@@ -24,10 +24,7 @@ const ExploreCover: FC<CoverProps> = ({}) => {
       <Typography
         component="p"
         className="text-[12px] lg:text-[18px] leading-[18px] lg:leading-[28px] font-semibold mt-2.5 max-w-[660px]  relative"
-      >
-        Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
-        libero et velit interdum, ac aliquet odio mattis.
-      </Typography>
+      ></Typography>
     </div>
   );
 };

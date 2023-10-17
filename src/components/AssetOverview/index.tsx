@@ -41,7 +41,16 @@ interface OverviewProps {
   offer?: OfferTypes;
 }
 
-const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed = false, isNoticed = false, isOffer, setIsOffer, offer }) => {
+const AssetOverview: FC<OverviewProps> = ({
+  nft,
+  listing,
+  setIsNoticed,
+  isListed = false,
+  isNoticed = false,
+  isOffer,
+  setIsOffer,
+  offer,
+}) => {
   const { openOfferModal, openBuyModal, openListModal } = useModal();
 
   const { count, cancelListing } = useInkubate();
@@ -99,7 +108,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
       );
 
       if (cancel) {
-        setIsNoticed(false)
+        setIsNoticed(false);
       }
       console.log("cancel", cancel);
     }
@@ -107,12 +116,12 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
 
   const handleCancelOffer = async () => {
     if (offer && listing) {
-      const res = await cancelOffer(offer.id, listing.network)
+      const res = await cancelOffer(offer.id, listing.network);
       if (res.status === "success") {
-        setIsOffer(false)
+        setIsOffer(false);
       }
     }
-  }
+  };
 
   useEffect(() => {
     const getAvatar = async () => {
@@ -214,7 +223,8 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
                 <ClockIcon className="mr-[5px]" />
                 <span className="text-light-200">
                   Sale ened{" "}
-                  {listing && format(new Date(listing.endTime), "MMM dd, yyyy, hh:mm b")}
+                  {listing &&
+                    format(new Date(listing.endTime), "MMM dd, yyyy, hh:mm b")}
                 </span>
               </Typography>
             </>
@@ -223,7 +233,7 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
           {address === owner.walletAddress && (
             <div className="flex flex-col gap-6">
               <div className="flex flex-col mt-5 md:flex-row">
-                {(isNoticed || listing) ? (
+                {isNoticed || listing ? (
                   <button
                     className="px-10 py-[11px] text-dark-200 font-readex flex !rounded-full items-center text-[16px] !font-bold bg-light-100 md:mr-2.5 justify-center hover:bg-[#bbb] duration-300"
                     onClick={handleCancelList}
@@ -242,7 +252,6 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
                     <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
                     Sell NFT
                   </button>
-
                 )}
 
                 {(isNoticed || listing) && (
@@ -260,12 +269,12 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
               </div>
             </div>
           )}
-          {isListed &&
+          {isListed && (
             <div className="inline-flex gap-[14px] items-center p-[14px] bg-[#161616] rounded-xl text-[16px] mt-6 font-semibold font-readex text-white">
               <CheckIcon />
               Your Item is successfully listed
             </div>
-          }
+          )}
           {address !== owner.walletAddress && (
             <>
               {listing ? (
@@ -275,9 +284,9 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
                     onClick={openBuyModal}
                   >
                     <WalletIcon className="mr-2 mt-[1px]" color="#161616" />
-                    Buy Now {isOffer && isOffer.toString()}
+                    Buy Now
                   </button>
-                  {(isOffer || offer) ?
+                  {isOffer || offer ? (
                     <button
                       className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
                       onClick={handleCancelOffer}
@@ -285,14 +294,15 @@ const AssetOverview: FC<OverviewProps> = ({ nft, listing, setIsNoticed, isListed
                       <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
                       Cancel Offer
                     </button>
-                    :
+                  ) : (
                     <button
                       className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
                       onClick={openOfferModal}
                     >
                       <OfferIcon className="mr-2 mt-[1px]" color="#F2F3F4" />
                       Make Offer
-                    </button>}
+                    </button>
+                  )}
                   {/* <button
                     className="px-10 py-[11px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center mt-[14px] md:mt-0 hover:bg-[#222] duration-300"
                     onClick={openOfferModal}

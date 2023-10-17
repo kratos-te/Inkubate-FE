@@ -20,7 +20,7 @@ const SearchBar: FC = () => {
       <SearchIcon className="absolute left-[14px] top-[14px]" />
       <input
         className="w-full p-0 bg-transparent text-light-100 placeholder:text-white text-[15px] h-[42.5px] rounded-xl absolute left-0 top-0 pl-[38px]"
-        placeholder="Search for collectios and accounts"
+        placeholder="Search for collections and accounts"
         style={{
           backgroundImage:
             "linear-gradient(120deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%, rgba(246, 246, 246, 0.00) 100%)",

@@ -15,7 +15,7 @@ const NotableCollections = () => {
   }, []);
 
   useEffect(() => {
-    getAllCollections().then(result => {
+    getAllCollections().then((result) => {
       setCollections(result || []);
       setIsLoading(false);
     });
@@ -35,9 +35,7 @@ const NotableCollections = () => {
         <Typography
           component="p"
           className="mt-2.5 text-[14px] xl:text-[20px] font-readex"
-        >
-          Yorem ipsum dolor sit amet, consectetur adipiscing elit
-        </Typography>
+        ></Typography>
       </div>
       <div className="relative z-10 grid place-content-center ">
         <div className="mt-4 xl:mt-[70px] flex gap-10  overflow-x-auto px-6 max-w-[1304px] mx-auto w-full">

@@ -43,7 +43,9 @@ const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
               priority
             />
           ) : (
-            <div className="bg-[#222] absolute left-0 top-0 w-full h-full text-gray-400 grid place-content-center capitalize">no image</div>
+            <div className="bg-[#222] absolute left-0 top-0 w-full h-full text-gray-400 grid place-content-center capitalize">
+              no image
+            </div>
           )}
         </div>
 
