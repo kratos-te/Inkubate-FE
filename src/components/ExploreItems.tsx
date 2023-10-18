@@ -1,14 +1,30 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FilterIcon, ListIcon, ListSmIcon, SearchIcon } from "./SvgIcons";
 import Typography from "./Typography";
 import SortDropdown from "./SortDropdown";
 import CollectionFilter from "./CollectionFilter";
 import NftGrid from "./NftGrid";
+import { getlistingNft } from "@/actions";
+import { ListingTypes, NftTypes } from "@/utils/types";
 
 const ExploreItems: FC = () => {
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
+  const [listingNft, setListingNft] = useState<NftTypes[]>([])
+
+  useEffect(() => {
+    const listedNft: NftTypes[] = []
+    const getNfts = async () => {
+      const listings = await getlistingNft()
+      listings.map((item: ListingTypes) => {
+        listedNft.push(item.nft)
+      })
+      setListingNft(listedNft)
+    }
+    getNfts()
+  }, [])
+
   return (
     <>
       <div className="relative z-30 flex gap-3 mt-6 lg:mt-12">
@@ -52,7 +68,7 @@ const ExploreItems: FC = () => {
           <NftGrid
             collectionId="opbunnies"
             isDense={isDense}
-            nftData={[]}
+            nftData={listingNft}
             setActiveBuy={() => {}}
             setActiveListing={() => {}}
           />

@@ -202,7 +202,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
           </div>
           {!isValidTime && (
             <p className="text-[12px] text-white text-left mt-1">
-              Please select a time later than the current time
+              Please select a time later 5 mins than the current time
             </p>
           )}
         </>

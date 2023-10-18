@@ -163,7 +163,7 @@ const AssetOverview: FC<OverviewProps> = ({
             {nftAvatar && (
               <div className="w-[33px] h-[33px] border-[1.5px] border-light-100 rounded-full relative">
                 <Image
-                  src={nftAvatar.url}
+                  src={nftAvatar?.url}
                   fill
                   objectFit="cover"
                   className="rounded-full"

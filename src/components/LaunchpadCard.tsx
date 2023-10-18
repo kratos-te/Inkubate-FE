@@ -20,8 +20,8 @@ const LaunchpadCard: FC<ItemProps> = ({ collection, className }) => {
       >
         <div className="relative w-full overflow-hidden h-[234px] xl:h-[235px] rounded-xl">
           <Image
-            src={avatar.url}
-            alt={avatar.id}
+            src={avatar?.url}
+            alt={avatar?.id}
             fill
             objectFit="cover"
             priority

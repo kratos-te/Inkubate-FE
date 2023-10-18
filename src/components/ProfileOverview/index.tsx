@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   DiscordIcon,
+  FacebookIcon,
   MenuDotsIcon,
   RedditIcon,
   ShareMdIcon,
@@ -63,14 +64,19 @@ const ProfileOverview = () => {
           </Typography>
 
           <div className="flex gap-4 mt-5 xl:gap-6">
-            <Link href={"#"} className="w-6 h-6">
-              <TwitterIcon />
-            </Link>
+            {profile.twitter &&
+              <Link href={profile.twitter} className="w-6 h-6">
+                <TwitterIcon />
+              </Link>
+            }
             <Link href={"#"} className="w-6 h-6">
               <DiscordIcon />
             </Link>
             <Link href={"#"} className="w-6 h-6">
               <RedditIcon />
+            </Link>
+            <Link href={"#"} className="w-6 h-6">
+              <FacebookIcon />
             </Link>
           </div>
         </div>

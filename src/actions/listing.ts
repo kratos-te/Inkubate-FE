@@ -44,7 +44,7 @@ export async function getlistingNft() {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/listing`);
     console.log("Listings", response);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

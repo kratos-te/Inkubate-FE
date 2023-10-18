@@ -58,7 +58,7 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
         }}
       >
         <Image
-          src={collection.avatar.url}
+          src={collection?.avatar?.url}
           className="relative z-0"
           alt=""
           fill
