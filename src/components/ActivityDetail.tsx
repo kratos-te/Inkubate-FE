@@ -11,7 +11,7 @@ import ActivityMobileCard from "./ActivityMobileCard";
 import Skeleton from "react-loading-skeleton";
 import ActivityMobileCardLoader from "./Common/ActivityMobileCardLoader";
 import { ActivityTypes } from "@/utils/types";
-import { ipfsToLink, weiToNum } from "@/utils/util";
+import { weiToNum } from "@/utils/util";
 
 interface DetailProps {
   actData: ActivityTypes[];
@@ -107,13 +107,13 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                         <td>
                           <div className="py-[17px] flex items-center">
                             <img
-                              src={ipfsToLink(row.nft.imgUrl)}
+                              src={row.nft.image}
                               className="rounded-md mr-2.5 w-[40px] h-[40px]"
                               alt="nft Mini Image"
                             />
                             <div className="">
                               <Typography className="font-semibold leading-[1.5]">
-                                {`${row.nft.name}#${row.nft.nftId}`}
+                                {`${row.nft.name}#${row.nft.tokenId}`}
                               </Typography>
                               <Typography className="text-[14px] font-medium leading-[1.5] !text-dark-700 mt-0.5">
                                 {row.nft.name}

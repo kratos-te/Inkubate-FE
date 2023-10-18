@@ -22,9 +22,15 @@ interface OverviewProps {
   launchpad: LaunchpadParam;
   nfts: NftTypes[];
   className?: string;
+  remainingTime: number;
 }
 
-const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
+const MintDetail: FC<OverviewProps> = ({
+  collection,
+  launchpad,
+  nfts,
+  remainingTime,
+}) => {
   // const { price, setPrice } = useState(launchpad.mintPrice)
   // const [supply, setSupply] = useState<string>("0")
   const router = useRouter();
@@ -33,11 +39,9 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
   const { width } = useWindowSize();
 
   const price = launchpad.mintPrice;
-  const remainingTime = Math.floor(
-    (new Date(launchpad.startDate).getTime() - Date.now()) / 1000
-  );
-  const description =
-    "The Cyber Droid NFTs are unique, algorithmically generated androids on the Ethereum blockchain. They can function as digital art, metaverse avatars, or blockchain game characters. Ownership may also unlock exclusive perks ithin the community.";
+  // const remainingTime = Math.floor(
+  //   (new Date(launchpad.startDate).getTime() - Date.now()) / 1000
+  // );
 
   // useEffect(()=> {
   //   const fetchSupply = async () => {
@@ -90,7 +94,7 @@ const MintDetail: FC<OverviewProps> = ({ collection, launchpad, nfts }) => {
             </Typography>
           </div>
           <Typography className="text-[12px] mt-2 md:mt-6 flex items-center text-white">
-            {description}
+            {collection.desc}
           </Typography>
           <div className="flex gap-4 mt-5 xl:gap-6">
             <Link href={"#"} className="w-6 h-6">

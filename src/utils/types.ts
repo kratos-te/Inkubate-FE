@@ -160,29 +160,24 @@ export interface InputData {
 export interface NftParams {
   collectionId: string;
   name: string;
-  nftId: string;
-  address: string;
-  assetUrl: string;
-  imgUrl: string;
-  royalty: Number;
   contractType: string;
-  attributes: string;
   price: string;
   txHash: string;
+  network: string;
 }
 
 export interface NftTypes {
   id: string;
-  address: string;
+  tokenAddress: string;
   assetUrl: string;
   attributes: AttributesTypes[];
   collection: CollectionParam;
   collectionId: string;
   contractType: string;
-  imgUrl: string;
+  image: string;
   minterId: string;
   name: string;
-  nftId: string;
+  tokenId: string;
   owner: UserItem;
   ownerId: string;
   royalty: number;

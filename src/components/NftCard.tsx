@@ -12,7 +12,7 @@ import { cancelList } from "@/actions";
 import { getListByNft } from "@/actions";
 import { useModal } from "@/contexts/ModalContext";
 import { ListingTypes, NftTypes } from "@/utils/types";
-import { date2Timestamp, ipfsToLink, weiToNum } from "@/utils/util";
+import { date2Timestamp, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
 import { SALT, ZERO_ADDRESS, ZERO_HASH } from "@/config";
 import { INK_CONDUIT_KEY } from "@/utils/constants";
@@ -32,7 +32,7 @@ const NftCard: FC<ItemProps> = ({
   setActiveBuy,
   setIsNoticed,
 }) => {
-  const { id, imgUrl, name, owner, nftId, address } = nft;
+  const { id, image, name, owner, tokenId, tokenAddress } = nft;
   const favorited = false;
   const pathname = usePathname();
   const { openBuyModal, openListModal } = useModal();
@@ -60,20 +60,20 @@ const NftCard: FC<ItemProps> = ({
 
   const handleSell = async () => {
     if (listByNft?.nftId === id) {
-      if (!address) return;
+      if (!tokenAddress) return;
       if (listByNft) {
         // const startAmount = (weiToNum(listing.price) / 100) * 95;
         const startDay = date2Timestamp(listByNft.startTime).toString();
         const endDay = date2Timestamp(listByNft.endTime).toString();
-        const counters = await count(address as `0x${string}`);
+        const counters = await count(tokenAddress as `0x${string}`);
         const orders = {
-          offerer: address,
+          offerer: tokenAddress,
           zone: ZERO_ADDRESS, // always this is a null address in listing
           offer: [
             {
               itemType: 2,
-              token: nft.address,
-              identifierOrCriteria: nftId,
+              token: nft.tokenAddress,
+              identifierOrCriteria: tokenId,
               startAmount: listByNft.price.toString(),
               endAmount: listByNft.price.toString(),
             },
@@ -83,10 +83,10 @@ const NftCard: FC<ItemProps> = ({
             {
               itemType: 2,
               token: ZERO_ADDRESS,
-              identifierOrCriteria: nftId,
+              identifierOrCriteria: tokenId,
               startAmount: listByNft.price.toString(), // 95% of amount -> price
               endAmount: listByNft.price.toString(),
-              recipient: address, // price receiver -> token owner
+              recipient: tokenAddress, // price receiver -> token owner
             },
           ],
           orderType: 0,
@@ -121,7 +121,7 @@ const NftCard: FC<ItemProps> = ({
 
   return (
     <div className="group">
-      <Link href={`/asset/${address}/${nftId}`}>
+      <Link href={`/asset/${tokenAddress}/${tokenId}`}>
         <div
           className="rounded-xl shadow-card relative"
           style={{
@@ -129,7 +129,7 @@ const NftCard: FC<ItemProps> = ({
           }}
         >
           <img
-            src={ipfsToLink(imgUrl)}
+            src={image}
             className="object-cover"
             alt="nft Image"
             onError={(e) => {
@@ -139,7 +139,9 @@ const NftCard: FC<ItemProps> = ({
             }}
           />
           <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
-            <Typography className="font-[500] text-[12px]">#{nftId}</Typography>
+            <Typography className="font-[500] text-[12px]">
+              #{tokenId}
+            </Typography>
           </div>
         </div>
         <div className="px-[18px] pt-3 pb-[18px] bg-dark-200 rounded-b-xl group-hover:rounded-b-none">

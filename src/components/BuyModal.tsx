@@ -8,7 +8,7 @@ import { useModal } from "@/contexts/ModalContext";
 import { useInkubate } from "@/hooks/useInkubate";
 import { INK_CONDUIT_KEY } from "@/utils/constants";
 import { ListingTypes, NftTypes } from "@/utils/types";
-import { date2Timestamp, ipfsToLink, weiToNum } from "@/utils/util";
+import { date2Timestamp, weiToNum } from "@/utils/util";
 import ClickAwayComponent from "./ClickAwayComponent";
 import { LoadingPad } from "./LoadingPad";
 import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
@@ -22,7 +22,7 @@ interface BuyModalProps {
 
 export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
   const { closeBuyModal, isOpenedBuyModal } = useModal();
-  const { imgUrl, name, nftId, address } = nft;
+  const { image, name, tokenId, tokenAddress } = nft;
   const { address: walletAddress } = useAccount();
   const [isBuyStatus, setIsBuyStatus] = useState(false);
   const { buyListing } = useInkubate();
@@ -37,8 +37,8 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
       considerationAmount: listing.price.toString(),
       offerer: listing.seller.walletAddress,
       zone: ZERO_ADDRESS,
-      offerToken: address,
-      offerIdentifier: nftId,
+      offerToken: tokenAddress,
+      offerIdentifier: tokenId,
       offerAmount: "1",
       basicOrderType: 0,
       startTime: date2Timestamp(listing.startTime).toString(),
@@ -90,7 +90,7 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
           <div className="modal_body text-center">
             <div className="flex gap-[24px] items-center mt-[34px] pb-[14px]">
               <img
-                src={ipfsToLink(imgUrl)}
+                src={image}
                 className="relative z-0 rounded-xl object-cover w-[120px] h-[120xp]"
                 alt="nft Image for Buy"
               />
@@ -105,7 +105,7 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
                   component="h1"
                   className="lg:font-readex font-poppins text-[36px] leading-[44px] max-sm:text-[24px] lg:leading-[35px] font-bold"
                 >
-                  {name} #{nftId}
+                  {name}
                 </Typography>
               </div>
             </div>

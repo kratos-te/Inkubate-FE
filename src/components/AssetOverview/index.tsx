@@ -24,7 +24,7 @@ import { useModal } from "@/contexts/ModalContext";
 import { useAccount } from "wagmi";
 import { cancelList, cancelOffer, getPhoto } from "@/actions";
 import { format } from "date-fns";
-import { date2Timestamp, ipfsToLink, weiToNum } from "@/utils/util";
+import { date2Timestamp, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
 import { SALT, ZERO_ADDRESS, ZERO_HASH } from "@/config";
 import { INK_CONDUIT_KEY } from "@/utils/constants";
@@ -55,7 +55,7 @@ const AssetOverview: FC<OverviewProps> = ({
 
   const { count, cancelListing } = useInkubate();
   const { address } = useAccount();
-  const { imgUrl, name, owner, nftId, collection } = nft;
+  const { image, name, owner, tokenId, collection } = nft;
   const [nftAvatar, setNftAvatar] = useState<PhotoItem>();
 
   const handleCancelList = async () => {
@@ -71,8 +71,8 @@ const AssetOverview: FC<OverviewProps> = ({
         offer: [
           {
             itemType: 2,
-            token: nft.address,
-            identifierOrCriteria: nftId,
+            token: nft.tokenAddress,
+            identifierOrCriteria: tokenId,
             startAmount: listing.price.toString(),
             endAmount: listing.price.toString(),
           },
@@ -82,7 +82,7 @@ const AssetOverview: FC<OverviewProps> = ({
           {
             itemType: 2,
             token: ZERO_ADDRESS,
-            identifierOrCriteria: nftId,
+            identifierOrCriteria: tokenId,
             startAmount: listing.price.toString(), // 95% of amount -> price
             endAmount: listing.price.toString(),
             recipient: address, // price receiver -> token owner
@@ -142,7 +142,7 @@ const AssetOverview: FC<OverviewProps> = ({
         }}
       >
         <img
-          src={ipfsToLink(imgUrl)}
+          src={image}
           className="relative z-0 object-cover"
           alt="nft Image"
           onError={(e) => {
@@ -153,7 +153,7 @@ const AssetOverview: FC<OverviewProps> = ({
         />
         <div className="absolute bottom-2 bg-[#00000040] rounded-md py-1 px-2 right-2">
           <Typography className="font-semibold text-[15px] !text-white">
-            #{nftId}
+            #{tokenId}
           </Typography>
         </div>
       </div>
@@ -202,7 +202,7 @@ const AssetOverview: FC<OverviewProps> = ({
             component="h1"
             className="lg:font-readex font-poppins text-[36px] leading-[44px] lg:text-[28px] lg:leading-[35px] font-bold"
           >
-            {`${name}#${nftId}`}
+            {name}
           </Typography>
           <Typography
             component="p"
@@ -211,7 +211,7 @@ const AssetOverview: FC<OverviewProps> = ({
             Owned by
             <span className="ml-2 text-secondary">{owner.username}</span>
           </Typography>
-          {(listing || isNoticed) && (
+          {(isNoticed || listing) && (
             <>
               <Typography className="text-[14px] font-medium mt-5">
                 Price

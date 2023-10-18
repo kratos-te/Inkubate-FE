@@ -61,10 +61,6 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
         rept.logs.map(async (item) => {
           const decimalValue = parseInt(item.topics[3] as `0x${string}`, 16);
 
-          const tokenUri = await getTokenUri(
-            collection.address,
-            decimalValue.toString()
-          );
           const nftData = await handleGetTokenURI(
             collection.address,
             decimalValue.toString()
@@ -74,15 +70,10 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
           const createNFT = await createNft({
             collectionId: collection.id,
             name: collection.name,
-            nftId: decimalValue.toString(),
-            address: collection.address,
-            assetUrl: tokenUri,
-            imgUrl: nftData.image,
-            royalty: 0,
             contractType: "ERC721",
-            attributes: nftData.attributes,
             price: launchpad.mintPrice.toString(),
             txHash: item.transactionHash || "",
+            network: "MAIN",
           });
           console.log("created Nft,", createNFT);
           return createNFT;

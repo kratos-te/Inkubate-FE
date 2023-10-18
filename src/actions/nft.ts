@@ -81,11 +81,11 @@ export async function createNft(createData: NftParams) {
   }
 }
 
-export async function getNftByOne(nftId: string, address: string) {
+export async function getNftByOne(tokenId: string, tokenAddress: string) {
   try {
     const response = await axios.post(`${API_BASE_URL}/api/nft/get`, {
-      nftId: nftId,
-      address: address,
+      tokenId: tokenId,
+      tokenAddress: tokenAddress,
     });
     return response;
   } catch (error) {
