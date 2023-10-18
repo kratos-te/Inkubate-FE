@@ -19,13 +19,13 @@ export const Listing: FC<ListingProps> = ({ listing }) => {
           <div className="flex items-center relative z-10">
             <div className="w-[70px] h-[70px] max-[640px]:w-[50px] max-[640px]:h-[50px]  relative">
               <image
-                xlinkHref={listing.nft.imgUrl}
+                xlinkHref={listing.nft.image}
                 className="rounded-[10px] mr-[11px] w-[70px] h-[70px] object-fill"
               />
             </div>
             <div className="flex-col gap-[2px]">
               <Typography className="flex items-center gap-2  ml-2 text-[30px] font-semibold max-[640px]:text-[20px] max-sm:text-[16px]">
-                {`${listing.nft.name}#${listing.nft.nftId}`}
+                {`${listing.nft.name}#${listing.nft.tokenId}`}
               </Typography>
               <p className="flex items-center gap-2  ml-2 text-[30px] font-semibold text-[#555555] max-[640px]:text-[20px] max-sm:text-[16px]">
                 {listing.nft.name}

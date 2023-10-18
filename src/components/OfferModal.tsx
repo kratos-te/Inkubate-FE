@@ -16,7 +16,7 @@ import {
   OrderType,
 } from "@/utils/constants";
 import { ListingTypes, NftTypes } from "@/utils/types";
-import { date2UTC, ipfsToLink, numToWei } from "@/utils/util";
+import { date2UTC, numToWei } from "@/utils/util";
 import { CoinButton } from "./CoinButton";
 import { LoadingPad } from "./LoadingPad";
 import { SetDuration } from "./SetDuratoin";
@@ -35,7 +35,7 @@ export const OfferModal: FC<{
   const { approve } = useErc20();
   const { count } = useInkubate();
   const signOrder = useSignSeaportOrder();
-  const { imgUrl, name, nftId } = nft;
+  const { image, name, tokenId } = nft;
 
   const [makeOffer, setMakeOffer] = useState(false);
   const [amount, setAmount] = useState<string>("");
@@ -56,8 +56,8 @@ export const OfferModal: FC<{
     const consideration = [
       {
         itemType: 2,
-        token: nft.address,
-        identifierOrCriteria: nftId,
+        token: nft.tokenAddress,
+        identifierOrCriteria: tokenId,
         startAmount: "1",
         endAmount: "1",
         recipient: walletAddress,
@@ -163,7 +163,7 @@ export const OfferModal: FC<{
           <div className="modal_body text-center">
             <div className="flex gap-[24px] items-center">
               <img
-                src={ipfsToLink(imgUrl)}
+                src={image}
                 className="relative z-0 rounded-xl object-cover w-[120px] h-[120xp]"
                 alt="nft Image for Buy"
                 onError={(e) => {
@@ -183,7 +183,7 @@ export const OfferModal: FC<{
                   component="h1"
                   className="items-left lg:font-readex font-poppins text-[36px] leading-[44px] lg:text-[36px] lg:leading-[35px] font-bold max-sm:text-[24px]"
                 >
-                  {name}#{nftId}
+                  {name}
                 </Typography>
               </div>
             </div>

@@ -12,6 +12,7 @@ import Skeleton from "react-loading-skeleton";
 import { MintModal } from "@/components/MintModal";
 import { CollectionParam, LaunchpadParam, NftTypes } from "@/utils/types";
 import { getCollectionById, getLaunchpadById, getNft } from "@/actions";
+import { weiToNum } from "@/utils/util";
 
 export default function CollectionPage() {
   const pathname = usePathname();
@@ -21,6 +22,7 @@ export default function CollectionPage() {
   const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
   const [nftByColletion, setNftByCollection] = useState<NftTypes[]>([]);
+  const [remainTime, setRemainTime] = useState<number>()
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -43,13 +45,19 @@ export default function CollectionPage() {
         const collection = await getCollectionById(collectionId);
         const launchpad = await getLaunchpadById(collection?.data.launchpadId);
         const nfts = await getNft(collectionId);
+        const remainingTime = Math.floor(
+          (new Date(launchpad?.data.startDate).getTime() - Date.now()) / 1000
+        );
         setLaunchPadById(launchpad?.data);
         setCollectionById(collection?.data);
         setNftByCollection(nfts?.data);
+        setRemainTime(remainingTime)
       }
     };
     getCollection();
   }, [collectionId, pathname]);
+
+
   return (
     <>
       <MainLayout
@@ -67,17 +75,18 @@ export default function CollectionPage() {
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
             collectionById &&
-            launchpadById && (
+            launchpadById && remainTime && (
               <MintDetail
                 collection={collectionById}
                 launchpad={launchpadById}
                 nfts={nftByColletion}
+                remainingTime={remainTime}
               />
             )
           ) : (
             <MintOverviewLoader />
           )}
-          {!loading ? (
+          {!loading && launchpadById ? (
             <div className="flex flex-col mt-6 sm:mt-5 md:flex-row">
               <div className="w-full md:w-[calc(50%-20px)] xl:w-[504px] flex flex-col gap-5 mr-0 md:mr-5 lg:mr-8 xl:mr-10">
                 <AssetDetailBox
@@ -85,9 +94,12 @@ export default function CollectionPage() {
                   title={
                     <div className="flex gap-2.5 items-center">
                       <span>Allowlist Mint</span>
-                      <div className="rounded-lg bg-secondary px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
+                      {remainTime && remainTime > 0 ? <div className="rounded-lg bg-[#666666] px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
                         Inactive
-                      </div>
+                      </div> : <div className="rounded-lg bg-secondary px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
+                        active
+                      </div>}
+
                     </div>
                   }
                   defaultCollapsed={true}
@@ -98,7 +110,7 @@ export default function CollectionPage() {
                         Price
                       </Typography>
                       <Typography className="!text-secondary font-semibold text-[14px]">
-                        Free
+                        {weiToNum(launchpadById?.mintPrice)}
                       </Typography>
                     </div>
                     <div className="flex justify-between items-center">
@@ -114,7 +126,7 @@ export default function CollectionPage() {
                         Max tokens per address
                       </Typography>
                       <Typography className="!text-secondary font-semibold text-[14px]">
-                        10000
+                        {launchpadById.maxPerWallet}
                       </Typography>
                     </div>
                   </div>
@@ -124,9 +136,11 @@ export default function CollectionPage() {
                   title={
                     <div className="flex gap-2.5 items-center">
                       <span>Public Mint</span>
-                      <div className="rounded-lg bg-secondary px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
+                      {remainTime && remainTime > 0 ? <div className="rounded-lg bg-[#666666] px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
                         Inactive
-                      </div>
+                      </div> : <div className="rounded-lg bg-secondary px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
+                        active
+                      </div>}
                     </div>
                   }
                   defaultCollapsed={true}
@@ -137,7 +151,7 @@ export default function CollectionPage() {
                         Price
                       </Typography>
                       <Typography className="!text-secondary font-semibold text-[14px]">
-                        Free
+                        {weiToNum(launchpadById?.mintPrice)}
                       </Typography>
                     </div>
                     <div className="flex justify-between items-center">
@@ -145,7 +159,7 @@ export default function CollectionPage() {
                         Max tokens per address
                       </Typography>
                       <Typography className="!text-secondary font-semibold text-[14px]">
-                        10000
+                        {launchpadById.maxPerWallet}
                       </Typography>
                     </div>
                   </div>

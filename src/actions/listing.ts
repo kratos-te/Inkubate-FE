@@ -129,6 +129,7 @@ export async function getListByNft(nftId: string) {
     const response = await axios.get(
       `${API_BASE_URL}/api/listing/nft/${nftId}`
     );
+    console.log("list by nft", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {

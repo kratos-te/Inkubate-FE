@@ -155,6 +155,7 @@ export const CreateModal: FC = () => {
         });
       }
       setIsLoading(true);
+      closeCreateModal();
     } catch (error) {
       console.log("error", error);
     }

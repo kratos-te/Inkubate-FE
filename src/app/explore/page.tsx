@@ -71,18 +71,9 @@ export default function ExplorePage() {
             >
               Items
             </button>
-            <button
-              onClick={() => router.push(`/explore?tab=3`)}
-              className={`text-[15px] font-semibold py-2 border-b-2 ml-[30px] ${
-                tab === "3"
-                  ? "text-secondary border-secondary"
-                  : "text-light-200 border-transparent"
-              }`}
-            >
-              Activity
-            </button>
+
           </div>
-          {tab !== "2" && tab !== "3" && (
+          {tab !== "2" && (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 gap-x-[30px] gap-y-3 xl:gap-y-10 mt-[34px]">
               {!loading ? (
                 <>

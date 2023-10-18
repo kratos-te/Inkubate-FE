@@ -83,7 +83,7 @@ export default function CollectionPage() {
     return path;
   }, [pathname]);
 
-  const nftId = useMemo(() => {
+  const tokenId = useMemo(() => {
     let path = "";
     if (pathname) {
       path = pathname.split("/")[3] as string;
@@ -180,7 +180,7 @@ export default function CollectionPage() {
 
   useEffect(() => {
     const getNftData = async () => {
-      const nft = await getNftByOne(nftId, contract);
+      const nft = await getNftByOne(tokenId, contract);
       const nfts = await getNft(nft?.data.collectionId);
       const listing = await getListByNft(nft?.data.id);
       setNftByOne(nft?.data);
@@ -195,7 +195,7 @@ export default function CollectionPage() {
       setOffers(newOffers);
     };
     getNftData();
-  }, [nftId, contract]);
+  }, [tokenId, contract]);
 
   useEffect(() => {
     const getOffer = async () => {
@@ -277,7 +277,7 @@ export default function CollectionPage() {
                           <DiscordIcon className="w-4 h-4" />
                         </Link>
                       }
-                      <Link href={`https://goerli.etherscan.io/address/${nftByOne?.address}`} className="w-5 h-5">
+                      <Link href={`https://goerli.etherscan.io/address/${nftByOne?.tokenAddress}`} className="w-5 h-5">
                         <EthscanIcon className="w-4 h-4" />
                       </Link>
                     </div>
@@ -382,9 +382,9 @@ export default function CollectionPage() {
                     </div>
                     <div className="block md:hidden">
                       <AssetActivityTableMobile
-                        collectionId={""}
-                        contract=""
-                        nftId={0}
+                        collectionId={nftByOne?.collectionId}
+                        contract={contract}
+                        nftId={nftByOne?.id}
                       />
                     </div>
                   </AssetDetailBox>
@@ -394,7 +394,7 @@ export default function CollectionPage() {
                 <div className="p-5 flex gap-2.5 items-center">
                   <ListIcon />{" "}
                   <Typography className="text-[16px] font-semibold font-readex">
-                    More from {nftByOne?.collectionId}
+                    More from {nftByOne?.collection.name}
                   </Typography>
                 </div>
                 <div className="flex justify-center gap-[25px] min-h-[390px] flex-wrap">

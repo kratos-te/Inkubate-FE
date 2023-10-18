@@ -22,7 +22,7 @@ import { useErc721a } from "@/hooks/useErc721a";
 import { useInkubate } from "@/hooks/useInkubate";
 import { INK_CONDUIT_KEY } from "@/utils/constants";
 import { NftTypes } from "@/utils/types";
-import { date2UTC, numToWei, ipfsToLink } from "@/utils/util";
+import { date2UTC, numToWei } from "@/utils/util";
 
 export const ListModal: FC<{
   nft: NftTypes;
@@ -35,7 +35,7 @@ export const ListModal: FC<{
   const signOrder = useSignSeaportOrder();
   const { address } = useAccount();
 
-  const { id, imgUrl, name, nftId } = nft;
+  const { id, image, name, tokenId } = nft;
   const { startDate, endDate, startTime, endTime } = useUser();
   const [makeList, setMakeList] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -63,8 +63,8 @@ export const ListModal: FC<{
       offer: [
         {
           itemType: 2,
-          token: nft.address,
-          identifierOrCriteria: nftId,
+          token: nft.tokenAddress,
+          identifierOrCriteria: tokenId,
           startAmount: "1",
           endAmount: "1",
         },
@@ -109,7 +109,7 @@ export const ListModal: FC<{
 
   const handleList = async () => {
     setMakeList(true);
-    const res = await setApprovalForAll(nft.address);
+    const res = await setApprovalForAll(nft.tokenAddress);
     if (res.status === "success") {
       const { signature, data } = await handleSign();
       if (signature) {
@@ -174,7 +174,7 @@ export const ListModal: FC<{
           <div className="modal_body text-center">
             <div className="flex gap-[24px] items-center">
               <img
-                src={ipfsToLink(imgUrl)}
+                src={image}
                 className="relative z-0 rounded-xl w-[120px] h-[120px] max-sm:w-[90px] max-sm:h-[90px] object-cover"
                 alt="nft image"
                 onError={(e) => {
@@ -194,7 +194,7 @@ export const ListModal: FC<{
                   component="h1"
                   className="items-left lg:font-readex font-poppins text-[36px] leading-[44px] lg:text-[36px] lg:leading-[35px] font-bold max-sm:text-[24px]"
                 >
-                  {`${name}#${nftId}`}
+                  {name}
                 </Typography>
               </div>
             </div>

@@ -21,13 +21,13 @@ export const Offer: FC<OfferProps> = ({ offer }) => {
           <div className="flex items-center relative z-10">
             <div className="w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] relative">
               <image
-                xlinkHref={offer.nft.imgUrl}
+                xlinkHref={offer.nft.image}
                 className="rounded-[10px] mr-[11px] w-[70px] h-[70px]"
               />
             </div>
             <div className="flex-col gap-[2px]">
               <Typography className="flex items-center gap-2  ml-2 text-[30px] font-semibold max-[640px]:text-[20px] max-sm:text-[16px]">
-                {`${offer.nft.name}#${offer.nft.nftId}`}
+                {`${offer.nft.name}#${offer.nft.tokenId}`}
               </Typography>
               <p className="flex items-center gap-2  ml-2 text-[30px] font-semibold text-[#555555] max-[640px]:text-[20px] max-sm:text-[16px]">
                 {offer.nft.name}

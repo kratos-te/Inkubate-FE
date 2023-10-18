@@ -7,7 +7,7 @@ import Typography from "./Typography";
 import ClickAwayComponent from "./ClickAwayComponent";
 
 export const AcceptModal: FC<ModalItem> = ({ nft }) => {
-  const { imgUrl, name } = nft;
+  const { image, name } = nft;
 
   const { closeAcceptModal, isOpenedAcceptModal } = useModal();
 
@@ -37,7 +37,7 @@ export const AcceptModal: FC<ModalItem> = ({ nft }) => {
             <div className="flex justify-between items-center my-7">
               <div className="flex gap-[24px] items-center">
                 <Image
-                  src={imgUrl}
+                  src={image}
                   className="relative z-0 rounded-xl"
                   alt=""
                   width={120}
