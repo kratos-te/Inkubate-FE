@@ -39,7 +39,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
           }}
         >
           <div className="relative w-[186px] xl:w-[286px] h-[186px] xl:h-[286px] rounded-lg xl:rounded-[19px] overflow-hidden">
-            <Image src={avatar.url} fill objectFit="cover" priority alt="" />
+            <Image src={avatar?.url} fill objectFit="cover" priority alt="" />
           </div>
         </div>
         <div className="">

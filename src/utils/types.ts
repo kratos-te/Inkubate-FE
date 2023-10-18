@@ -99,10 +99,10 @@ export interface CreateLaunchpadParam {
   startDate: string;
   endDate: string;
   network: string;
-  twitter: string;
-  discord: string;
-  facebook: string;
-  reddit: string;
+  twitter?: string;
+  discord?: string;
+  facebook?: string;
+  reddit?: string;
   collectionUri: string;
 }
 

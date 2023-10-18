@@ -259,23 +259,25 @@ export default function CollectionPage() {
                     defaultCollapsed={true}
                   >
                     <Typography className="text-[14px] !text-light-200 font-[400] font-readex leading-[17.5px]">
-                      Torem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Nunc vulputate libero et velit interdum, ac aliquet odio
-                      mattis. Torem ipsum dolor sit amet, consectetur adipiscing
-                      elit. Nunc vulputate libero et velit interdum, ac aliquet
-                      odio mattis.
+                      {nftByOne?.collection.desc}
                     </Typography>
                     <div className="flex gap-[15px] mt-5">
-                      <Link href={"#"} className="w-5 h-5">
+                      {nftByOne?.collection.website &&
+                        <Link href={nftByOne?.collection.website} className="w-5 h-5">
                         <WebsiteIcon className="w-4 h-4" />
                       </Link>
-                      <Link href={"#"} className="w-5 h-5">
-                        <TwitterIcon className="w-4 h-4" />
-                      </Link>
-                      <Link href={"#"} className="w-5 h-5">
-                        <DiscordIcon className="w-4 h-4" />
-                      </Link>
-                      <Link href={"#"} className="w-5 h-5">
+                      }
+                      {nftByOne?.collection.twitter &&
+                        <Link href={nftByOne?.collection.twitter} className="w-5 h-5">
+                          <TwitterIcon className="w-4 h-4" />
+                        </Link>
+                      }
+                      {nftByOne?.collection.discord &&
+                        <Link href={nftByOne?.collection.discord} className="w-5 h-5">
+                          <DiscordIcon className="w-4 h-4" />
+                        </Link>
+                      }
+                      <Link href={`https://goerli.etherscan.io/address/${nftByOne?.address}`} className="w-5 h-5">
                         <EthscanIcon className="w-4 h-4" />
                       </Link>
                     </div>
@@ -326,11 +328,10 @@ export default function CollectionPage() {
                           <th className=" text-secondary text-left">offerer</th>
                           <th className=" text-secondary text-left">price</th>
                           <th
-                            className={` text-secondary text-left ${
-                              offer?.sellerId !== userData?.id
-                                ? "hidden"
-                                : "show"
-                            }`}
+                            className={` text-secondary text-left ${offer?.sellerId !== userData?.id
+                              ? "hidden"
+                              : "show"
+                              }`}
                           >
                             action
                           </th>
@@ -344,11 +345,10 @@ export default function CollectionPage() {
                               </td>
                               <td className="w-[20%] cursor-pointer hover:text-light-400">
                                 <button
-                                  className={`bg-secondary px-4 py-2 rounded-[8px] ${
-                                    offer.sellerId !== userData?.id
-                                      ? "hidden"
-                                      : "show"
-                                  }`}
+                                  className={`bg-secondary px-4 py-2 rounded-[8px] ${offer.sellerId !== userData?.id
+                                    ? "hidden"
+                                    : "show"
+                                    }`}
                                   onClick={() => handleAccept(offer)}
                                 >
                                   Accept
@@ -367,26 +367,28 @@ export default function CollectionPage() {
                 </div>
               </div>
               <div className="mt-5">
-                <AssetDetailBox
-                  icon={<ActivityIcon />}
-                  title="Activity"
-                  defaultCollapsed={true}
-                >
-                  <div className="hidden md:block">
-                    <AssetActivityTable
-                      collectionId={""}
-                      contract=""
-                      nftId={0}
-                    />
-                  </div>
-                  <div className="block md:hidden">
-                    <AssetActivityTableMobile
-                      collectionId={""}
-                      contract=""
-                      nftId={0}
-                    />
-                  </div>
-                </AssetDetailBox>
+                {nftByOne &&
+                  <AssetDetailBox
+                    icon={<ActivityIcon />}
+                    title="Activity"
+                    defaultCollapsed={true}
+                  >
+                    <div className="hidden md:block">
+                      <AssetActivityTable
+                        collectionId={nftByOne?.collectionId}
+                        contract={contract}
+                        nftId={nftByOne?.id}
+                      />
+                    </div>
+                    <div className="block md:hidden">
+                      <AssetActivityTableMobile
+                        collectionId={""}
+                        contract=""
+                        nftId={0}
+                      />
+                    </div>
+                  </AssetDetailBox>
+                }
               </div>
               <div className="max-w-[1080px] mx-auto mt-[30px]">
                 <div className="p-5 flex gap-2.5 items-center">

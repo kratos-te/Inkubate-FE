@@ -115,6 +115,7 @@ export const CreateModal: FC = () => {
       if (
         values.name &&
         values.symbol &&
+        values.description &&
         values.mintPrice &&
         values.totalSupply &&
         values.maxPerTx &&
@@ -131,7 +132,7 @@ export const CreateModal: FC = () => {
         await createLaunchpad({
           name: values.name,
           symbol: values.symbol,
-          desc: "",
+          desc: values.description,
           logoId: nftItem.id,
           imageId: coverImage.id,
           mintPrice: mintPrice,
@@ -146,10 +147,10 @@ export const CreateModal: FC = () => {
           startDate: startDay,
           endDate: endDay,
           network: "MAIN",
-          twitter: "",
-          discord: "",
-          facebook: "",
-          reddit: "",
+          twitter: values.twitter,
+          discord: values.discord,
+          facebook: values.facebook,
+          reddit: values.reddit,
           collectionUri: values.collectionUri,
         });
       }
@@ -270,6 +271,16 @@ export const CreateModal: FC = () => {
                   </div>
                   <div className="flex-col">
                     <Typography className="font-semibold leading-6 text-[16px] text-left">
+                      Description
+                    </Typography>
+                    <textarea
+                      {...register("description", { required: false })}
+                      className="bg-dark-400 text-[14px] text-[#B3B3B3]  w-full rounded-xl mt-2 p-[14px] min-h-[183px] placeholder:text-third"
+                      placeholder="Enter Description"
+                    />
+                  </div>
+                  <div className="flex-col">
+                    <Typography className="font-semibold leading-6 text-[16px] text-left">
                       Total Supply
                     </Typography>
                     <input
@@ -299,7 +310,7 @@ export const CreateModal: FC = () => {
                     />
                   </div>
                 </div>
-                <div className="w-full lg:w-1/2 flex flex-col gap-6 lg:gap-[34px] ">
+                <div className="w-full lg:w-1/2 flex flex-col gap-4 lg:gap-[20px] ">
                   <div className="flex-col">
                     <Typography className="font-semibold leading-6 text-[16px] text-left">
                       Whitelist Address
@@ -427,6 +438,46 @@ export const CreateModal: FC = () => {
                       Allow the contract owner to mint a token reserve seperate
                       from the allowlist mint
                     </p>
+                  </div>
+                  <div className="flex-col">
+                    <Typography className="font-semibold leading-6 text-[16px] text-left">
+                      Twitter
+                    </Typography>
+                    <input
+                      {...register("twitter", { required: false })}
+                      className="bg-dark-400 text-[14px] text-[#B3B3B3]  w-full rounded-xl mt-2 p-[14px] placeholder:text-third"
+                      placeholder="Enter your twitter link"
+                    />
+                  </div>
+                  <div className="flex-col">
+                    <Typography className="font-semibold leading-6 text-[16px] text-left">
+                      Discord
+                    </Typography>
+                    <input
+                      {...register("discord", { required: false })}
+                      className="bg-dark-400 text-[14px] text-[#B3B3B3]  w-full rounded-xl mt-2 p-[14px] placeholder:text-third"
+                      placeholder="Enter your discord link"
+                    />
+                  </div>
+                  <div className="flex-col">
+                    <Typography className="font-semibold leading-6 text-[16px] text-left">
+                      Facebook
+                    </Typography>
+                    <input
+                      {...register("facebook", { required: false })}
+                      className="bg-dark-400 text-[14px] text-[#B3B3B3]  w-full rounded-xl mt-2 p-[14px] placeholder:text-third"
+                      placeholder="Enter your facebook link"
+                    />
+                  </div>
+                  <div className="flex-col">
+                    <Typography className="font-semibold leading-6 text-[16px] text-left">
+                      Website
+                    </Typography>
+                    <input
+                      {...register("reddit", { required: false })}
+                      className="bg-dark-400 text-[14px] text-[#B3B3B3]  w-full rounded-xl mt-2 p-[14px] placeholder:text-third"
+                      placeholder="Enter your Website link"
+                    />
                   </div>
                 </div>
               </div>
