@@ -71,7 +71,6 @@ export default function ExplorePage() {
             >
               Items
             </button>
-
           </div>
           {tab !== "2" && (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 gap-x-[30px] gap-y-3 xl:gap-y-10 mt-[34px]">

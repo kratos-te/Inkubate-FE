@@ -1,9 +1,12 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
+import { FC } from "react";
 import Typography from "./Typography";
 import { ExtendIcon, VerifiedIcon } from "./SvgIcons";
 import Link from "next/link";
+import { ActivityTypes } from "@/utils/types";
+import { weiToNum } from "@/utils/util";
 
-const ActivityMobileCard = () => {
+const ActivityMobileCard: FC<{ actData: ActivityTypes }> = ({ actData }) => {
   return (
     <div className="rounded-xl shadow-card bg-dark-200 py-[18px] px-7">
       <div className="flex gap-7 items-center">
@@ -14,11 +17,9 @@ const ActivityMobileCard = () => {
           }}
         >
           <div className="relative w-[66px] xl:w-[112px] h-[66px] xl:h-[112px] rounded-lg xl:rounded-[19px] overflow-hidden">
-            <Image
-              src={"/assets/images/pfp-demo.gif"}
-              fill
-              objectFit="cover"
-              priority
+            <img
+              src={actData.nft.image || "/assets/images/pfp-demo.gif"}
+              className=" object-cover"
               alt=""
             />
           </div>
@@ -38,7 +39,7 @@ const ActivityMobileCard = () => {
             ETH
           </Typography>
           <Typography className="text-[24px] leading-8 font-poppins !text-secondary font-bold">
-            0.0014
+            {weiToNum(actData.price)}
           </Typography>
         </div>
       </div>
@@ -46,13 +47,13 @@ const ActivityMobileCard = () => {
         <div className="">
           <Typography className="text-[12px] leading-[18px]">From</Typography>
           <Typography className="text-[14px] leading-[20px] font-bold">
-            0x5123
+            {actData.seller?.username}
           </Typography>
         </div>
         <div className="">
           <Typography className="text-[12px] leading-[18px]">To</Typography>
           <Typography className="text-[14px] leading-[20px] font-bold">
-            0x5123
+            {actData.buyer?.username ? actData.buyer?.username : "—"}
           </Typography>
         </div>
         <div className="">

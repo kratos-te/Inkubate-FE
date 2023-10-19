@@ -26,7 +26,7 @@ const ProfileOverview = () => {
           <div className="relative w-[186px] xl:w-[286px] h-[186px] xl:h-[286px] rounded-lg xl:rounded-[19px] overflow-hidden">
             {profile?.avatar?.url && (
               <Image
-                src={profile.avatar.url}
+                src={profile?.avatar?.url}
                 fill
                 objectFit="cover"
                 priority
@@ -64,7 +64,7 @@ const ProfileOverview = () => {
           </Typography>
 
           <div className="flex gap-4 mt-5 xl:gap-6">
-            {profile.twitter &&
+            {profile?.twitter &&
               <Link href={profile.twitter} className="w-6 h-6">
                 <TwitterIcon />
               </Link>

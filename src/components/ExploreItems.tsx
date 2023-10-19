@@ -11,19 +11,19 @@ import { ListingTypes, NftTypes } from "@/utils/types";
 const ExploreItems: FC = () => {
   const [sort, setSort] = useState("p-l-h");
   const [isDense, setIsDense] = useState(true);
-  const [listingNft, setListingNft] = useState<NftTypes[]>([])
+  const [listingNft, setListingNft] = useState<NftTypes[]>([]);
 
   useEffect(() => {
-    const listedNft: NftTypes[] = []
+    const listedNft: NftTypes[] = [];
     const getNfts = async () => {
-      const listings = await getlistingNft()
+      const listings = await getlistingNft();
       listings.map((item: ListingTypes) => {
-        listedNft.push(item.nft)
-      })
-      setListingNft(listedNft)
-    }
-    getNfts()
-  }, [])
+        listedNft.push(item.nft);
+      });
+      setListingNft(listedNft);
+    };
+    getNfts();
+  }, []);
 
   return (
     <>
@@ -62,7 +62,7 @@ const ExploreItems: FC = () => {
       </div>
       <div className="mt-[28px] lg:mt-[38px] flex relative z-10 ">
         <div className="hidden lg:block w-[300px]">
-          <CollectionFilter />
+          {listingNft[0] && <CollectionFilter nft={listingNft[0]} />}
         </div>
         <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
           <NftGrid
