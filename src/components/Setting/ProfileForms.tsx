@@ -19,8 +19,8 @@ const ProfileForms: FC = () => {
   const { userData, profile, getUserData, setProfile, getProfileData } =
     useUser();
   const { closeSettingModal } = useModal();
-  const [changedName, setChangeName] = useState(userData.username);
-  const [changedBio, setChangedBio] = useState(profile.bio);
+  const [changedName, setChangeName] = useState(userData?.username);
+  const [changedBio, setChangedBio] = useState(profile?.bio);
   const [changePfp, setChangePfp] = useState<string | null>(
     profile?.avatar?.url || null
   );
@@ -88,7 +88,7 @@ const ProfileForms: FC = () => {
         }
       }
       if (selectedPfpFile) {
-        if (profile.avatarId) {
+        if (profile?.avatarId) {
           const updatePfp = await updatePhoto(
             selectedPfpFile,
             profile.avatarId
@@ -100,7 +100,7 @@ const ProfileForms: FC = () => {
         }
       }
       if (selectedBannerFile) {
-        if (profile.bannerId) {
+        if (profile?.bannerId) {
           const updateBanner = await updatePhoto(
             selectedBannerFile,
             profile.bannerId
@@ -159,7 +159,7 @@ const ProfileForms: FC = () => {
                 {...register("bio", { required: false })}
                 className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third min-h-[160px] lg:min-h-[180px]"
                 placeholder="share your story"
-                value={changedBio ? changedBio : profile.bio}
+                value={changedBio ? changedBio : profile?.bio}
                 onChange={handleBioChange}
               ></textarea>
             </div>
@@ -182,7 +182,7 @@ const ProfileForms: FC = () => {
                 {...register("bio", { required: false })}
                 className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third min-h-[180px]"
                 placeholder="share your story"
-                value={changedBio ? changedBio : profile.bio}
+                value={changedBio ? changedBio : profile?.bio}
                 onChange={handleBioChange}
               ></textarea>
             </div>

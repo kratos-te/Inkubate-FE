@@ -206,7 +206,7 @@ export default function ProfilePage() {
             }`}
           >
             <div className="hidden lg:block w-[300px]">
-              <CollectionFilter />
+              {nftByOwner[0] && <CollectionFilter nft={nftByOwner[0]} />}
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
               {tab === "1" && (

@@ -52,17 +52,23 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
           </Typography>
 
           <div className="flex gap-4 mt-5 xl:gap-6 lg:hidden">
-            <Link href={"#"} className="w-6 h-6">
-              <WebsiteIcon />
-            </Link>
-            <Link href={"#"} className="w-6 h-6">
-              <TwitterIcon />
-            </Link>
-            <Link href={"#"} className="w-6 h-6">
-              <DiscordIcon />
-            </Link>
-            <Link href={"#"} className="w-6 h-6">
-              <EthscanIcon />
+            {collection.website &&
+              <Link href={collection.website} className="w-5 h-5">
+                <WebsiteIcon className="w-4 h-4" />
+              </Link>
+            }
+            {collection.twitter &&
+              <Link href={collection.twitter} className="w-5 h-5">
+                <TwitterIcon className="w-4 h-4" />
+              </Link>
+            }
+            {collection.discord &&
+              <Link href={collection.discord} className="w-5 h-5">
+                <DiscordIcon className="w-4 h-4" />
+              </Link>
+            }
+            <Link href={`https://goerli.etherscan.io/address/${collection.address}`} className="w-5 h-5">
+              <EthscanIcon className="w-4 h-4" />
             </Link>
           </div>
           <Typography

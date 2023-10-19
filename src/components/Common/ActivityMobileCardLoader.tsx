@@ -1,6 +1,7 @@
+import { FC } from "react";
 import Skeleton from "react-loading-skeleton";
 
-const ActivityMobileCardLoader = () => {
+const ActivityMobileCardLoader: FC = () => {
   return (
     <div className="rounded-xl shadow-card bg-dark-200 py-[18px] px-7">
       <div className="flex gap-7 items-center">

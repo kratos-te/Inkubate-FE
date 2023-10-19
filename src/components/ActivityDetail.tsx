@@ -45,7 +45,7 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
             </button>
           ))}
         <div className="">
-          <ActivityChart />
+          <ActivityChart actData={actData} />
         </div>
         <table className="w-full mt-6 hidden lg:inline-table">
           <thead>
@@ -113,10 +113,10 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                             />
                             <div className="">
                               <Typography className="font-semibold leading-[1.5]">
-                                {`${row.nft.name}#${row.nft.tokenId}`}
+                                {row.nft.name}
                               </Typography>
                               <Typography className="text-[14px] font-medium leading-[1.5] !text-dark-700 mt-0.5">
-                                {row.nft.name}
+                                {row.nft.collection.name}
                               </Typography>
                             </div>
                           </div>
@@ -138,7 +138,7 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                               className="hidden xl:block mr-2"
                             />
                             <Typography className="text-[14px] font-bold ml-2">
-                              {row.seller.username}
+                              {row.seller?.username}
                             </Typography>
                           </div>
                         </td>
@@ -146,7 +146,7 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                           <div className="flex items-center">
                             <UserAvatar
                               src={
-                                row.buyer?.profile.avatar?.url ||
+                                row.buyer?.profile?.avatar?.url ||
                                 "/assets/images/default-avatar.svg"
                               }
                               gradientFrom="yellow"
@@ -278,7 +278,7 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
         </table>
         <div className="flex flex-col gap-3 lg:hidden mt-[30px]">
           {!loading &&
-            actData.map((_, key) => <ActivityMobileCard key={key} />)}
+            actData.map((item, key) => <ActivityMobileCard key={key} actData={item} />)}
           {loading &&
             actData.map((_, key) => <ActivityMobileCardLoader key={key} />)}
         </div>

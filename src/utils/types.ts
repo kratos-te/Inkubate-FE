@@ -157,6 +157,11 @@ export interface InputData {
   input_rank: number | null;
 }
 
+export interface ChartType {
+  day: string;
+  value: number;
+}
+
 export interface NftParams {
   collectionId: string;
   name: string;

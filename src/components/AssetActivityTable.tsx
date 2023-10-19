@@ -13,17 +13,15 @@ interface ActivityTableProps {
 }
 
 const AssetActivityTable: FC<ActivityTableProps> = ({ nftId }) => {
-
   const [activity, setActivity] = useState<ActivityTypes[]>([]);
 
   useEffect(() => {
     const getActs = async () => {
-      const activities = await getActivityByNft(nftId)
-      setActivity(activities?.data)
-    }
+      const activities = await getActivityByNft(nftId);
+      setActivity(activities?.data);
+    };
     getActs();
-  }, [nftId])
-
+  }, [nftId]);
 
   return (
     <table className="w-full">
@@ -50,47 +48,51 @@ const AssetActivityTable: FC<ActivityTableProps> = ({ nftId }) => {
         {activity.map((item, key) => (
           <tr key={key}>
             <td className="h-[54px] flex items-center gap-[5px] text-[14px] font-medium text-light-100 w-1/5">
-              {(item.actionType === "LISTED" || item.actionType === "UNLISTED") &&
+              {(item.actionType === "LISTED" ||
+                item.actionType === "UNLISTED") && (
                 <div className="flex gap-[5px] items-center">
                   <OfferSmIcon /> {item.actionType}
                 </div>
-              }
-              {item.actionType === "CREATED_OFFER" &&
+                )}
+              {item.actionType === "CREATED_OFFER" && (
                 <div className="flex gap-[5px] items-center">
                   <EditSmIcon /> {item.actionType}
                 </div>
-              }
-              {item.actionType === "MINTED" &&
+              )}
+              {item.actionType === "MINTED" && (
                 <div className="flex gap-[5px] items-center">
                   <OfferSmTwoIcon /> {item.actionType}
                 </div>
-              }
+              )}
             </td>
             <td className="h-[54px] text-[14px] font-medium text-light-100 w-1/5">
               {weiToNum(item.price)} ETH
             </td>
             <td className="h-[54px] text-[14px] font-medium text-secondary items-center w-1/5">
-              {item.seller &&
+              {item.seller && (
                 <div className="flex gap-[5px] items-center">
                   <UserAvatar
                     gradientFrom="red"
                     gradientTo="blue"
                     src={item.seller?.profile?.avatar?.url}
                   />
-                  {item.seller.username}
+                  {item.seller?.username}
                 </div>
-              }
+              )}
             </td>
             <td className="h-[54px] text-[14px] font-medium text-light-100 w-1/5">
-              {item.buyer ?
+              {item.buyer ? (
                 <div className="flex gap-[5px] items-center">
                   <UserAvatar
                     gradientFrom="red"
                     gradientTo="blue"
-                    src={item.buyer.profile.avatar.url}
+                    src={item.buyer?.profile?.avatar?.url}
                   />
-                  {item.buyer.username}
-                </div> : "—"}
+                  {item.buyer?.username}
+                </div>
+              ) : (
+                "—"
+              )}
             </td>
             <td className="h-[54px] text-[14px] font-medium text-light-100 w-1/5">
               {moment(new Date(item.createdAt)).fromNow()}

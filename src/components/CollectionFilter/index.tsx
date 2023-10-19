@@ -2,8 +2,9 @@
 import { FC, useState, Dispatch, SetStateAction, useEffect } from "react";
 import { ArrowDownLineIcon, BnbIcon, EthIcon } from "../SvgIcons";
 import Loader from "./Loader";
+import { NftTypes } from "@/utils/types";
 
-const CollectionFilter: FC = ({}) => {
+const CollectionFilter: FC<{ nft: NftTypes }> = ({ nft }) => {
   const [status, setStatus] = useState("all");
   const [currency, setCurrency] = useState("all");
 
@@ -80,11 +81,9 @@ const CollectionFilter: FC = ({}) => {
           setValue={setCurrency}
         />
       </FilterGroup>
-      <FilterGroup title="Background"></FilterGroup>
-      <FilterGroup title="Mask"></FilterGroup>
-      <FilterGroup title="Clothes"></FilterGroup>
-      <FilterGroup title="Eyes"></FilterGroup>
-      <FilterGroup title="Head"></FilterGroup>
+      {nft.attributes.map((item, key) => (
+        <FilterGroup key={key} title={item.trait_type}></FilterGroup>
+      ))}
     </div>
   ) : (
     <Loader />

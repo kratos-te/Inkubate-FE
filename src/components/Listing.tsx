@@ -1,8 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Typography from "./Typography";
 import { ListingTypes } from "@/utils/types";
 import { weiToNum } from "@/utils/util";
-import { getDayOfYear } from "date-fns";
+import { getDayOfYear, getYear } from "date-fns";
 
 interface ListingProps {
   listing: ListingTypes;
@@ -10,8 +10,18 @@ interface ListingProps {
 
 export const Listing: FC<ListingProps> = ({ listing }) => {
   const { endTime } = listing;
-
-  const duration = getDayOfYear(new Date(endTime)) - getDayOfYear(new Date());
+  const [duration, setDuration] = useState<number>();
+  useEffect(() => {
+    if (getYear(new Date(endTime)) === getYear(new Date())) {
+      const durationDay =
+        getDayOfYear(new Date(endTime)) - getDayOfYear(new Date());
+      setDuration(durationDay);
+    } else {
+      const durationDay =
+        getDayOfYear(new Date(endTime)) + getDayOfYear(new Date());
+      setDuration(durationDay);
+    }
+  }, [endTime]);
   return (
     <>
       <tr className="cursor-pointer group border-t-[0.5px] border-[#687681]">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FC } from "react";
 import {
   ComposedChart,
   Line,
@@ -10,11 +10,13 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { DEMO_CHART } from "@/config";
 import Typography from "../Typography";
 import Skeleton from "react-loading-skeleton";
+import { ActivityTypes, ChartType } from "@/utils/types";
+import { weiToNum } from "@/utils/util";
 
-const ActivityChart = () => {
+const ActivityChart: FC<{ actData: ActivityTypes[] }> = ({ actData }) => {
+  const [chartData, setChartData] = useState<ChartType[]>([]);
   const modifyPathAttributes = () => {
     const pathElements = Array.from(
       document.getElementsByClassName("recharts-rectangle")
@@ -45,6 +47,21 @@ const ActivityChart = () => {
       clearInterval(interval); // Clear the interval when the component unmounts
     };
   }, []);
+
+  useEffect(() => {
+    const charts: ChartType[] = [];
+    const getChart = () => {
+      actData.map((item) => {
+        const chart = {
+          day: item.createdAt.toString(),
+          value: weiToNum(item.price),
+        };
+        charts.push(chart);
+      });
+      setChartData(charts);
+    };
+    getChart();
+  }, [actData]);
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -79,7 +96,7 @@ const ActivityChart = () => {
             <ComposedChart
               width={500}
               height={400}
-              data={DEMO_CHART}
+              data={chartData}
               margin={{
                 top: 60,
                 right: 40,
