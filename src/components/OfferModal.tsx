@@ -23,6 +23,7 @@ import { SetDuration } from "./SetDuratoin";
 import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
 import Typography from "./Typography";
 import { useUser } from "@/contexts/UserContext";
+import { successAlert } from "./ToastGroup";
 
 export const OfferModal: FC<{
   nft: NftTypes;
@@ -131,6 +132,7 @@ export const OfferModal: FC<{
       }
       setMakeOffer(false);
       closeOfferModal();
+      successAlert("Offered successfully!")
       setIsOffer(true);
     }
   };

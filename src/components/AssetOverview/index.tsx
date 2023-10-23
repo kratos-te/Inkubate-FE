@@ -28,6 +28,7 @@ import { date2Timestamp, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
 import { SALT, ZERO_ADDRESS, ZERO_HASH } from "@/config";
 import { INK_CONDUIT_KEY } from "@/utils/constants";
+import { successAlert } from "../ToastGroup";
 
 interface OverviewProps {
   nft: NftTypes;
@@ -106,6 +107,8 @@ const AssetOverview: FC<OverviewProps> = ({
         res?.transactionHash as `0x${string}`,
         listing.network
       );
+
+      successAlert("Canceled List")
 
       if (cancel) {
         setIsNoticed(false);

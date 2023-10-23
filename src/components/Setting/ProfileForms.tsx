@@ -10,9 +10,9 @@ import {
 } from "@/actions";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
-
 import { AddLargeIcon } from "../SvgIcons";
 import Typography from "../Typography";
+import { successAlert } from "../ToastGroup";
 
 const ProfileForms: FC = () => {
   const { register, handleSubmit } = useForm();
@@ -44,7 +44,6 @@ const ProfileForms: FC = () => {
     if (!event.target.files) return;
     const file = event.target.files[0];
     if (!file) return;
-
     setSelectedPfpFile(file);
     setChangePfp(URL.createObjectURL(file));
   };
@@ -131,6 +130,7 @@ const ProfileForms: FC = () => {
       getUserData();
       getProfileData();
       closeSettingModal();
+      successAlert("Updated succesfully!")
     } catch (error) {
       console.log("error", error);
     }

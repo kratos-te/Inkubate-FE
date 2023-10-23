@@ -18,6 +18,7 @@ interface DetailProps {
 }
 
 const ActivityDetail: FC<DetailProps> = ({ actData }) => {
+
   const tags = [
     {
       title: "sale",
@@ -27,11 +28,13 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
   ];
 
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1200);
   }, []);
+
   return (
     <>
       <div className="">
@@ -107,16 +110,16 @@ const ActivityDetail: FC<DetailProps> = ({ actData }) => {
                         <td>
                           <div className="py-[17px] flex items-center">
                             <img
-                              src={row.nft.image}
+                              src={row.nft?.image}
                               className="rounded-md mr-2.5 w-[40px] h-[40px]"
                               alt="nft Mini Image"
                             />
                             <div className="">
                               <Typography className="font-semibold leading-[1.5]">
-                                {row.nft.name}
+                                {row.nft?.name}
                               </Typography>
                               <Typography className="text-[14px] font-medium leading-[1.5] !text-dark-700 mt-0.5">
-                                {row.nft.collection.name}
+                                {row.nft?.collection?.name}
                               </Typography>
                             </div>
                           </div>

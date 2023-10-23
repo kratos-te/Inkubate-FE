@@ -7,6 +7,7 @@ import Typography from "./Typography";
 import ClickAwayComponent from "./ClickAwayComponent";
 
 export const AcceptModal: FC<ModalItem> = ({ nft }) => {
+
   const { image, name } = nft;
 
   const { closeAcceptModal, isOpenedAcceptModal } = useModal();

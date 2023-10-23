@@ -48,7 +48,6 @@ export async function updateProfile(updateData: {
     };
     const { bio, twitter, discord, facebook, reddit, avatarId, bannerId } =
       updateData;
-    console.log("update ");
     const response = await axios
       .patch(
         `${API_BASE_URL}/api/profile`,
