@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { FC, useState } from "react";
 import { useAccount } from "wagmi";
-
 import { buyNow } from "@/actions";
 import { SALT, ZERO_ADDRESS, ZERO_HASH } from "@/config";
 import { useModal } from "@/contexts/ModalContext";
@@ -13,6 +12,7 @@ import ClickAwayComponent from "./ClickAwayComponent";
 import { LoadingPad } from "./LoadingPad";
 import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
 import Typography from "./Typography";
+import { successAlert } from "./ToastGroup";
 
 interface BuyModalProps {
   nft: NftTypes;
@@ -26,11 +26,9 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
   const { address: walletAddress } = useAccount();
   const [isBuyStatus, setIsBuyStatus] = useState(false);
   const { buyListing } = useInkubate();
-
   const handleBuy = async () => {
     if (!walletAddress || !listing) return;
     setIsBuyStatus(true);
-
     const orders = {
       considerationToken: ZERO_ADDRESS,
       considerationIdentifier: "0",
@@ -52,9 +50,7 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
       signature: listing.signature,
     };
     console.log("orders", orders);
-
     const res = await buyListing(orders);
-
     const buy = await buyNow(
       listing.id,
       nft.id,
@@ -62,7 +58,7 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
       listing.network
     );
     console.log("buy", buy);
-
+    successAlert("Bought successfully!")
     setIsBuyStatus(false);
   };
 

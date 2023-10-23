@@ -2,7 +2,6 @@ import {
   MenuFavorIcon,
   MenuListIcon,
   MenuOfferIcon,
-  MenuSettingIcon,
   MenuUserIcon,
 } from "./components/SvgIcons";
 
@@ -31,10 +30,6 @@ export const HEADER_LINKS = [
   {
     title: "Stats",
     link: "/stats",
-  },
-  {
-    title: "Bridge",
-    link: "/bridge",
   },
   {
     title: "Launchpad",
@@ -111,12 +106,8 @@ export const DROPDOWN_LINKS = [
     title: "Offers",
     link: "/profile?tab=8",
   },
-  {
-    icon: MenuSettingIcon,
-    title: "Settings",
-    link: "/",
-  },
 ];
+
 export const DEMO_COLLECTIONS = [
   {
     title: "Optimistic",

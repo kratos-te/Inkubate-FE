@@ -23,15 +23,16 @@ import {
   EthIcon,
   HamburgerIcon,
   MenuLogoutIcon,
+  MenuSettingIcon,
   SearchIcon,
 } from "./SvgIcons";
 import Typography from "./Typography";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Header: FC = () => {
-  const { openWalletModal, closeWalletModal } = useModal();
+  const { openWalletModal, closeWalletModal, openSettingModal } = useModal();
   const [isNotificationModal, setIsNotificationModal] = useState(false);
-  const { username, userAddress, profile, userData } = useUser();
+  const { userAddress, profile, userData, getUserData, getProfileData } = useUser();
   const { logout, accessToken } = useAuth();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
@@ -72,13 +73,14 @@ const Header: FC = () => {
     setIsConvertModal(false);
   };
 
-  const handleOpenWrap = () => {
-    setIsConvertModal(true);
-    setIsShowDropdown(false);
-  };
-
   const handleNotification = () => {
     setIsNotificationModal(!isNotificationModal);
+  };
+
+  const handleEditProfile = async () => {
+    openSettingModal();
+    getProfileData();
+    getUserData();
   };
 
   return (
@@ -114,18 +116,16 @@ const Header: FC = () => {
               <>
                 <div className="flex border-2 border-[#EA4492] rounded-full">
                   <div
-                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full  text-white items-center cursor-pointer ${
-                      isEther ? "bg-[#EA4492]" : ""
-                    }`}
+                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full  text-white items-center cursor-pointer ${isEther ? "bg-[#EA4492]" : ""
+                      }`}
                     onClick={handelSetEther}
                   >
                     <EthIcon color="white" />
                     <p className="text-[12px] text-white font-bold"> ETH</p>
                   </div>
                   <div
-                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full text-white items-center cursor-pointer ${
-                      isBnb ? "bg-[#EA4492]" : ""
-                    }`}
+                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full text-white items-center cursor-pointer ${isBnb ? "bg-[#EA4492]" : ""
+                      }`}
                     onClick={handleSetBnb}
                   >
                     <BnbIcon />
@@ -135,9 +135,8 @@ const Header: FC = () => {
                 <IconButton className="relative" onClick={handleNotification}>
                   <AlarmIcon />
                   <BadgeIcon
-                    className={`${
-                      !NOTIFICATIONS ? "hidden" : "absolute right-0"
-                    }`}
+                    className={`${!NOTIFICATIONS ? "hidden" : "absolute right-0"
+                      }`}
                   />
                 </IconButton>
                 <ClickAwayComponent
@@ -166,6 +165,13 @@ const Header: FC = () => {
                             link={item.link}
                           />
                         ))}
+                        <button className="flex w-full space-x-4 cursor-pointer"
+                          onClick={handleEditProfile}>
+                          <MenuSettingIcon />
+                          <p className="text-white text-lg font-semibold">
+                            Settings
+                          </p>
+                        </button>
                         <button
                           className="flex w-full space-x-4 cursor-pointer"
                           onClick={handleDisconnect}
@@ -177,7 +183,7 @@ const Header: FC = () => {
                         </button>
                       </div>
                       <Link href="/profile" passHref>
-                        <div className="flex items-center p-6 gap-[14px] cursor-pointer">
+                        <div className="flex items-center p-6 gap-[14px] cursor-pointer bg-secondary rounded-b-2xl">
                           <Image
                             src={
                               profile?.avatar?.url ||
@@ -198,14 +204,6 @@ const Header: FC = () => {
                           </div>
                         </div>
                       </Link>
-                      <button
-                        className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
-                        onClick={handleOpenWrap}
-                      >
-                        <p className="text-white text-lg text-center">
-                          Add Funds
-                        </p>
-                      </button>
                     </div>
                   )}
                 </ClickAwayComponent>
@@ -272,7 +270,7 @@ const Header: FC = () => {
                       </button>
                     </div>
                     {isConnected && accessToken ? (
-                      <div className="flex items-center p-6 gap-[14px]">
+                      <div className="flex items-center p-6 gap-[14px] bg-secondary rounded-b-2xl">
                         <Image
                           src={
                             profile?.avatar?.url ||
@@ -284,29 +282,20 @@ const Header: FC = () => {
                           className="rounded-full cursor-pointer w-[44px] h-[44px]"
                         />
                         <div className="flex-col space-y-1">
-                          <p className="text-white text-lg">{username}</p>
+                          <p className="text-white text-lg"> {userData.username}</p>
                           <p className="text-white text-[16px]">
-                            {data?.formatted} ETH
+                            {data?.formatted.slice(0, 7)} ETH
                           </p>
                         </div>
                       </div>
                     ) : (
                       <button
-                        className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center"
+                          className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center bg-secondary rounded-b-2xl"
                         onClick={openWalletModal}
                       >
                         Connect Wallet
                       </button>
                     )}
-
-                    <button
-                      className="flex justify-center py-3 bg-[#EA4492] rounded-b-2xl cursor-pointer w-full"
-                      onClick={handleOpenWrap}
-                    >
-                      <p className="text-white text-lg text-center">
-                        Add Funds
-                      </p>
-                    </button>
                   </div>
                 </div>
               )}

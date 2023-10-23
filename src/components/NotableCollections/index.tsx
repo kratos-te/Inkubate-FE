@@ -6,8 +6,10 @@ import Loader from "./Loader";
 import { getAllCollections } from "@/actions";
 
 const NotableCollections = () => {
+
   const [loading, setIsLoading] = useState(true);
   const [collections, setCollections] = useState([]);
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -20,6 +22,7 @@ const NotableCollections = () => {
       setIsLoading(false);
     });
   }, []);
+
   return !loading ? (
     <section
       className="container max-w-full mx-0 xl:mx-auto py-20 xl:py-[90px] relative"

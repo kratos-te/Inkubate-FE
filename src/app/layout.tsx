@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToastContainer } from "react-toastify";
 import LaunchpadModal from "@/components/LaunchpadModal";
 import SettingModal from "@/components/SettingModal";
 import { ModalProvider } from "@/contexts/ModalContext";
@@ -10,6 +11,7 @@ import "@/styles/globals.scss";
 import "react-loading-skeleton/dist/skeleton.css";
 import WagmiProvider from "@/contexts/WagmiConext";
 import { AuthProvider } from "@/contexts/AuthContext";
+
 
 export const metadata: Metadata = {
   icons: [
@@ -56,6 +58,11 @@ export default function RootLayout({
                   <WalletModal />
                   <LaunchpadModal />
                   <SettingModal />
+                  <ToastContainer
+                    style={{ fontSize: 15 }}
+                    pauseOnFocusLoss={false}
+                    enableMultiContainer={false}
+                  />
                 </ModalProvider>
               </AuthProvider>
             </UserProvider>

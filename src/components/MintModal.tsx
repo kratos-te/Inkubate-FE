@@ -8,6 +8,7 @@ import { useErc721a } from "@/hooks/useErc721a";
 import { CollectionParam, LaunchpadParam } from "@/utils/types";
 import { createNft } from "@/actions/nft";
 import axios from "axios";
+import { successAlert } from "./ToastGroup";
 
 interface MintModalProps {
   collection: CollectionParam;
@@ -83,6 +84,7 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
       console.log(e);
     } finally {
       setMintStatus(false);
+      successAlert("Minted Successfully!")
     }
   };
 

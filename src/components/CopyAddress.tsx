@@ -1,8 +1,9 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import copy from "copy-to-clipboard";
 import Typography from "./Typography";
 import { CopiedIcon, CopyIcon } from "./SvgIcons";
+import { successAlert } from "./ToastGroup";
 
 interface Props {
   address: string;
@@ -17,6 +18,11 @@ const CopyAddress: FC<Props> = ({ address }) => {
       setCopied(false);
     }, 1000);
   };
+  useEffect(() => {
+    if (copied === true) {
+      successAlert("Address copied successfully!")
+    }
+  }, [copied])
   return (
     <div
       className="bg-[#434343] rounded-lg p-[6px] flex items-center"
