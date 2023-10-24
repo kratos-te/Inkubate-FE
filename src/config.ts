@@ -214,21 +214,21 @@ export const DEMO_COLLECTIONS = [
     cover: "/assets/images/cover-demo.png",
     verified: true,
   },
-  {
-    title: "Magic Eden",
-    collectionId: "magiceden",
-    totalSupply: 3900,
-    owners: 2400,
-    listed: 2.4,
-    sales: 1100,
-    pfp: "/assets/images/pfp-demo.gif",
-    floorPrice: 0.025,
-    volume: 31.2,
-    description:
-      "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
-    cover: "/assets/images/cover-demo.png",
-    verified: true,
-  },
+  // {
+  //   title: "Magic Eden",
+  //   collectionId: "magiceden",
+  //   totalSupply: 3900,
+  //   owners: 2400,
+  //   listed: 2.4,
+  //   sales: 1100,
+  //   pfp: "/assets/images/pfp-demo.gif",
+  //   floorPrice: 0.025,
+  //   volume: 31.2,
+  //   description:
+  //     "The first NFTs on Optimism. Optimistic Bunnies NFT is a collection of 5151 unique bunnies featuring 100+ traits. They have great personalities and are optimistic about the future. Adopt one and show off your awesome personality. Owner of the NFT has right to the image. Minting is open at https://www.optiland.xyz",
+  //   cover: "/assets/images/cover-demo.png",
+  //   verified: true,
+  // },
 ];
 
 export const DEMO_NFTS = [

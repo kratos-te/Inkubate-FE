@@ -13,7 +13,7 @@ interface ItemProps {
 }
 
 const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
-  const { name, avatar, banner, id, verified, launchpadId } = collection;
+  const { name, avatar, banner, id, verified, launchpadId, desc } = collection;
   const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
                   )}{" "}
                 </Typography>
                 <Typography className="font-[400] text-[12px] leading-[18px] mt-[3px] hidden xl:block">
-                  {/* {description.slice(0, 50)}... */}
+                  {desc.slice(0, 50)}...
                 </Typography>
                 <div className="flex justify-between mt-4">
                   <div className="w-1/2">

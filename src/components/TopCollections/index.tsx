@@ -10,7 +10,10 @@ import Loader from "./Loader";
 
 const TopCollections: FC = () => {
   const [range, setRange] = useState(1);
-  const collections = Array(12).fill(DEMO_COLLECTIONS[0]);
+
+  // const collections = Array(12).fill(DEMO_COLLECTIONS[0]);
+
+  const collections = DEMO_COLLECTIONS;
 
   const [loading, setIsLoading] = useState(true);
   useEffect(() => {

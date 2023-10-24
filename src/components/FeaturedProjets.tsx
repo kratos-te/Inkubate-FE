@@ -42,7 +42,7 @@ const FeaturedProjects: FC = () => {
           >
             Featured Projects
           </Typography>
-          <Link href={"/stats"}>
+          <Link href={"/launchpad"}>
             <Button>View All</Button>
           </Link>
         </div>
