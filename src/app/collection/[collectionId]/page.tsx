@@ -114,7 +114,7 @@ export default function CollectionPage() {
         }
       >
         <CoverBanner
-          src={collectionById?.banner.url || "/assets/images/cover-demo.png"}
+          src={collectionById?.banner?.url || "/assets/images/cover-demo.png"}
         />
         {collectionById && (
           <CollectionOverview

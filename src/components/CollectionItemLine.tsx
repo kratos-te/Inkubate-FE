@@ -26,9 +26,8 @@ const CollectionItemLine: FC<ItemProps> = ({ num, collection, className }) => {
   return (
     <Link href={`/collection/${collectionId}`}>
       <div
-        className={`flex justify-between items-center ${
-          className ? className : ""
-        }`}
+        className={`flex justify-between items-center ${className ? className : ""
+          }`}
       >
         <div className="flex items-center gap-5 max-w-[266px]">
           <div className="w-4 text-center">
@@ -53,21 +52,23 @@ const CollectionItemLine: FC<ItemProps> = ({ num, collection, className }) => {
             </Typography>
           </div>
         </div>
-        <div className="flex-col justify-between hidden gap-2 md:flex">
-          <Typography className="text-[12px] leading-[18px] mt-1.5 opacity-50">
-            Floor Price
-          </Typography>
-          <Typography className="font-bold text-[14px] lg:text-[20px]">
-            {floorPrice} ETH
-          </Typography>
-        </div>
-        <div className="flex flex-col justify-between gap-2">
-          <Typography className="text-[12px] leading-[18px] mt-1.5 opacity-50">
-            Volume
-          </Typography>
-          <Typography className="font-bold text-[14px] lg:text-[20px]">
-            {volume.toFixed(2)} ETH
-          </Typography>
+        <div className="flex justify-between items-center gap-20">
+          <div className="flex-col justify-between hidden gap-2 md:flex">
+            <Typography className="text-[12px] leading-[18px] mt-1.5 opacity-50">
+              Floor Price
+            </Typography>
+            <Typography className="font-bold text-[14px] lg:text-[20px]">
+              {floorPrice} ETH
+            </Typography>
+          </div>
+          <div className="flex flex-col justify-between gap-2">
+            <Typography className="text-[12px] leading-[18px] mt-1.5 opacity-50">
+              Volume
+            </Typography>
+            <Typography className="font-bold text-[14px] lg:text-[20px]">
+              {volume.toFixed(2)} ETH
+            </Typography>
+          </div>
         </div>
       </div>
     </Link>
