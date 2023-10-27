@@ -25,7 +25,7 @@ const Footer: FC = () => {
               Join Our Community
             </Typography>
             <div className="grid grid-cols-3 gap-6 mt-6">
-              <Link href={"#"}>
+              <Link href={"https://x.com/InkubateNft?t=dy17jht--7ehFL8XdW00Qg&s=35"}>
                 <TwitterIcon />
               </Link>
               <Link href={"#"}>

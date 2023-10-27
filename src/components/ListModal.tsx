@@ -35,7 +35,7 @@ export const ListModal: FC<{
   const signOrder = useSignSeaportOrder();
   const { address } = useAccount();
 
-  const { id, image, name, tokenId } = nft;
+  const { id, image, name, tokenId, collection } = nft;
   const { startDate, endDate, startTime, endTime } = useUser();
   const [makeList, setMakeList] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -184,11 +184,13 @@ export const ListModal: FC<{
                 }}
               />
               <div className="flex-col space-y-2">
-                <div className="flex items-left">
+                <div className="flex items-center gap-[4px]">
                   <p className="text-[24px] leading-[15px] font-bold lg:text-[24px] lg:leading-[1.5] text-[#B3B3B3] max-sm:text-[20px]">
-                    {"OG Dread Zero"}
+                    {collection?.name}
                   </p>
-                  <VerifiedIcon color="#EA4492" />
+                  {collection.verified &&
+                    <VerifiedIcon color="#EA4492" />
+                  }
                 </div>
                 <Typography
                   component="h1"
@@ -200,22 +202,20 @@ export const ListModal: FC<{
             </div>
             <div className="flex justify-between border border-white rounded-3xl mt-12 overflow-hidden">
               <div
-                className={`flex h-12 space-x-1 justify-center border-white py-2 w-1/2 rounded-r-full items-center cursor-pointer ${
-                  tab === "eth"
+                className={`flex h-12 space-x-1 justify-center border-white py-2 w-1/2 rounded-r-full items-center cursor-pointer ${tab === "eth"
                     ? "bg-white text-black"
                     : "bg-transparent text-white"
-                }`}
+                  }`}
                 onClick={handelSetEther}
               >
                 <EthIcon color={`${tab === "eth" ? "black" : "white"}`} />
                 <p className="text-[24px] font-bold"> ETH</p>
               </div>
               <div
-                className={`flex h-12 space-x-1 justify-center w-1/2 border-white py-2 px-4 rounded-l-full items-center cursor-pointer ${
-                  tab === "bnb"
+                className={`flex h-12 space-x-1 justify-center w-1/2 border-white py-2 px-4 rounded-l-full items-center cursor-pointer ${tab === "bnb"
                     ? "bg-white text-black"
                     : "bg-transparent text-white"
-                }`}
+                  }`}
                 onClick={handleSetBnb}
               >
                 <BnbIcon color={`${tab === "bnb" ? "black" : "white"}`} />

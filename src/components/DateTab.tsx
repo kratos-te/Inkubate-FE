@@ -2,27 +2,27 @@ import { FC, Dispatch, SetStateAction } from "react";
 import Typography from "./Typography";
 
 interface DateTabProps {
-  current: number;
-  setTab: Dispatch<SetStateAction<number>>;
+  current: string;
+  setTab: Dispatch<SetStateAction<string>>;
   className?: string;
 }
 
 const tabs = [
   {
     title: "1H",
-    value: 1,
+    value: "1H_VOLUME",
   },
   {
     title: "6H",
-    value: 6,
+    value: "6H_VOLUME",
   },
   {
     title: "24H",
-    value: 24,
+    value: "24H_VOLUME",
   },
   {
     title: "7D",
-    value: 168,
+    value: "7D_VOLUME",
   },
 ];
 

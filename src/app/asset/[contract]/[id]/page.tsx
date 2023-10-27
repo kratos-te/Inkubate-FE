@@ -398,7 +398,7 @@ export default function CollectionPage() {
                   </Typography>
                 </div>
                 <div className="flex justify-center gap-[25px] min-h-[390px] flex-wrap">
-                  {nftByCollection.map((item, index) => (
+                  {nftByCollection && nftByCollection.map((item, index) => (
                     <NftCard
                       key={index}
                       nft={item}

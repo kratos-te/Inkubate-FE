@@ -64,7 +64,7 @@ const NftGrid: FC<GridProps> = ({
         gridTemplateColumns: `repeat(${colCont}, minmax(0, 1fr))`,
       }}
     >
-      {!loading
+      {!loading && nftData
         ? nftData.map((item, key) => (
             <NftCard
               nft={item}

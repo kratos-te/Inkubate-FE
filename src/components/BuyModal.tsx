@@ -22,7 +22,7 @@ interface BuyModalProps {
 
 export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
   const { closeBuyModal, isOpenedBuyModal } = useModal();
-  const { image, name, tokenId, tokenAddress } = nft;
+  const { image, name, tokenId, tokenAddress, collection } = nft;
   const { address: walletAddress } = useAccount();
   const [isBuyStatus, setIsBuyStatus] = useState(false);
   const { buyListing } = useInkubate();
@@ -93,15 +93,17 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
               <div className="flex-col space-y-1">
                 <div className="flex items-center">
                   <p className="text-[24px] leading-[15px] font-semibold max-sm:text-[18px] lg:leading-[1.5] text-[#B3B3B3] font-poppins">
-                    {"OG Dread Zero"}
+                    {collection?.name}
                   </p>
-                  <VerifiedIcon color="#EA4492" />
+                  {collection?.verified &&
+                    <VerifiedIcon color="#EA4492" />
+                  }
                 </div>
                 <Typography
                   component="h1"
                   className="lg:font-readex font-poppins text-[36px] leading-[44px] max-sm:text-[24px] lg:leading-[35px] font-bold"
                 >
-                  {name}
+                  { }
                 </Typography>
               </div>
             </div>

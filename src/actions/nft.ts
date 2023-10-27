@@ -3,9 +3,15 @@ import { API_BASE_URL } from "@/config";
 import { checkAuthorization } from ".";
 import { NftParams } from "@/utils/types";
 
-export async function getNft(collectionId: string) {
+export async function getNft(
+  collectionId: string,
+  ascending?: boolean,
+  sort?: string
+) {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/nft/${collectionId}`);
+    const response = await axios.get(
+      `${API_BASE_URL}/api/nft/${collectionId}?sortAscending=${ascending}&sortBy=${sort}`
+    );
     console.log("nfts", response);
     return response;
   } catch (error) {

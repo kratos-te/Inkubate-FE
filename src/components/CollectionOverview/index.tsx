@@ -11,15 +11,16 @@ import {
 import Typography from "../Typography";
 import Image from "next/image";
 import Loader from "./Loader";
-import { CollectionParam, NftTypes } from "@/utils/types";
+import { CollectionParam, NftTypes, StatTypes } from "@/utils/types";
+import { weiToNum } from "@/utils/util";
 
 interface CollectionProps {
-  collection: CollectionParam;
+  stat: StatTypes;
   nfts: NftTypes[];
 }
 
-const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
-  const { name, avatar } = collection;
+const CollectionOverview: FC<CollectionProps> = ({ stat, nfts }) => {
+  const { collection } = stat;
   const [showMoreDec, setShowMoreDec] = useState(false);
 
   const [loading, setIsLoading] = useState(true);
@@ -39,7 +40,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
           }}
         >
           <div className="relative w-[186px] xl:w-[286px] h-[186px] xl:h-[286px] rounded-lg xl:rounded-[19px] overflow-hidden">
-            <Image src={avatar?.url} fill objectFit="cover" priority alt="" />
+            <Image src={collection?.avatar?.url} fill objectFit="cover" priority alt="" />
           </div>
         </div>
         <div className="">
@@ -47,7 +48,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
             component="h2"
             className="text-[28px] lg:text-[30px] font-bold font-poppins flex gap-2 items-center leading-[1]"
           >
-            <span>{name}</span>
+            <span>{collection?.name}</span>
             <VerifiedIcon color="#EA4492" className="w-7 h-7" />
           </Typography>
 
@@ -99,7 +100,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
                 Owners
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5]">
-                3.2K
+                {stat?.owners}
               </Typography>
             </div>
 
@@ -108,7 +109,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
                 Listed
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5]">
-                2.5%
+                {stat?.listedItems}
               </Typography>
             </div>
 
@@ -117,7 +118,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
                 Sales
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5]">
-                1.1K
+                {stat?.salesItems}
               </Typography>
             </div>
             <div className="flex flex-col-reverse lg:flex-col">
@@ -125,7 +126,7 @@ const CollectionOverview: FC<CollectionProps> = ({ collection, nfts }) => {
                 Floor price
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5] whitespace-nowrap">
-                0.024 ETH
+                {weiToNum(stat?.floorPrice).toFixed(2)} ETH
               </Typography>
             </div>
           </div>

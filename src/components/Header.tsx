@@ -162,7 +162,7 @@ const Header: FC = () => {
                             key={key}
                             icon={<item.icon />}
                             title={item.title}
-                            link={item.link}
+                            link={`/profile/${userData.id}?tab=1`}
                           />
                         ))}
                         <button className="flex w-full space-x-4 cursor-pointer"
@@ -182,7 +182,7 @@ const Header: FC = () => {
                           </p>
                         </button>
                       </div>
-                      <Link href="/profile" passHref>
+                      <Link href={`/profile/${userData.id}`} passHref>
                         <div className="flex items-center p-6 gap-[14px] cursor-pointer bg-secondary rounded-b-2xl">
                           <Image
                             src={

@@ -16,25 +16,30 @@ import Typography from "@/components/Typography";
 import SortDropdown from "@/components/SortDropdown";
 import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
-import { getNft } from "@/actions/nft";
+import { getNft, getNftByOne } from "@/actions/nft";
 import {
   ActivityTypes,
   CollectionParam,
   ListingTypes,
   NftTypes,
+  StatTypes,
 } from "@/utils/types";
 import { getCollectionById, getListByNft } from "@/actions";
 import { getActivityByCollection } from "@/actions/activity";
 import { BuyModal } from "@/components/BuyModal";
+import { getStatByCollectionId } from "@/actions/stat";
 
 export default function CollectionPage() {
   const router = useRouter();
   const query = useSearchParams();
   const [sort, setSort] = useState("p-l-h");
+  const [ascending, setAscending] = useState(false);
   const [isDense, setIsDense] = useState(true);
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
+  const [nftOne, setNftOne] = useState<NftTypes>();
   const [listByNft, setListByNft] = useState<ListingTypes>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
+  const [stat, setStat] = useState<StatTypes>();
   const [actByCollection, setActByCollection] = useState<ActivityTypes[]>([]);
   const [_activeListing, setActiveListing] = useState<NftTypes | undefined>(
     undefined
@@ -70,16 +75,27 @@ export default function CollectionPage() {
 
   useEffect(() => {
     const getNftByCollection = async () => {
-      const nfts = await getNft(collectionId);
+      const nfts = await getNft(collectionId, ascending, sort);
       const collection = await getCollectionById(collectionId);
       const activity = await getActivityByCollection(collectionId);
-
+      const getStat = await getStatByCollectionId(collectionId);
+      const nft = await getNftByOne("0", collection?.data?.address)
       setNftByCollection(nfts?.data);
       setCollectionById(collection?.data);
       setActByCollection(activity?.data);
+      setNftOne(nft?.data)
+      setStat(getStat?.data)
     };
     getNftByCollection();
-  }, [collectionId]);
+  }, [ascending, collectionId, sort]);
+
+  useEffect(() => {
+    const getNfts = async () => {
+      const nfts = await getNft(collectionId, ascending, sort)
+      setNftByCollection(nfts?.data);
+    }
+    getNfts();
+  }, [ascending, collectionId, sort])
 
   const selectActiveNftIdx = (nft: NftTypes) => {
     setActiveListing(nft);
@@ -116,9 +132,9 @@ export default function CollectionPage() {
         <CoverBanner
           src={collectionById?.banner?.url || "/assets/images/cover-demo.png"}
         />
-        {collectionById && (
+        {collectionById && stat && (
           <CollectionOverview
-            collection={collectionById}
+            stat={stat}
             nfts={nftByCollection}
           />
         )}
@@ -166,7 +182,7 @@ export default function CollectionPage() {
               />
             </div>
             <div className="hidden lg:block">
-              <SortDropdown value={sort} setValue={setSort} />
+              <SortDropdown value={sort} setValue={setSort} setAscending={setAscending} />
             </div>
             <div className="flex rounded-lg bg-dark-400 items-center h-11 overflow-hidden">
               <button
@@ -189,8 +205,8 @@ export default function CollectionPage() {
             }`}
           >
             <div className="hidden lg:block w-[300px]">
-              {nftByCollection[0] && (
-                <CollectionFilter nft={nftByCollection[0]} />
+              {nftOne && (
+                <CollectionFilter nft={nftOne} />
               )}
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">

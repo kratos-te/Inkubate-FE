@@ -152,6 +152,8 @@ export function ModalProvider({ children }: ModalProviderProps) {
     document.body.classList.add("modal-open");
   };
   const closeCreateModal = () => {
+    console.log("====== Closed!!!!!!!==========")
+
     setIsOpenedCreateModal(false);
     document.body.classList.remove("modal-open");
   };

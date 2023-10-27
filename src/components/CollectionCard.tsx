@@ -1,18 +1,19 @@
 import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { CollectionParam, LaunchpadParam, StatTypes } from "@/utils/types";
 import Typography from "./Typography";
 import { VerifiedIcon } from "./SvgIcons";
 import { getLaunchpadById } from "@/actions";
 import { weiToNum } from "@/utils/util";
 
 interface ItemProps {
+  item: StatTypes;
   collection: CollectionParam;
   className?: string;
 }
 
-const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
+const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
   const { name, avatar, banner, id, verified, launchpadId, desc } = collection;
   const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
 
@@ -29,9 +30,8 @@ const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
       className="inline-block min-w-[240px] xl:min-w-[360px]"
     >
       <div
-        className={`bg-dark-200 rounded-xl shadow-card relative ${
-          className ? className : ""
-        }`}
+        className={`bg-dark-200 rounded-xl shadow-card relative ${className ? className : ""
+          }`}
       >
         <div className="relative overflow-hidden rounded-t-xl h-[124px] xl:h-[235px]">
           {banner ? (
@@ -87,7 +87,7 @@ const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
                     </Typography>
                     {launchpadById && (
                       <Typography className="font-bold leading-[1.5] text-[12px] xl:text-[14px]">
-                        {weiToNum(launchpadById?.mintPrice)} ETH
+                        {weiToNum(item?.floorPrice)} ETH
                       </Typography>
                     )}
                   </div>
@@ -96,7 +96,7 @@ const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
                       Total Volume
                     </Typography>
                     <Typography className="font-bold leading-[1.5] text-[12px] xl:text-[14px]">
-                      227 ETH
+                      {weiToNum(item?.volume).toFixed(2)} ETH
                     </Typography>
                   </div>
                 </div>

@@ -9,7 +9,7 @@ export const formatNumberToK = (value: number): string => {
     const scaledValue = value / Math.pow(10, suffixIndex * 3);
     return scaledValue.toFixed(1) + suffixes[suffixIndex];
   }
-  return value.toString();
+  return value?.toString();
 };
 
 export const numToWei = (value: string | number): string => {

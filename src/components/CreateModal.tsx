@@ -13,6 +13,7 @@ import { SetDuration } from "./SetDuratoin";
 import { InputData } from "@/utils/types";
 import { date2UTC, numToWei } from "@/utils/util";
 import { LoadingPad } from "./LoadingPad";
+import { errorAlert, successAlert } from "./ToastGroup";
 
 export const CreateModal: FC = () => {
   const { closeCreateModal, isOpenedCreateModal } = useModal();
@@ -27,7 +28,10 @@ export const CreateModal: FC = () => {
   const [addressList, setAddressList] = useState<InputData[]>([]);
   const [ownerList, setOwnerList] = useState<InputData[]>([]);
   const [feeList, setFeeList] = useState<InputData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isSpinLoading, setIsSpinLoading] = useState(false);
+
+  const startDay = date2UTC(startDate, startTime);
+  const endDay = date2UTC(endDate, endTime);
 
   const handleInputChange = (
     event: any,
@@ -86,7 +90,7 @@ export const CreateModal: FC = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      setIsLoading(false);
+      setIsSpinLoading(true);
       const values: Record<string, string> = {};
       for (const key in data) {
         const value = data[key];
@@ -103,12 +107,16 @@ export const CreateModal: FC = () => {
         url: "",
         fileEntityId: "",
       };
+      console.log("spin!!!!!!!!!!")
 
       if (selectedNftItemFile) {
+        console.log("!!!!!!!!!!!!!!!saving!!!!!!!!!!")
+
         const createNftItem = await createPhoto(selectedNftItemFile);
         nftItem = createNftItem?.data;
       }
       if (selectedCoverFile) {
+
         const createCoverImage = await createPhoto(selectedCoverFile);
         coverImage = createCoverImage?.data;
       }
@@ -126,10 +134,9 @@ export const CreateModal: FC = () => {
         const supply = parseInt(values.totalSupply);
         const maxPerTx = parseInt(values.maxPerTx);
         const maxPerWallet = parseInt(values.maxPerWallet);
-        const startDay = date2UTC(startDate, startTime);
-        const endDay = date2UTC(endDate, endTime);
 
-        await createLaunchpad({
+
+        const result = await createLaunchpad({
           name: values.name,
           symbol: values.symbol,
           desc: values.description,
@@ -153,16 +160,24 @@ export const CreateModal: FC = () => {
           reddit: values.reddit,
           collectionUri: values.collectionUri,
         });
+        if (result?.data.status === "500") {
+          errorAlert("Failed creating LaunchPad!")
+          setIsSpinLoading(false);
+        } else {
+          successAlert("Created Launchpad successfully!")
+          console.log("====next=====")
+          setIsSpinLoading(false);
+          closeCreateModal();
+        }
       }
-      setIsLoading(true);
-      closeCreateModal();
     } catch (error) {
+
       console.log("error", error);
     }
   };
 
   useEffect(() => {
-    if (isLoading === true) {
+    if (isSpinLoading === false) {
       closeCreateModal();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -182,7 +197,7 @@ export const CreateModal: FC = () => {
             <CloseCircleIcon className="group-hover:rotate-90 duration-300 w-[40px] h-[40px]" />
           </button>
           <div className="modal_body text-center">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit((data) => onSubmit(data))}>
               <div className="flex gap-7 xl:gap-[98px] lg:px-4 pt-11 xl:pt-14  flex-col lg:flex-row">
                 <div className="w-full lg:w-1/2 flex flex-col gap-6 lg:gap-7">
                   <div className="flex-col">
@@ -204,7 +219,7 @@ export const CreateModal: FC = () => {
                             src={nftItem}
                             width={209}
                             height={209}
-                            className="w-[209px] lg:w-[209px] h-[209px] lg:h-[209px] rounded-xl absolute"
+                            className="w-[209px] lg:w-[209px] h-[209px] lg:h-[209px] rounded-xl absolute object-cover"
                             alt="Selected File Preview"
                           />
                         )}
@@ -348,35 +363,35 @@ export const CreateModal: FC = () => {
                     </Typography>
                     {addressList.length > 0
                       ? addressList.map((_, index) => (
-                          <>
-                            <div key={index} className="flex gap-2 ">
-                              <input
-                                className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[85%] rounded-xl mt-2 p-[14px] placeholder:text-third"
-                                placeholder="Enter a name for the collection"
-                                onChange={(event) =>
-                                  handleInputChange(
-                                    event,
-                                    index,
-                                    ownerList,
-                                    setOwnerList
-                                  )
-                                }
-                              />
-                              <input
-                                className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[15%] rounded-xl mt-2 p-[14px] placeholder:text-third"
-                                placeholder="0.00%"
-                                onChange={(event) =>
-                                  handleInputChange(
-                                    event,
-                                    index,
-                                    feeList,
-                                    setFeeList
-                                  )
-                                }
-                              />
-                            </div>
-                          </>
-                        ))
+                        <>
+                          <div key={index} className="flex gap-2 ">
+                            <input
+                              className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[85%] rounded-xl mt-2 p-[14px] placeholder:text-third"
+                              placeholder="Enter a name for the collection"
+                              onChange={(event) =>
+                                handleInputChange(
+                                  event,
+                                  index,
+                                  ownerList,
+                                  setOwnerList
+                                )
+                              }
+                            />
+                            <input
+                              className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[15%] rounded-xl mt-2 p-[14px] placeholder:text-third"
+                              placeholder="0.00%"
+                              onChange={(event) =>
+                                handleInputChange(
+                                  event,
+                                  index,
+                                  feeList,
+                                  setFeeList
+                                )
+                              }
+                            />
+                          </div>
+                        </>
+                      ))
                       : ""}
 
                     <button
@@ -482,7 +497,7 @@ export const CreateModal: FC = () => {
                   </div>
                 </div>
               </div>
-              {!isLoading && (
+              {isSpinLoading && (
                 <div className="flex justify-center">
                   <LoadingPad
                     title="Processing"
@@ -505,7 +520,7 @@ export const CreateModal: FC = () => {
           </div>
         </div>
       </div>
-      <CalendarModal />
+      {/* <CalendarModal /> */}
     </div>
   );
 };
