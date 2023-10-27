@@ -75,7 +75,8 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
     setCurrMonth(format(firstDayOfNextMonth, "MMM-yyyy"));
   };
 
-  const handleSetDate = (day: Date) => {
+  const handleSetDay = (day: Date) => {
+    console.log("selected Day============")
     const today = new Date();
 
     if (day > today) {
@@ -99,7 +100,6 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
 
   const handleSetStartTime = (e: any) => {
     setStartTime(e.target.value);
-    console.log(format(new Date(), "kk:mm"));
   };
 
   const handleSetEndTime = (e: any) => {
@@ -123,16 +123,9 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
     const today = new Date();
     if (format(today, "dd") === format(startDay, "dd")) {
       if (getTime(today) > getTime(new Date(date2UTC(startDay, startTime)))) {
-        console.log("today", getTime(today));
-        console.log(
-          "starttime",
-          getTime(new Date(date2UTC(startDay, startTime)))
-        );
         setIsValidTime(false);
-        console.log("small");
       } else {
         setIsValidTime(true);
-        console.log("big");
       }
     } else {
       setIsValidTime(true);
@@ -175,14 +168,12 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
                 Start Time
               </Typography>
               <div
-                className={` mt-2 rounded-[8px] ${
-                  !isValidTime ? " border-secondary border-[2px]" : ""
-                }`}
+                className={` mt-2 rounded-[8px] ${!isValidTime ? " border-secondary border-[2px]" : ""
+                  }`}
               >
                 <input
-                  className={`bg-[#616161] text-[14px] text-white w-full rounded-[8px] p-[14px] placeholder:text-third ${
-                    !isValidTime ? " border-secondary border-1" : ""
-                  } `}
+                  className={`bg-[#616161] text-[14px] text-white w-full rounded-[8px] p-[14px] placeholder:text-third ${!isValidTime ? " border-secondary border-1" : ""
+                    } `}
                   placeholder={format(new Date(), "kk:mm")}
                   onChange={handleSetStartTime}
                 />
@@ -238,25 +229,24 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
           {daysInMonth.map((day, idx) => {
             return (
               <div key={idx} className={colStartClasses[getDay(day)]}>
-                <button
-                  className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[16px] md:text-[20px] font-semibold h-9 w-9 md:h-12 md:w-12 rounded-md md:rounded-xl ${
-                    isToday(day)
-                      ? " bg-secondary text-white"
-                      : "text-[#CAC7C7] hover:bg-[#666666] hover:text-white active:bg-[#666666]"
-                  }  ${
-                    format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""
-                  } ${
-                    format(startDay, "MM/dd/yyyy") <=
+                <div
+                  className={`cursor-pointer disabled:cursor-not-allowed flex items-center justify-center text-[16px] md:text-[20px] font-semibold h-9 w-9 md:h-12 md:w-12 rounded-md md:rounded-xl ${isToday(day)
+                    ? " bg-secondary text-white"
+                    : "text-[#CAC7C7] hover:bg-[#666666] hover:text-white active:bg-[#666666]"
+                    }  ${format(day, "MMM") !== currMonth.slice(0, 3) ? "hidden" : ""
+                    } ${format(startDay, "MM/dd/yyyy") <=
                       format(day, "MM/dd/yyyy") &&
                     format(day, "MM/dd/yyyy") <= format(endDay, "MM/dd/yyyy")
                       ? "bg-[#666666]"
                       : ""
-                  }`}
-                  onClick={() => handleSetDate(day)}
-                  disabled={day < today}
+                    }`}
+                  onClick={() => handleSetDay(day)}
+                  style={{
+                    pointerEvents: day < today ? "none" : "all"
+                  }}
                 >
                   {format(day, "d")}
-                </button>
+                </div>
               </div>
             );
           })}

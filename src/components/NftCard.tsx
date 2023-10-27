@@ -201,13 +201,13 @@ const NftCard: FC<ItemProps> = ({
               <>
                 <button
                   className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-bl-xl font-bold text-white w-[calc(100%-61px)] duration-300"
-                  onClick={handleBuy}
+                    onClick={handleSell}
                 >
                   {listByNft?.nftId === id ? "Cancel List" : "Sell Now"}
                 </button>
                 <button
                   className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300"
-                  onClick={handleBuy}
+                    onClick={handleSell}
                 >
                   <AddIcon />
                 </button>

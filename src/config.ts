@@ -10,6 +10,10 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
   ? process.env.NEXT_PUBLIC_API_BASE_URL
   : "https://marketapi.5thweb.io";
 
+export const API_STAT_URL = process.env.NEXT_PUBLIC_API_STAT_URL
+  ? process.env.NEXT_PUBLIC_API_STAT_URL
+  : "https://marketapi.5thweb.io";
+
 export const INFURN_APU_KEY = "dfb6591f687e4a37b958417070e73dab";
 
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -247,47 +251,58 @@ export const DEMO_NFTS = [
 export const SORT_LIST = [
   {
     title: "Price low to high",
-    value: "p-l-h",
+    value: "",
+    ascending: true,
   },
   {
     title: "Price high to low",
-    value: "p-h-l",
+    value: "",
+    ascending: false,
   },
   {
     title: "Recently listed",
-    value: "rl",
+    value: "LISTING_DATE",
+    ascending: false,
   },
   {
     title: "Best offer",
-    value: "be",
+    value: "BEST_OFFER",
+    ascending: false,
   },
   {
     title: "Highest last sale",
-    value: "hls",
+    value: "LAST_SALE_PRICE",
+    ascending: false,
   },
   {
     title: "Recently sold",
-    value: "rs",
+    value: "LAST_SALE_DATE",
+    ascending: false,
   },
   {
     title: "Recently created",
-    value: "rc",
+    value: "CREATED_DATE",
+    ascending: false,
   },
   {
     title: "Most viewed",
-    value: "mv",
+    value: "VIEWER_COUNT",
+    ascending: false,
   },
   {
     title: "Oldest",
-    value: "o",
+    value: "CREATED_DATE",
+    ascending: true,
   },
   {
     title: "Most favorited",
-    value: "mf",
+    value: "FAVOURITE_COUNT",
+    ascending: false,
   },
   {
     title: "Ending soon",
-    value: "es",
+    value: "EXPIRATION_DATE",
+    ascending: true,
   },
   {
     title: "Recently received",

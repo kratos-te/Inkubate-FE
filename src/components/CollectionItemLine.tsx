@@ -1,27 +1,24 @@
 import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatNumberToK } from "@/utils/util";
-import { CollectionItem } from "@/utils/types";
+import { formatNumberToK, weiToNum } from "@/utils/util";
+import { CollectionItem, CollectionParam, StatTypes } from "@/utils/types";
 import Typography from "./Typography";
 import { VerifiedIcon } from "./SvgIcons";
 
 interface ItemProps {
   num: number;
-  collection: CollectionItem;
+  item: StatTypes;
   className?: string;
 }
 
-const CollectionItemLine: FC<ItemProps> = ({ num, collection, className }) => {
+const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
   const {
-    title,
     collectionId,
-    totalSupply,
-    pfp,
+    collection,
     floorPrice,
     volume,
-    verified,
-  } = collection;
+  } = item;
 
   return (
     <Link href={`/collection/${collectionId}`}>
@@ -36,19 +33,19 @@ const CollectionItemLine: FC<ItemProps> = ({ num, collection, className }) => {
             </Typography>
           </div>
           <Image
-            src={pfp}
+            src={collection?.avatar?.url}
             width={50}
             height={50}
             objectFit="cover"
             className="rounded-full"
-            alt={title}
+            alt={collection?.name}
           />
           <div className="flex flex-col justify-between w-[calc(100%-66px)]">
             <Typography className="font-bold leading-[1.5] flex items-center text-[14px] lg:text-[20px]">
-              {title} {verified && <VerifiedIcon className="ml-1" />}
+              {collection?.name} {collection?.verified && <VerifiedIcon className="ml-1" />}
             </Typography>
             <Typography className="text-[12px] leading-[18px] mt-1.5">
-              {formatNumberToK(totalSupply)} Items
+              {formatNumberToK(collection?.supply)} Items
             </Typography>
           </div>
         </div>
@@ -58,16 +55,18 @@ const CollectionItemLine: FC<ItemProps> = ({ num, collection, className }) => {
               Floor Price
             </Typography>
             <Typography className="font-bold text-[14px] lg:text-[20px]">
-              {floorPrice} ETH
+              {weiToNum(floorPrice)} ETH
             </Typography>
           </div>
           <div className="flex flex-col justify-between gap-2">
             <Typography className="text-[12px] leading-[18px] mt-1.5 opacity-50">
               Volume
             </Typography>
+
             <Typography className="font-bold text-[14px] lg:text-[20px]">
-              {volume.toFixed(2)} ETH
+              {weiToNum(volume).toFixed(2)} ETH
             </Typography>
+
           </div>
         </div>
       </div>

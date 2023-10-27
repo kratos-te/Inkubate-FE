@@ -16,7 +16,7 @@ export type CollectionItem = {
   listed: number;
   sales: number;
   pfp: string;
-  floorPrice: number;
+  floorPrice: string;
   volume: number;
   description: string;
   cover: string;
@@ -143,6 +143,7 @@ export interface CollectionParam {
   avatar: PhotoItem;
   bannerId: string;
   banner: PhotoItem;
+  supply: number;
   mintPrice: bigint;
   launchpadId: number;
   network: string;
@@ -340,6 +341,16 @@ export type ActivityTypes = {
   price: bigint;
 };
 
+export type StatTypes = {
+  id: string;
+  collectionId: string;
+  collection: CollectionParam;
+  owners: number;
+  listedItems: number;
+  salesItems: number;
+  floorPrice: bigint;
+  volume: bigint;
+};
 enum BasicOrderType {
   ETH_TO_ERC721_FULL_OPEN,
   ETH_TO_ERC721_PARTIAL_OPEN,

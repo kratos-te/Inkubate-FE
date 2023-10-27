@@ -1,19 +1,23 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { DEMO_COLLECTIONS } from "@/config";
+// import { DEMO_COLLECTIONS } from "@/config";
 import Link from "next/link";
 import Typography from "../Typography";
 import CollectionItemLine from "../CollectionItemLine";
 import Button from "../Button";
 import DateTab from "../DateTab";
 import Loader from "./Loader";
+import { getTopCollection } from "@/actions/stat";
+import { StatTypes } from "@/utils/types";
 
 const TopCollections: FC = () => {
-  const [range, setRange] = useState(1);
+  const [range, setRange] = useState("1H_VOLUME");
+  const [topCollections, setTopCollections] = useState<StatTypes[]>([])
+
 
   // const collections = Array(12).fill(DEMO_COLLECTIONS[0]);
 
-  const collections = DEMO_COLLECTIONS;
+  // const collections = DEMO_COLLECTIONS;
 
   const [loading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -21,6 +25,15 @@ const TopCollections: FC = () => {
       setIsLoading(false);
     }, 1200);
   }, []);
+
+  useEffect(() => {
+    console.log("range", range)
+    const getTopCollections = async () => {
+      const getData = await getTopCollection(range)
+      setTopCollections(getData?.data)
+    }
+    getTopCollections()
+  }, [range])
 
   if (!loading) {
     return (
@@ -37,11 +50,11 @@ const TopCollections: FC = () => {
         <div className="mt-[42px]">
           <div className="grid xl:grid-cols-2 gap-[100px]">
             <div className="relative grid grid-cols-1 gap-7">
-              {collections.map(
+              {topCollections && topCollections.map(
                 (item, index) =>
                   index < 6 && (
                     <CollectionItemLine
-                      collection={item}
+                      item={item}
                       num={index + 1}
                       key={index}
                     />
@@ -56,11 +69,11 @@ const TopCollections: FC = () => {
               />
             </div>
             <div className="relative hidden grid-cols-1 xl:grid gap-7">
-              {collections.map(
+              {topCollections && topCollections.map(
                 (item, index) =>
                   index >= 6 && (
                     <CollectionItemLine
-                      collection={item}
+                      item={item}
                       num={index + 1}
                       key={index}
                     />

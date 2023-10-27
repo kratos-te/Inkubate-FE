@@ -6,12 +6,13 @@ import Button from "./Button";
 import Link from "next/link";
 import CollectionCard from "./CollectionCard";
 import CollecionCardLoader from "./Common/CollecionCardLoader";
-import { CollectionParam } from "@/utils/types";
+import { CollectionParam, StatTypes } from "@/utils/types";
 import { getAllCollections, getLaunchpad } from "@/actions";
+import { getFeature } from "@/actions/stat";
 
 const FeaturedProjects: FC = () => {
   const pathname = usePathname();
-  const [collections, setCollections] = useState<CollectionParam[]>([]);
+  const [collections, setCollections] = useState<StatTypes[]>([]);
   const [loading, setIsLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -20,16 +21,11 @@ const FeaturedProjects: FC = () => {
   }, []);
 
   useEffect(() => {
-    const launchPad = async () => {
-      if (pathname === "/") {
-        const launchpadData = await getLaunchpad();
-        const collectionData = await getAllCollections();
-        if (launchpadData) {
-          setCollections(collectionData);
-        }
-      }
+    const getFeatureCollection = async () => {
+      const getData = await getFeature()
+      setCollections(getData?.data)
     };
-    launchPad();
+    getFeatureCollection();
   }, [pathname]);
 
   return (
@@ -49,7 +45,7 @@ const FeaturedProjects: FC = () => {
         <div className="flex xl:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-4 xl:gap-x-[30px] gap-y-10 mt-8 xl:mt-9 overflow-x-auto pb-8 xl:pb-0 px-6">
           {!loading
             ? collections.map((item, key) => (
-                <CollectionCard collection={item} key={key} />
+              <CollectionCard item={item} collection={item.collection} key={key} />
               ))
             : Array.from({ length: 8 }).map((_, key) => (
                 <CollecionCardLoader key={key} />

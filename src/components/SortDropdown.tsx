@@ -5,12 +5,18 @@ import { SORT_LIST } from "@/config";
 interface DropdownProps {
   value: string;
   setValue: Function;
+  setAscending: Function;
   className?: string;
 }
-const SortDropdown: FC<DropdownProps> = ({ value, setValue, className }) => {
+const SortDropdown: FC<DropdownProps> = ({ value, setValue, setAscending, className }) => {
+
+  const handelSetData = (item: any) => {
+    setValue(item.value);
+    setAscending(item.ascending)
+  }
   return (
     <div
-      className={` ${className} w-[177px] h-11 group bg-dark-400 rounded-lg relative z-20 text-[14px]`}
+      className={`${className} w-[177px] h-11 group bg-dark-400 rounded-lg relative z-20 text-[14px]`}
     >
       <div className="flex items-center px-3 text-left text-white h-11 font-readex">
         {SORT_LIST.find((item) => item.value === value)?.title}
@@ -25,7 +31,7 @@ const SortDropdown: FC<DropdownProps> = ({ value, setValue, className }) => {
             (item, key) =>
               item.value !== value && (
                 <button
-                  onClick={() => setValue(item.value)}
+                  onClick={() => handelSetData(item)} 
                   key={key}
                   className="px-3 text-left hover:bg-dark-500 h-11 w-full duration-300 font-readex"
                 >
