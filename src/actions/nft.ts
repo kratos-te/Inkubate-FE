@@ -6,14 +6,21 @@ import { NftParams } from "@/utils/types";
 export async function getNft(
   collectionId: string,
   ascending?: boolean,
-  sort?: string
+  sortBy?: string,
+  startId?: number,
+  offset?: number,
+  limit?: number
 ) {
   try {
-    const response = await axios.get(
-      `${API_BASE_URL}/api/nft/${collectionId}?sortAscending=${ascending}&sortBy=${sort}`
-    );
+    const query = `${API_BASE_URL}/api/nft/${collectionId}?sortAscending=${ascending}${
+      sortBy ? "&sortBy=" + sortBy : ""
+    }${startId ? "&startId=" + startId : ""}${
+      offset ? "&offset=" + offset : ""
+    }${limit ? "&limit=" + limit : ""}`;
+
+    const response = await axios.get(query);
     console.log("nfts", response);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

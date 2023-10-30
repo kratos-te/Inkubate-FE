@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import CollectionCard from "../CollectionCard";
 import Typography from "../Typography";
 import Loader from "./Loader";
-import { getAllCollections } from "@/actions";
 import { getNotable } from "@/actions/stat";
 import { StatTypes } from "@/utils/types";
 

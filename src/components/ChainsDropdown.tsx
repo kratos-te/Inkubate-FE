@@ -1,13 +1,13 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import {
   ArrowDownRoundIcon,
-  AvalancheIcon,
-  BaseIcon,
+  // AvalancheIcon,
+  // BaseIcon,
   BnbIcon,
   EthereumWhiteIcon,
-  OptimismIcon,
-  PolygonIcon,
-  SolanaIcon,
+  // OptimismIcon,
+  // PolygonIcon,
+  // SolanaIcon,
 } from "./SvgIcons";
 
 interface DropdownProps {
@@ -56,16 +56,16 @@ const chains = [
     value: "all",
     icon: <></>,
   },
-  {
-    title: "Avalanche",
-    value: "43114",
-    icon: <AvalancheIcon />,
-  },
-  {
-    title: "Base",
-    value: "8453",
-    icon: <BaseIcon />,
-  },
+  // {
+  //   title: "Avalanche",
+  //   value: "43114",
+  //   icon: <AvalancheIcon />,
+  // },
+  // {
+  //   title: "Base",
+  //   value: "8453",
+  //   icon: <BaseIcon />,
+  // },
   {
     title: "BNB Chain",
     value: "56",
@@ -76,19 +76,19 @@ const chains = [
     value: "1",
     icon: <EthereumWhiteIcon />,
   },
-  {
-    title: "Optimism",
-    value: "op",
-    icon: <OptimismIcon />,
-  },
-  {
-    title: "Polygon",
-    value: "137",
-    icon: <PolygonIcon />,
-  },
-  {
-    title: "Solana",
-    value: "sol",
-    icon: <SolanaIcon />,
-  },
+  // {
+  //   title: "Optimism",
+  //   value: "op",
+  //   icon: <OptimismIcon />,
+  // },
+  // {
+  //   title: "Polygon",
+  //   value: "137",
+  //   icon: <PolygonIcon />,
+  // },
+  // {
+  //   title: "Solana",
+  //   value: "sol",
+  //   icon: <SolanaIcon />,
+  // },
 ];

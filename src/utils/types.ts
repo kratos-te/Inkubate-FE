@@ -17,7 +17,7 @@ export type CollectionItem = {
   sales: number;
   pfp: string;
   floorPrice: string;
-  volume: number;
+  volume: string;
   description: string;
   cover: string;
   verified?: boolean;
@@ -34,10 +34,9 @@ export type NftItem = {
   favorited: boolean;
 };
 export type StatsItem = {
-  rank: number;
+  index: number;
   collection: CollectionItem;
-  volumeH24: number;
-  volumeD7: number;
+  liquidity: number;
 };
 
 export type ModalItem = {
@@ -377,3 +376,28 @@ enum BasicOrderType {
   ERC1155_TO_ERC20_FULL_RESTRICTED,
   ERC1155_TO_ERC20_PARTIAL_RESTRICTED,
 }
+
+export enum PeriodType {
+  HOUR = "HOUR",
+  SIX_HOURS = "SIX_HOURS",
+  DAY = "DAY",
+  WEEK = "WEEK",
+  ALL = "ALL",
+}
+
+export enum StatsSortBy {
+  VOLUME = "VOLUME",
+  LIQUIDITY = "LIQUIDITY",
+  FLOOR = "FLOOR",
+  SALES = "SALES",
+  ITEMS = "ITEMS",
+  LISTED = "LISTED",
+  OWNERS = "OWNERS",
+}
+
+export enum SortType {
+  ASC = "asc",
+  DESC = "desc",
+}
+
+export type CollectionStats = Omit<StatsItem, "index">;

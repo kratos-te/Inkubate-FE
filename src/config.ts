@@ -6,9 +6,10 @@ import {
 } from "./components/SvgIcons";
 
 // Define your backend API base URL in your environment variables
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
-  ? process.env.NEXT_PUBLIC_API_BASE_URL
-  : "https://marketapi.5thweb.io";
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://marketapi.5thweb.io";
+export const API_INDEXER_URL =
+  process.env.NEXT_PUBLIC_API_INDEXER_URL || "https://marketapi.5thweb.io";
 
 export const API_STAT_URL = process.env.NEXT_PUBLIC_API_STAT_URL
   ? process.env.NEXT_PUBLIC_API_STAT_URL
@@ -25,6 +26,9 @@ export const DEFAULT_GAS = BigInt("3000000");
 export const MIN_GAS = BigInt("500000");
 export const DEFAULT_GAS_PRICE = BigInt("20000000000");
 export const MIN_GAS_PRICE = BigInt("1000000000");
+
+// Stats Page
+export const DEFAULT_LIST_ITEMS_COUNT = 30;
 
 export const HEADER_LINKS = [
   {

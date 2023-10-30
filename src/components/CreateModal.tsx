@@ -6,7 +6,6 @@ import { useModal } from "@/contexts/ModalContext";
 import { CloseCircleIcon, MinuPlusIcon, UploadIcon } from "./SvgIcons";
 import Typography from "./Typography";
 import { createLaunchpad, createPhoto } from "@/actions";
-import { CalendarModal } from "./CalendarModal";
 import { CoinButton } from "./CoinButton";
 import { useUser } from "@/contexts/UserContext";
 import { SetDuration } from "./SetDuratoin";

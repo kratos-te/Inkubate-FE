@@ -1,14 +1,14 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Typography from "./Typography";
-import Button from "./Button";
 import Link from "next/link";
+
+import Button from "./Button";
 import CollectionCard from "./CollectionCard";
 import CollecionCardLoader from "./Common/CollecionCardLoader";
-import { CollectionParam, StatTypes } from "@/utils/types";
-import { getAllCollections, getLaunchpad } from "@/actions";
+import Typography from "./Typography";
 import { getFeature } from "@/actions/stat";
+import { StatTypes } from "@/utils/types";
 
 const FeaturedProjects: FC = () => {
   const pathname = usePathname();
@@ -22,8 +22,8 @@ const FeaturedProjects: FC = () => {
 
   useEffect(() => {
     const getFeatureCollection = async () => {
-      const getData = await getFeature()
-      setCollections(getData?.data)
+      const getData = await getFeature();
+      setCollections(getData?.data || []);
     };
     getFeatureCollection();
   }, [pathname]);
@@ -45,7 +45,11 @@ const FeaturedProjects: FC = () => {
         <div className="flex xl:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-4 xl:gap-x-[30px] gap-y-10 mt-8 xl:mt-9 overflow-x-auto pb-8 xl:pb-0 px-6">
           {!loading
             ? collections.map((item, key) => (
-              <CollectionCard item={item} collection={item.collection} key={key} />
+                <CollectionCard
+                  item={item}
+                  collection={item.collection}
+                  key={key}
+                />
               ))
             : Array.from({ length: 8 }).map((_, key) => (
                 <CollecionCardLoader key={key} />

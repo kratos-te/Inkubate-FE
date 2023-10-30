@@ -6,13 +6,14 @@ import Image from "next/image";
 import { VerifiedIcon } from "./SvgIcons";
 import { useRouter } from "next/navigation";
 import useWindowSize from "@/utils/useWindowSize";
+import { weiToNum } from "@/utils/util";
 
 interface ItemProps {
   collection: StatsItem;
 }
 
 const RowStatsItem: FC<ItemProps> = ({ collection }) => {
-  const { rank, volumeD7, volumeH24 } = collection;
+  const { index, liquidity } = collection;
   const {
     collectionId,
     title,
@@ -23,6 +24,7 @@ const RowStatsItem: FC<ItemProps> = ({ collection }) => {
     listed,
     totalSupply,
     owners,
+    pfp,
   } = collection.collection;
   const router = useRouter();
 
@@ -53,14 +55,14 @@ const RowStatsItem: FC<ItemProps> = ({ collection }) => {
         />
       </td>
       <td className="relative w-8 font-readex text-[15px] font-medium text-light-100 text-center border-t-[0.5px] border-light-400 ">
-        <div className="relative z-10">{rank}</div>
+        <div className="relative z-10">{index}</div>
         <div className="td-cell-bg group-hover:opacity-100" />
       </td>
       <td className="relative border-t-[0.5px] border-light-400 ">
         <div className="flex items-center relative z-10">
           <div className="w-10 h-10 sm:w-[50px] sm:h-[50px] relative">
             <Image
-              src={"/assets/images/pfp-demo.gif"}
+              src={pfp || "/assets/images/pfp-demo.gif"}
               fill
               className="rounded-[10px] mr-[11px]"
               alt=""
@@ -74,27 +76,21 @@ const RowStatsItem: FC<ItemProps> = ({ collection }) => {
         <div className="td-cell-bg group-hover:opacity-100" />
       </td>
       <td className="relative text-right text-[14px] font-bold leading-[20px] sm:text-center text-light-100 h-20 border-t-[0.5px] border-light-400 ">
-        <div className="relative z-10 before:absolute">{volume}ETH</div>
+        <div className="relative z-10 before:absolute">
+          {weiToNum(volume)} ETH
+        </div>
         <div className="td-cell-bg group-hover:opacity-100" />
       </td>
       <td
         className={`hidden xld:table-cell relative text-[14px] text-center font-bold leading-[20px] border-t-[0.5px] border-light-400  ${
-          volumeH24 <= 0 ? "text-[#F00]" : "text-[#00FF29]"
+          liquidity <= 0 ? "text-[#F00]" : "text-[#00FF29]"
         }`}
       >
-        <div className="relative z-10">{volumeH24}%</div>
-        <div className="td-cell-bg group-hover:opacity-100" />
-      </td>
-      <td
-        className={`hidden xld:table-cell relative text-[14px] text-center font-bold leading-[20px] border-t-[0.5px] border-light-400 ${
-          volumeD7 <= 0 ? "text-[#F00]" : "text-[#00FF29]"
-        }`}
-      >
-        <div className="relative z-10">{volumeD7}%</div>
+        <div className="relative z-10">{liquidity} %</div>
         <div className="td-cell-bg group-hover:opacity-100" />
       </td>
       <td className="hidden sm:table-cell relative text-[14px] text-center font-bold leading-[20px] text-light-100 border-t-[0.5px] border-light-400 ">
-        <div className="relative z-10">{floorPrice}ETH</div>
+        <div className="relative z-10">{weiToNum(floorPrice)} ETH</div>
         <div className="td-cell-bg group-hover:opacity-100" />
       </td>
       <td className="hidden md:table-cell relative text-[14px] text-center font-bold leading-[20px] text-light-100 border-t-[0.5px] border-light-400 ">

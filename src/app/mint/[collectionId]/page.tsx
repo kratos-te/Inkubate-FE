@@ -79,7 +79,7 @@ export default function CollectionPage() {
               <MintDetail
                 collection={collectionById}
                 launchpad={launchpadById}
-                nfts={nftByColletion}
+                nfts={nftByColletion || []}
                 remainingTime={remainTime}
               />
             )
