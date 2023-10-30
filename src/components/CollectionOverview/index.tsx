@@ -11,7 +11,7 @@ import {
 import Typography from "../Typography";
 import Image from "next/image";
 import Loader from "./Loader";
-import { CollectionParam, NftTypes, StatTypes } from "@/utils/types";
+import { NftTypes, StatTypes } from "@/utils/types";
 import { weiToNum } from "@/utils/util";
 
 interface CollectionProps {

@@ -9,18 +9,29 @@ import ExploreItems from "@/components/ExploreItems";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import { getAllCollections } from "@/actions/collection";
+import { StatTypes } from "@/utils/types";
+import { getStatByCollectionId } from "@/actions";
 
 export default function ExplorePage() {
   const router = useRouter();
   const query = useSearchParams();
   const tab = query?.get("tab");
-  const [collections, setCollections] = useState([]);
+  const [stats, setStats] = useState<StatTypes[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getAllCollections().then((result) => {
-      setCollections(result || []);
+    const getData = async () => {
+      const statData: StatTypes[] = [];
+      const collections = await getAllCollections();
+      const stat = await getStatByCollectionId(collections.data.id)
+      statData.push(stat?.data)
+      setStats(statData)
+    }
+    getData();
+  }, []);
+  useEffect(() => {
+    setTimeout(() => {
       setLoading(false);
-    });
+    }, 1200);
   }, []);
 
   return (
@@ -76,8 +87,8 @@ export default function ExplorePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 gap-x-[30px] gap-y-3 xl:gap-y-10 mt-[34px]">
               {!loading ? (
                 <>
-                  {collections.map((item, key) => (
-                    <CollectionCard collection={item} key={key} />
+                  {stats.map((item, key) => (
+                    <CollectionCard item={item} collection={item.collection} key={key} />
                   ))}
                 </>
               ) : (

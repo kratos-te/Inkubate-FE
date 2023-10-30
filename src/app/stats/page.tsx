@@ -1,29 +1,44 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { getAllStats } from "@/actions";
+import ChainsDropdown from "@/components/ChainsDropdown";
+import RowStatsItemLoader from "@/components/Common/RowStateItemLoader";
 import RowStatsItem from "@/components/RowStatsItem";
+import StatsRangeDropdown from "@/components/StatsRangeDropdown";
 import {
   ArrowDownLineIcon,
   ArrowUpDownIcon,
   SearchIcon,
 } from "@/components/SvgIcons";
 import Typography from "@/components/Typography";
-import { DEMO_COLLECTIONS } from "@/config";
-import ChainsDropdown from "@/components/ChainsDropdown";
-import { Meta } from "@/layouts/Meta";
 import MainLayout from "@/layouts/MainLayout";
+import { Meta } from "@/layouts/Meta";
 import useWindowSize from "@/utils/useWindowSize";
-import StatsRangeDropdown from "@/components/StatsRangeDropdown";
-import RowStatsItemLoader from "@/components/Common/RowStateItemLoader";
+import {
+  CollectionStats,
+  PeriodType,
+  SortType,
+  StatsSortBy,
+} from "@/utils/types";
+import useScroll from "@/utils/useScroll";
+import { DEFAULT_LIST_ITEMS_COUNT } from "@/config";
 
 export default function Home() {
-  const [range, setRange] = useState<number>(24);
-  const collections = Array(12).fill(DEMO_COLLECTIONS[0]);
+  const [range, setRange] = useState<PeriodType>(PeriodType.DAY);
+  const [search, setSearch] = useState("");
   const [chainId, setChainId] = useState("all");
-  const [sortBy, setSortBy] = useState("volume");
-  const [orderBy, setOrderBy] = useState<"desc" | "asc">("desc");
+  const [sortBy, setSortBy] = useState(StatsSortBy.VOLUME);
+  const [orderBy, setOrderBy] = useState<SortType>(SortType.DESC);
+  const [loading, setLoading] = useState(false);
+  const [endPageLoading, setEndPageLoading] = useState(false);
+  const [collections, setCollections] = useState<CollectionStats[]>([]);
 
-  // set width of emplty corner cells
   const { width } = useWindowSize();
+  const { top, height } = useScroll();
+  const tableRef = useRef<HTMLTableElement | null>(null);
+
   const cellInterval = useMemo(() => {
     let val = 0;
     if (width > 1628) {
@@ -35,8 +50,62 @@ export default function Home() {
   }, [width]);
 
   useEffect(() => {
-    setOrderBy("desc");
+    setOrderBy(SortType.DESC);
   }, [sortBy]);
+
+  useEffect(() => {
+    if (loading) return;
+    handleFetchStatsData(true);
+  }, [range, search, sortBy, orderBy]);
+
+  // Fetch initial data when reloading
+  useEffect(() => {
+    handleFetchStatsData(true);
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    if (top > 80 * collections.length - height) {
+      handleFetchStatsData(false);
+    }
+  }, [top]);
+
+  const handleFetchStatsData = useCallback(
+    (withClear: boolean) => {
+      if (withClear) setEndPageLoading(false);
+      if (!withClear && endPageLoading) return;
+      const lastSroll = top;
+      setLoading(true);
+      getAllStats({
+        filter: search || undefined,
+        period: range,
+        sortBy,
+        sortType: orderBy,
+        pageId: withClear
+          ? 1
+          : Math.floor(collections.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+        offset: DEFAULT_LIST_ITEMS_COUNT,
+        limit: DEFAULT_LIST_ITEMS_COUNT,
+      })
+        .then((res) => {
+          setEndPageLoading(
+            !res.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+          );
+          if (withClear) {
+            setCollections(res);
+          } else {
+            const oldData: CollectionStats[] = Object.assign(collections);
+            oldData.push(...res);
+            setCollections(oldData);
+            window.scrollTo(0, lastSroll);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [collections, search, range, orderBy, sortBy, top, endPageLoading]
+  );
 
   const SortAbleHeadCell = ({
     title,
@@ -45,17 +114,19 @@ export default function Home() {
     className,
   }: {
     title: string;
-    sort: string;
+      sort: StatsSortBy;
     align: "center" | "start" | "end";
     className: string;
   }) => {
-    if (sort !== "volume") {
+    if (sort !== StatsSortBy.VOLUME) {
       return (
         <th
           className={className}
           onClick={() => {
             setSortBy(sort);
-            setOrderBy((prev) => (prev === "desc" ? "asc" : "desc"));
+            setOrderBy((prev) =>
+              prev === SortType.DESC ? SortType.ASC : SortType.DESC
+            );
           }}
         >
           <div
@@ -64,7 +135,8 @@ export default function Home() {
             {title}
             {sortBy === sort ? (
               <ArrowDownLineIcon
-                className={`ml-0.5 rotate-${orderBy === "desc" ? 0 : 180}`}
+                className={`ml-0.5 rotate-${orderBy === SortType.DESC ? 0 : 180
+                  }`}
               />
             ) : (
               <ArrowUpDownIcon className="ml-0.5" />
@@ -77,8 +149,10 @@ export default function Home() {
         <th
           className="py-2.5 md:py-[30px] w-auto sm:w-[124px] cursor-pointer whitespace-nowrap"
           onClick={() => {
-            setSortBy("volume");
-            setOrderBy((prev) => (prev === "desc" ? "asc" : "desc"));
+            setSortBy(StatsSortBy.VOLUME);
+            setOrderBy((prev) =>
+              prev === SortType.DESC ? SortType.ASC : SortType.DESC
+            );
           }}
         >
           <div
@@ -87,7 +161,8 @@ export default function Home() {
             {width < 480 ? "Total Volume" : "Volume"}
             {sortBy === sort ? (
               <ArrowDownLineIcon
-                className={`ml-0.5 rotate-${orderBy === "desc" ? 0 : 180}`}
+                className={`ml-0.5 rotate-${orderBy === SortType.DESC ? 0 : 180
+                  }`}
               />
             ) : (
               <ArrowUpDownIcon className="ml-0.5" />
@@ -98,20 +173,13 @@ export default function Home() {
     }
   };
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1200);
-  }, []);
-
   return (
     <>
       <MainLayout
         className="!bg-dark-300"
         meta={
           <Meta
-            title="Trending Collections"
+            title="Collection Stats"
             description="Lorem ipsum dolor sit amet."
           />
         }
@@ -129,7 +197,9 @@ export default function Home() {
                 <SearchIcon className="absolute left-3 top-[14px]" />
                 <input
                   className="bg-transparent w-full h-[42px] pl-9 text-[14px] font-readex text-light-100 relative z-10 outline-none"
-                  placeholder="Search items"
+                  placeholder="Search collection"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value || "")}
                 />
               </div>
               <ChainsDropdown
@@ -143,7 +213,7 @@ export default function Home() {
         </div>
         <div className="mx-auto mt-[18px] relative z-10">
           <div className="py-[22px]">
-            <table className="w-full">
+            <table className="w-full" ref={tableRef}>
               <thead>
                 <tr className="text-[14px] font-bold leading-[20px] text-light-100">
                   <th style={{ width: cellInterval }} />
@@ -157,49 +227,43 @@ export default function Home() {
                   <SortAbleHeadCell
                     title="Volume"
                     align="center"
-                    sort="volume"
+                    sort={StatsSortBy.VOLUME}
                     className="py-2.5 md:py-[30px] w-[100px] md:w-[124px] cursor-pointer"
                   />
                   <SortAbleHeadCell
-                    title="24h %"
+                    title="%"
                     align="center"
-                    sort="24h"
-                    className="py-[30px] w-[124px] cursor-pointer hidden xld:table-cell"
-                  />
-                  <SortAbleHeadCell
-                    title="7d %"
-                    align="center"
-                    sort="7d"
+                    sort={StatsSortBy.LIQUIDITY}
                     className="py-[30px] w-[124px] cursor-pointer hidden xld:table-cell"
                   />
                   <SortAbleHeadCell
                     title="Floor"
                     align="center"
-                    sort="floor"
+                    sort={StatsSortBy.FLOOR}
                     className="py-2.5 md:py-[30px] w-[100px] md:w-[124px] cursor-pointer hidden sm:table-cell"
                   />
                   <SortAbleHeadCell
                     title="Sales"
                     align="center"
-                    sort="sales"
+                    sort={StatsSortBy.SALES}
                     className="py-[30px] w-[124px] cursor-pointer hidden md:table-cell"
                   />
                   <SortAbleHeadCell
                     title="Items"
                     align="center"
-                    sort="items"
+                    sort={StatsSortBy.ITEMS}
                     className="py-[30px] w-[124px] cursor-pointer hidden md:table-cell"
                   />
                   <SortAbleHeadCell
                     title="Listed"
                     align="center"
-                    sort="listed"
+                    sort={StatsSortBy.LISTED}
                     className="py-[30px] w-[124px] cursor-pointer hidden lg:table-cell"
                   />
                   <SortAbleHeadCell
                     title="Owners"
                     align="end"
-                    sort="owners"
+                    sort={StatsSortBy.OWNERS}
                     className="py-[30px] w-[124px] cursor-pointer hidden lg:table-cell "
                   />
                   <th style={{ width: cellInterval }} />
@@ -207,17 +271,16 @@ export default function Home() {
               </thead>
               {!loading ? (
                 <tbody>
-                  {collections.map((item, key) => (
-                    <RowStatsItem
-                      collection={{
-                        collection: item,
-                        rank: key + 1,
-                        volumeD7: -2.5,
-                        volumeH24: 4,
-                      }}
-                      key={key}
-                    />
-                  ))}
+                  {collections &&
+                    collections.map((item, key) => (
+                      <RowStatsItem
+                        collection={{
+                          ...item,
+                          index: key + 1,
+                        }}
+                        key={key}
+                      />
+                    ))}
                 </tbody>
               ) : (
                 <tbody>

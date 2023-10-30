@@ -2,10 +2,11 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import Typography from "./Typography";
 import { ArrowDownRoundIcon } from "./SvgIcons";
+import { PeriodType } from "@/utils/types";
 
 interface DropdownProps {
-  range: number;
-  setTab: Dispatch<SetStateAction<number>>;
+  range: PeriodType;
+  setTab: Dispatch<SetStateAction<PeriodType>>;
 }
 
 const StatsRangeDropdown: FC<DropdownProps> = ({ range, setTab }) => {
@@ -60,18 +61,18 @@ export default StatsRangeDropdown;
 const ranges = [
   {
     title: "1H",
-    value: 1,
+    value: PeriodType.HOUR,
   },
   {
     title: "6H",
-    value: 6,
+    value: PeriodType.SIX_HOURS,
   },
   {
     title: "24H",
-    value: 24,
+    value: PeriodType.DAY,
   },
   {
     title: "7D",
-    value: 168,
+    value: PeriodType.WEEK,
   },
 ];

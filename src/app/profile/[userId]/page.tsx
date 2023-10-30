@@ -48,7 +48,7 @@ export default function ProfilePage() {
   const { openSettingModal } = useModal();
   const { profile, userData, getUserData, getProfileData } = useUser();
 
-  const [sort, setSort] = useState("p-l-h");
+  const [sort, setSort] = useState("");
   const [ascending, setAscending] = useState(false);
 
   const [isDense, setIsDense] = useState(true);

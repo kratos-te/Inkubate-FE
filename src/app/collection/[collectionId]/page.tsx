@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import CollectionOverview from "@/components/CollectionOverview";
 import CoverBanner from "@/components/CoverBanner";
 import PageHead from "@/components/PageHead";
@@ -28,11 +29,13 @@ import { getCollectionById, getListByNft } from "@/actions";
 import { getActivityByCollection } from "@/actions/activity";
 import { BuyModal } from "@/components/BuyModal";
 import { getStatByCollectionId } from "@/actions/stat";
+import { DEFAULT_LIST_ITEMS_COUNT } from "@/config";
+import useScroll from "@/utils/useScroll";
 
 export default function CollectionPage() {
   const router = useRouter();
   const query = useSearchParams();
-  const [sort, setSort] = useState("p-l-h");
+  const [sort, setSort] = useState("");
   const [ascending, setAscending] = useState(false);
   const [isDense, setIsDense] = useState(true);
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
@@ -45,6 +48,10 @@ export default function CollectionPage() {
     undefined
   );
   const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
+
+  const [endPageLoading, setEndPageLoading] = useState(false);
+
+  const { top, height } = useScroll();
 
   const tab = useMemo(() => {
     let t = "1";
@@ -72,6 +79,61 @@ export default function CollectionPage() {
       setLoading(false);
     }, 1200);
   }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    handleFetchStatsData(true);
+  }, [sort, ascending]);
+
+  // Fetch initial data when reloading
+  useEffect(() => {
+    handleFetchStatsData(true);
+  }, []);
+
+  // useEffect(() => {
+  //   if (loading) return;
+  //   if (top > 80 * nftByCollection.length - height) {
+  //     handleFetchStatsData(false);
+  //   }
+  // }, [top]);
+
+  const handleFetchStatsData = useCallback(
+    (withClear: boolean) => {
+      if (withClear) setEndPageLoading(false);
+      if (!withClear && endPageLoading) return;
+      const lastSroll = top;
+      setLoading(true);
+      getNft(
+        collectionId,
+        ascending,
+        sort,
+        withClear
+          ? 1
+          : Math.floor(nftByCollection.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+        DEFAULT_LIST_ITEMS_COUNT,
+        DEFAULT_LIST_ITEMS_COUNT,
+      )
+        .then((res) => {
+          setEndPageLoading(
+            !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+          );
+          if (withClear) {
+            setNftByCollection(res?.data);
+          } else {
+            const oldData: NftTypes[] = Object.assign(nftByCollection);
+            oldData.push(...res);
+            setNftByCollection(oldData);
+            window.scrollTo(0, lastSroll);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [nftByCollection, sort, ascending, top, endPageLoading]
+  );
+
+
 
   useEffect(() => {
     const getNftByCollection = async () => {
@@ -135,7 +197,7 @@ export default function CollectionPage() {
         {collectionById && stat && (
           <CollectionOverview
             stat={stat}
-            nfts={nftByCollection}
+            nfts={nftByCollection || []}
           />
         )}
         <div className="max-w-[1600px] mx-5 2xl:mx-auto relative">
@@ -143,30 +205,27 @@ export default function CollectionPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => router.push(`${collectionId}?tab=1`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${
-                  tab === "1"
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "1"
                     ? " border-secondary bg-secondary"
                     : "border-transparent"
-                }`}
+                  }`}
               >
                 Items
               </button>
               <button
                 onClick={() => router.push(`${collectionId}?tab=2`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${
-                  tab === "2"
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "2"
                     ? " border-secondary bg-secondary"
                     : "border-transparent"
-                }`}
+                  }`}
               >
                 Activity
               </button>
             </div>
           </div>
           <div
-            className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${
-              tab === "1" || tab === "2" ? "show" : "hidden"
-            }`}
+            className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${tab === "1" || tab === "2" ? "show" : "hidden"
+              }`}
           >
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
@@ -200,9 +259,8 @@ export default function CollectionPage() {
             </div>
           </div>
           <div
-            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${
-              tab === "1" || tab === "2" ? "show" : "hidden"
-            }`}
+            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${tab === "1" || tab === "2" ? "show" : "hidden"
+              }`}
           >
             <div className="hidden lg:block w-[300px]">
               {nftOne && (
