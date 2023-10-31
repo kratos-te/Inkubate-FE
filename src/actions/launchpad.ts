@@ -20,7 +20,7 @@ export async function getLaunchpad() {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/launchpad`);
     console.log("launchpad", response);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
@@ -34,11 +34,10 @@ export async function getLaunchpad() {
   }
 }
 
-export async function getLaunchpadById(id: number) {
+export async function getLaunchpadById(id: string) {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/launchpad/${id}`);
-    console.log("launchpad by Id", response);
-    return response;
+    const res = await axios.get(`${API_BASE_URL}/api/launchpad/${id}`);
+    return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

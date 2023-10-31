@@ -1,25 +1,25 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import { usePathname } from "next/navigation";
+
 import AssetDetailBox from "@/components/AssetDetailBox";
 import { PublicIcon, StarIcon } from "@/components/SvgIcons";
 import Typography from "@/components/Typography";
 import MintDetail from "@/components/MintDetail";
+import MintOverviewLoader from "@/components/Common/MintOverviewLoader";
+import { MintModal } from "@/components/MintModal";
+
 import { Meta } from "@/layouts/Meta";
 import MainLayout from "@/layouts/MainLayout";
-import MintOverviewLoader from "@/components/Common/MintOverviewLoader";
-import Skeleton from "react-loading-skeleton";
-import { MintModal } from "@/components/MintModal";
-import { CollectionParam, LaunchpadParam } from "@/utils/types";
-import { getCollectionById, getLaunchpadById } from "@/actions";
+import { getLaunchpadById } from "@/actions";
+import { LaunchpadParam } from "@/utils/types";
 import { weiToNum } from "@/utils/util";
 
 export default function MintPage() {
   const pathname = usePathname();
 
   const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
-  const [collectionById, setCollectionById] = useState<CollectionParam>();
-  // const [nftByColletion, setNftByCollection] = useState<NftTypes[]>([]);
   const [remainTime, setRemainTime] = useState<number>();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function MintPage() {
     }, 1200);
   }, []);
 
-  const collectionId = useMemo(() => {
+  const launchpadId = useMemo(() => {
     let path = "";
     if (pathname) {
       path = pathname.split("/")[2] as string;
@@ -37,23 +37,19 @@ export default function MintPage() {
   }, [pathname]);
 
   useEffect(() => {
-    console.log("path", pathname.split("/")[1] as string, collectionId);
+    console.log("path", pathname.split("/")[1] as string, launchpadId);
     const getCollection = async () => {
-      if ((pathname.split("/")[1] as string) === "mint" && collectionId) {
-        const collection = await getCollectionById(collectionId);
-        const launchpad = await getLaunchpadById(collection?.data.launchpadId);
-        // const nfts = await getNft({ collectionId });
+      if ((pathname.split("/")[1] as string) === "mint" && launchpadId) {
+        const launchpad = await getLaunchpadById(launchpadId);
         const remainingTime = Math.floor(
-          (new Date(launchpad?.data.startDate).getTime() - Date.now()) / 1000
+          (new Date(launchpad.startDate).getTime() - Date.now()) / 1000
         );
-        setLaunchPadById(launchpad?.data);
-        setCollectionById(collection?.data);
-        // setNftByCollection(nfts);
+        setLaunchPadById(launchpad);
         setRemainTime(remainingTime);
       }
     };
     getCollection();
-  }, [collectionId, pathname]);
+  }, [launchpadId, pathname]);
 
   return (
     <>
@@ -64,20 +60,17 @@ export default function MintPage() {
         bgClass="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[3131px] h-[3158px] object-cover opacity-80 lg:opacity-100"
         meta={
           <Meta
-            title={`${collectionId ? collectionId : ""}`}
+            title={`${launchpadId ? launchpadId : ""}`}
             description="Lorem ipsum dolor sit amet."
           />
         }
       >
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
-            collectionById &&
             launchpadById &&
             remainTime && (
               <MintDetail
-                collection={collectionById}
                 launchpad={launchpadById}
-                nfts={collectionById.nfts || []}
                 remainingTime={remainTime}
               />
             )
@@ -192,9 +185,7 @@ export default function MintPage() {
           )}
         </div>
       </MainLayout>
-      {collectionById && launchpadById && (
-        <MintModal collection={collectionById} launchpad={launchpadById} />
-      )}
+      {launchpadById && <MintModal launchpad={launchpadById} />}
     </>
   );
 }

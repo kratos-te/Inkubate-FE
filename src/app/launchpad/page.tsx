@@ -7,13 +7,12 @@ import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import Skeleton from "react-loading-skeleton";
 import LaunchpadContentLoader from "@/components/Common/LaunchpadContentLoader";
-import { getAllCollections, getLaunchpad } from "@/actions";
-import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { getLaunchpad } from "@/actions";
+import { LaunchpadParam } from "@/utils/types";
 
 export default function LaunchpadPage() {
   const [loading, setLoading] = useState(true);
   const [launchpads, setLaunchPads] = useState<LaunchpadParam[]>([]);
-  const [collections, setCollections] = useState<CollectionParam[]>([]);
 
   const pathname = usePathname();
 
@@ -21,10 +20,8 @@ export default function LaunchpadPage() {
     const launchPad = async () => {
       if (pathname === "/launchpad") {
         const launchpadData = await getLaunchpad();
-        const collectionData = await getAllCollections();
         if (launchpadData) {
-          setLaunchPads(launchpadData.data);
-          setCollections(collectionData);
+          setLaunchPads(launchpadData);
         }
       }
     };
@@ -65,9 +62,8 @@ export default function LaunchpadPage() {
               <div className="h-[60px] 2xl:h-[120px]" />
               <LaunchpadCollectionList
                 title="Launchpads"
-                description="Qorem ipsum dolor sit amet, consectetur adipiscing elit."
+                description="Most trending launchpads"
                 launchpads={launchpads}
-                collections={collections}
               />
               <div className="h-[40px] 2xl:h-[72px]" />
               {/* <LaunchpadCollectionList
