@@ -50,6 +50,7 @@ import { INK_CONDUIT_KEY } from "@/utils/constants";
 import { SALT } from "@/config";
 import { ZeroAddress, ZeroHash } from "ethers";
 import { useUser } from "@/contexts/UserContext";
+import ActivityChart from "@/components/ActivityChart";
 
 export default function NftPage() {
   const pathname = usePathname();
@@ -388,7 +389,7 @@ export default function NftPage() {
                   >
                     {activity && (
                       <div>
-
+                        <ActivityChart actData={activity} />
                       </div>
                     )}
                   </AssetDetailBox>

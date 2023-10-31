@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { FC, useCallback, useEffect, useState } from "react";
 // import { DEMO_COLLECTIONS } from "@/config";
@@ -32,7 +33,7 @@ const TopCollections: FC = () => {
 
   useEffect(() => {
     handleGetTopCollections();
-  }, [handleGetTopCollections, period]);
+  }, [period]);
 
   if (!loading) {
     return (

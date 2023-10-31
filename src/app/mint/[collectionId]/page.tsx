@@ -10,8 +10,8 @@ import MainLayout from "@/layouts/MainLayout";
 import MintOverviewLoader from "@/components/Common/MintOverviewLoader";
 import Skeleton from "react-loading-skeleton";
 import { MintModal } from "@/components/MintModal";
-import { CollectionParam, LaunchpadParam, NftTypes } from "@/utils/types";
-import { getCollectionById, getLaunchpadById, getNft } from "@/actions";
+import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { getCollectionById, getLaunchpadById } from "@/actions";
 import { weiToNum } from "@/utils/util";
 
 export default function MintPage() {
@@ -19,7 +19,7 @@ export default function MintPage() {
 
   const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
-  const [nftByColletion, setNftByCollection] = useState<NftTypes[]>([]);
+  // const [nftByColletion, setNftByCollection] = useState<NftTypes[]>([]);
   const [remainTime, setRemainTime] = useState<number>();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -42,13 +42,13 @@ export default function MintPage() {
       if ((pathname.split("/")[1] as string) === "mint" && collectionId) {
         const collection = await getCollectionById(collectionId);
         const launchpad = await getLaunchpadById(collection?.data.launchpadId);
-        const nfts = await getNft({ collectionId});
+        // const nfts = await getNft({ collectionId });
         const remainingTime = Math.floor(
           (new Date(launchpad?.data.startDate).getTime() - Date.now()) / 1000
         );
         setLaunchPadById(launchpad?.data);
         setCollectionById(collection?.data);
-        setNftByCollection(nfts?.data);
+        // setNftByCollection(nfts);
         setRemainTime(remainingTime);
       }
     };
@@ -77,7 +77,7 @@ export default function MintPage() {
               <MintDetail
                 collection={collectionById}
                 launchpad={launchpadById}
-                nfts={nftByColletion || []}
+                nfts={collectionById.nfts || []}
                 remainingTime={remainTime}
               />
             )

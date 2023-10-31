@@ -141,10 +141,11 @@ export default function ProfilePage() {
                 <button
                   key={key}
                   onClick={() => router.push(`?tab=${item.tab}`)}
-                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${tab === item.tab
-                    ? "bg-secondary hover:bg-[#AE115B]"
-                    : "bg-dark-400 hover:bg-[#444]"
-                    }`}
+                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${
+                    tab === item.tab
+                      ? "bg-secondary hover:bg-[#AE115B]"
+                      : "bg-dark-400 hover:bg-[#444]"
+                  }`}
                 >
                   {item.title}
                 </button>
@@ -162,8 +163,9 @@ export default function ProfilePage() {
           </div>
           <div className="border-b-[0.5px] border-light-400 relative z-10  mt-6"></div>
           <div
-            className={`relative flex gap-3 mt-6 lg:mt-12 z-20 ${tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
-              }`}
+            className={`relative flex gap-3 mt-6 lg:mt-12 z-20 ${
+              tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
+            }`}
           >
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
@@ -201,8 +203,9 @@ export default function ProfilePage() {
             </div>
           </div>
           <div
-            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
-              }`}
+            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${
+              tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
+            }`}
           >
             <div className="hidden lg:block w-[300px]">
               {nftByOwner[0] && <CollectionFilter nft={nftByOwner[0]} />}

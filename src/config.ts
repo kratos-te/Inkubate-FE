@@ -282,12 +282,12 @@ export const DEMO_NFTS = [
 export const SORT_LIST = [
   {
     title: "Price low to high",
-    value: "asc",
+    value: "",
     ascending: true,
   },
   {
     title: "Price high to low",
-    value: "desc",
+    value: "",
     ascending: false,
   },
   {
