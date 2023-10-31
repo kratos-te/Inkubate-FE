@@ -1,10 +1,10 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 
-export async function getAllCollections() {
+export async function getAllCollections(contains?: string) {
   try {
     const response = await axios
-      .get(`${API_BASE_URL}/api/collection`)
+      .get(`${API_BASE_URL}/api/collection?contains=${contains}`)
       .then((res) => res.data);
     console.log("collection", response);
     return response;

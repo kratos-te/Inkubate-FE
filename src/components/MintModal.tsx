@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { FC, useState } from "react";
 import { useModal } from "@/contexts/ModalContext";
@@ -5,21 +6,21 @@ import { CloseCircleIcon, MinusIcon, PlusIcon } from "./SvgIcons";
 import { LoadingPad } from "./LoadingPad";
 import ClickAwayComponent from "./ClickAwayComponent";
 import { useErc721a } from "@/hooks/useErc721a";
-import { CollectionParam, LaunchpadParam } from "@/utils/types";
+import { CollectionParam, LaunchpadParam, NftItem } from "@/utils/types";
 import { createNft } from "@/actions/nft";
-import axios from "axios";
-import { successAlert } from "./ToastGroup";
+import { errorAlert, successAlert } from "./ToastGroup";
 
 interface MintModalProps {
   collection: CollectionParam;
   launchpad: LaunchpadParam;
 }
 export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
-  const { mintNFT, getMintingStartTime, getTokenUri } = useErc721a();
+  const { mintNFT, getMintingStartTime } = useErc721a();
   const { closeMintModal, isOpenedMintModal } = useModal();
   const [mintValue, setMintValue] = useState<number>(1);
-  const [mintStatus, setMintStatus] = useState<boolean>(false);
-  const [mintSuccess] = useState<boolean>(false);
+  const [mintingProgress, setMintingProgress] = useState<boolean>(false);
+  const [mintSuccess, setMintSuccess] = useState<boolean>(false);
+  const [nfts, setNfts] = useState<NftItem[]>([]);
 
   const handleMinus = () => {
     setMintValue(mintValue - 1);
@@ -28,63 +29,32 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
     setMintValue(mintValue + 1);
   };
 
-  const handleGetTokenURI = async (address: string, id: string) => {
-    try {
-      const tokenUri = await getTokenUri(address, id);
-      const config = {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          "Content-Type": "application/json",
-        },
-      };
-      const response = await axios.get(tokenUri, config);
-      const data = await response.data;
-      return data;
-    } catch (err) {
-      console.log(err);
-      return {
-        image: "fetching-failed",
-        attributes: [],
-      };
-    }
-  };
   const handleMint = async (amount: number) => {
-    setMintStatus(true);
+    setMintingProgress(true);
     try {
       const startTimeRes = await getMintingStartTime(collection.address);
       if (startTimeRes?.res) console.log("here", startTimeRes.res);
       const value = Number(launchpad.mintPrice) * amount;
-      console.log("value", value, collection.address);
       const rept = await mintNFT(amount, value.toString(), collection.address);
-      console.log("transaction result is ", rept);
-      if (rept.status === "success") {
-        rept.logs.map(async (item) => {
-          const decimalValue = parseInt(item.topics[3] as `0x${string}`, 16);
-
-          const nftData = await handleGetTokenURI(
-            collection.address,
-            decimalValue.toString()
-          );
-
-          console.log("nftData ===============", nftData);
-          const createNFT = await createNft({
-            collectionId: collection.id,
-            name: collection.name,
-            contractType: "ERC721",
-            price: launchpad.mintPrice.toString(),
-            txHash: item.transactionHash || "",
-            network: "MAIN",
-          });
-          console.log("created Nft,", createNFT);
-          return createNFT;
-        });
-      }
-    } catch (e) {
-      console.log(e);
+      console.log(rept);
+      const createNfts = await createNft({
+        collectionId: collection.id,
+        contractType: "ERC721",
+        price: launchpad.mintPrice.toString(),
+        txHash: rept.transactionHash || "",
+        network: "MAIN",
+      });
+      console.log("created Nft", createNfts);
+      setNfts(createNfts);
+      setMintSuccess(true)
+      successAlert("Minted Successfully!");
+    } catch (e: any) {
+      console.log(e.message);
+      if (e.message.includes("User rejected the request."))
+        errorAlert("User rejected the request.");
+      else errorAlert("Failed Minting");
     } finally {
-      setMintStatus(false);
-      successAlert("Minted Successfully!")
+      setMintingProgress(false);
     }
   };
 
@@ -110,12 +80,23 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
             </div>
           </div>
           <div className="modal_body text-center">
-            {mintStatus ? (
+            {mintingProgress ? (
               <div className="flex-col items-center pt-4 pb-16">
                 <LoadingPad
                   title="Complete Purchase"
                   description="Confirm the transaction in your wallet to purchase the NFT."
                 />
+              </div>
+            ) : nfts.length > 0 ? (
+              <div className="w-full flex justify-center flex-wrap">
+                {nfts.map((nft) => (
+                  <div key={nft.id}>
+                    <img src={nft.image} alt={nft.name} className="w-20 h-20" />
+                    <span>
+                      {nft.name} #{nft.tokenId}
+                    </span>
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="flex-col items-center">
@@ -145,11 +126,11 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
 
             <button
               className={`w-full rounded-[12px] text-[16px] font-semibold py-3 mt-[38px] ${
-                mintStatus ? "bg-[#666666] text-[#F2F2F2] " : "bg-white"
+                mintingProgress ? "bg-[#666666] text-[#F2F2F2] " : "bg-white"
               }`}
               onClick={() => handleMint(mintValue)}
             >
-              {mintStatus ? "Cancel " : "Mint NFT"}
+              {mintingProgress ? "Cancel " : "Mint NFT"}
             </button>
             {mintSuccess && (
               <div className="flex flex-col gap-[38px]">

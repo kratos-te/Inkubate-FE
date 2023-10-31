@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { FC, useEffect, useState } from "react";
 import {
@@ -9,7 +10,6 @@ import {
   getDay,
   isToday,
   parse,
-  startOfToday,
   startOfWeek,
   addMonths,
   addDays,
@@ -20,6 +20,8 @@ import { NextIcon, PrevIcon } from "./SvgIcons";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
 import { date2UTC } from "@/utils/util";
+
+const TEN_MINS = 10 * 60 * 1000;
 
 interface DatePrickerProps {
   type: string;
@@ -36,7 +38,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
     setEndTime,
     endTime,
   } = useUser();
-  const today = startOfToday();
+  const today = new Date(Date.now() + TEN_MINS);
   const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   const colStartClasses = [
     "",
@@ -76,7 +78,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   };
 
   const handleSetDay = (day: Date) => {
-    console.log("selected Day============")
+    console.log("selected Day============");
     const today = new Date();
 
     if (day > today) {
@@ -115,6 +117,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   }, [type, range, today]);
 
   useEffect(() => {
+    console.log("startDay-.................", startDay);
     setStartDate(startDay);
     setEndDate(endDay);
   }, [endDay, endTime, setEndDate, setStartDate, startDay, startTime]);
@@ -242,7 +245,7 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
                     }`}
                   onClick={() => handleSetDay(day)}
                   style={{
-                    pointerEvents: day < today ? "none" : "all"
+                    pointerEvents: day < today ? "none" : "all",
                   }}
                 >
                   {format(day, "d")}

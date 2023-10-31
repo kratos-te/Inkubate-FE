@@ -14,6 +14,8 @@ import { date2UTC, numToWei } from "@/utils/util";
 import { LoadingPad } from "./LoadingPad";
 import { errorAlert, successAlert } from "./ToastGroup";
 
+const FIVE_MINS = 5 * 60 * 1000;
+
 export const CreateModal: FC = () => {
   const { closeCreateModal, isOpenedCreateModal } = useModal();
   const { startDate, endDate, startTime, endTime } = useUser();
@@ -28,9 +30,6 @@ export const CreateModal: FC = () => {
   const [ownerList, setOwnerList] = useState<InputData[]>([]);
   const [feeList, setFeeList] = useState<InputData[]>([]);
   const [isSpinLoading, setIsSpinLoading] = useState(false);
-
-  const startDay = date2UTC(startDate, startTime);
-  const endDay = date2UTC(endDate, endTime);
 
   const handleInputChange = (
     event: any,
@@ -88,90 +87,97 @@ export const CreateModal: FC = () => {
   };
 
   const onSubmit = async (data: any) => {
-    try {
-      setIsSpinLoading(true);
-      const values: Record<string, string> = {};
-      for (const key in data) {
-        const value = data[key];
-        values[key] = value;
-      }
+    const startDay = date2UTC(startDate, startTime);
+    const endDay = date2UTC(endDate, endTime);
+    console.log(new Date(startDay).getTime());
+    console.log(Date.now());
+    if (new Date(startDay).getTime() > Date.now() + FIVE_MINS) {
+      if (new Date(endDay).getTime() > new Date(startDay).getTime()) {
+        try {
+          setIsSpinLoading(true);
+          const values: Record<string, string> = {};
+          for (const key in data) {
+            const value = data[key];
+            values[key] = value;
+          }
 
-      let nftItem = {
-        id: "",
-        url: "",
-        fileEntityId: "",
-      };
-      let coverImage = {
-        id: "",
-        url: "",
-        fileEntityId: "",
-      };
-      console.log("spin!!!!!!!!!!")
+          let nftItem = {
+            id: "",
+            url: "",
+            fileEntityId: "",
+          };
+          let coverImage = {
+            id: "",
+            url: "",
+            fileEntityId: "",
+          };
+          console.log("spin!!!!!!!!!!");
 
-      if (selectedNftItemFile) {
-        console.log("!!!!!!!!!!!!!!!saving!!!!!!!!!!")
+          if (selectedNftItemFile) {
+            console.log("!!!!!!!!!!!!!!!saving!!!!!!!!!!");
 
-        const createNftItem = await createPhoto(selectedNftItemFile);
-        nftItem = createNftItem?.data;
-      }
-      if (selectedCoverFile) {
+            const createNftItem = await createPhoto(selectedNftItemFile);
+            nftItem = createNftItem?.data;
+          }
+          if (selectedCoverFile) {
+            const createCoverImage = await createPhoto(selectedCoverFile);
+            coverImage = createCoverImage?.data;
+          }
+          if (
+            values.name &&
+            values.symbol &&
+            values.description &&
+            values.mintPrice &&
+            values.totalSupply &&
+            values.maxPerTx &&
+            values.maxPerWallet &&
+            values.collectionUri
+          ) {
+            const mintPrice = BigInt(numToWei(values.mintPrice));
+            const supply = parseInt(values.totalSupply);
+            const maxPerTx = parseInt(values.maxPerTx);
+            const maxPerWallet = parseInt(values.maxPerWallet);
 
-        const createCoverImage = await createPhoto(selectedCoverFile);
-        coverImage = createCoverImage?.data;
-      }
-      if (
-        values.name &&
-        values.symbol &&
-        values.description &&
-        values.mintPrice &&
-        values.totalSupply &&
-        values.maxPerTx &&
-        values.maxPerWallet &&
-        values.collectionUri
-      ) {
-        const mintPrice = BigInt(numToWei(values.mintPrice));
-        const supply = parseInt(values.totalSupply);
-        const maxPerTx = parseInt(values.maxPerTx);
-        const maxPerWallet = parseInt(values.maxPerWallet);
-
-
-        const result = await createLaunchpad({
-          name: values.name,
-          symbol: values.symbol,
-          desc: values.description,
-          logoId: nftItem.id,
-          imageId: coverImage.id,
-          mintPrice: mintPrice,
-          supply: supply,
-          owners: [],
-          ownerRoyalties: [],
-          maxPerTx: maxPerTx,
-          maxPerWallet: maxPerWallet,
-          wlEnabled: false,
-          wlAddresses: [""],
-          enableReserveTokens: false,
-          startDate: startDay,
-          endDate: endDay,
-          network: "MAIN",
-          twitter: values.twitter,
-          discord: values.discord,
-          facebook: values.facebook,
-          reddit: values.reddit,
-          collectionUri: values.collectionUri,
-        });
-        if (result?.data.status === "500") {
-          errorAlert("Failed creating LaunchPad!")
-          setIsSpinLoading(false);
-        } else {
-          successAlert("Created Launchpad successfully!")
-          console.log("====next=====")
-          setIsSpinLoading(false);
+            await createLaunchpad({
+              name: values.name,
+              symbol: values.symbol,
+              desc: values.description,
+              logoId: nftItem.id,
+              imageId: coverImage.id,
+              mintPrice: mintPrice,
+              supply: supply,
+              owners: [],
+              ownerRoyalties: [],
+              maxPerTx: maxPerTx,
+              maxPerWallet: maxPerWallet,
+              wlEnabled: false,
+              wlAddresses: [""],
+              enableReserveTokens: false,
+              startDate: startDay,
+              endDate: endDay,
+              network: "MAIN",
+              twitter: values.twitter,
+              discord: values.discord,
+              facebook: values.facebook,
+              reddit: values.reddit,
+              collectionUri: values.collectionUri,
+            });
+          }
+          successAlert("Created Launchpad successfully!");
           closeCreateModal();
+        } catch (error) {
+          errorAlert("Failed creating LaunchPad!");
+          console.log("error", error);
+        } finally {
+          setIsSpinLoading(false);
         }
+      } else {
+        errorAlert("Wrong end time, It must be set to less than start time.");
       }
-    } catch (error) {
-
-      console.log("error", error);
+    } else {
+      errorAlert(
+        "Wrong start time, It must be set to 5 minutes later, at least less than now."
+      );
     }
   };
 
@@ -362,35 +368,35 @@ export const CreateModal: FC = () => {
                     </Typography>
                     {addressList.length > 0
                       ? addressList.map((_, index) => (
-                        <>
-                          <div key={index} className="flex gap-2 ">
-                            <input
-                              className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[85%] rounded-xl mt-2 p-[14px] placeholder:text-third"
-                              placeholder="Enter a name for the collection"
-                              onChange={(event) =>
-                                handleInputChange(
-                                  event,
-                                  index,
-                                  ownerList,
-                                  setOwnerList
-                                )
-                              }
-                            />
-                            <input
-                              className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[15%] rounded-xl mt-2 p-[14px] placeholder:text-third"
-                              placeholder="0.00%"
-                              onChange={(event) =>
-                                handleInputChange(
-                                  event,
-                                  index,
-                                  feeList,
-                                  setFeeList
-                                )
-                              }
-                            />
-                          </div>
-                        </>
-                      ))
+                          <>
+                            <div key={index} className="flex gap-2 ">
+                              <input
+                                className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[85%] rounded-xl mt-2 p-[14px] placeholder:text-third"
+                                placeholder="Enter a name for the collection"
+                                onChange={(event) =>
+                                  handleInputChange(
+                                    event,
+                                    index,
+                                    ownerList,
+                                    setOwnerList
+                                  )
+                                }
+                              />
+                              <input
+                                className="bg-dark-400 text-[14px] text-[#B3B3B3] w-[15%] rounded-xl mt-2 p-[14px] placeholder:text-third"
+                                placeholder="0.00%"
+                                onChange={(event) =>
+                                  handleInputChange(
+                                    event,
+                                    index,
+                                    feeList,
+                                    setFeeList
+                                  )
+                                }
+                              />
+                            </div>
+                          </>
+                        ))
                       : ""}
 
                     <button

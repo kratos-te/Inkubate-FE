@@ -101,7 +101,7 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
                   component="h1"
                   className="lg:font-readex font-poppins text-[36px] leading-[44px] max-sm:text-[24px] lg:leading-[35px] font-bold"
                 >
-                  { }
+                  {}
                 </Typography>
               </div>
             </div>

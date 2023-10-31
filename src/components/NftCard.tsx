@@ -1,11 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-
 import Typography from "./Typography";
 import IconButton from "./IconButton";
 import { AddIcon, FavoriteIcon } from "./SvgIcons";

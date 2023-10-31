@@ -23,6 +23,7 @@ export type CollectionItem = {
   verified?: boolean;
 };
 export type NftItem = {
+  id: string;
   name: string;
   image: string;
   price: number;
@@ -30,7 +31,9 @@ export type NftItem = {
   ownerBy: string;
   rarity: number;
   contract: string;
-  nftId: number;
+  tokenAddress: string;
+  tokenId: string;
+  tokenUri: string;
   favorited: boolean;
 };
 export type StatsItem = {
@@ -150,6 +153,7 @@ export interface CollectionParam {
   discord: string;
   website: string;
   verified: boolean;
+  nfts: NftTypes[];
 }
 
 export interface InputData {
@@ -164,11 +168,10 @@ export interface ChartType {
 
 export interface NftParams {
   collectionId: string;
-  name: string;
   contractType: string;
   price: string;
-  txHash: string;
   network: string;
+  txHash: string;
 }
 
 export interface NftTypes {

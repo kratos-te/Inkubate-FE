@@ -88,11 +88,15 @@ interface UserProviderProps {
   children: ReactNode;
 }
 
+const TEN_MINS = 10 * 60 * 1000;
+
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const today = startOfToday();
   const [username, setUsername] = useState("");
   const [userAddress, setUserAddress] = useState("");
-  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<Date>(
+    new Date(Date.now() + TEN_MINS)
+  );
   const [endDate, setEndDate] = useState<Date>(addMonths(today, 1));
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
