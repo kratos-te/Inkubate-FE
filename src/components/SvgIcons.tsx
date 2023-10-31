@@ -61,10 +61,6 @@ export const RedditIcon: FC<IconProps> = ({ className, color }) => {
   );
 };
 
-{/* <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
-<path d="M 5.9199219 6 L 20.582031 27.375 L 6.2304688 44 L 9.4101562 44 L 21.986328 29.421875 L 31.986328 44 L 44 44 L 28.681641 21.669922 L 42.199219 6 L 39.029297 6 L 27.275391 19.617188 L 17.933594 6 L 5.9199219 6 z M 9.7167969 8 L 16.880859 8 L 40.203125 42 L 33.039062 42 L 9.7167969 8 z"></path>
-</svg> */}
-
 export const TwitterIcon: FC<IconProps> = ({ color, className }) => {
   return (
     <svg
@@ -2417,3 +2413,19 @@ export const CheckIcon: FC = () => {
     </svg>
   );
 };
+
+export const ReportIcon: FC<IconProps> = ({ color, className }) => {
+  return (
+    <svg width="25"
+      height="25"
+      viewBox="0 0 25 25"
+      fill="none"
+      className={className ? className : ""}
+      xmlns="http://www.w3.org/2000/svg">
+      <g id="Navigation / Flag">
+        <path id="Vector" d="M4 21V15.6871M4 15.6871C9.81818 11.1377 14.1818 20.2363 20 15.6869V4.31347C14.1818 8.86284 9.81818 -0.236103 4 4.31327V15.6871Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          fill={color ? color : "#FFFFFF"} />
+      </g>
+    </svg>
+  )
+}

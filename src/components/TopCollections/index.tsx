@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 // import { DEMO_COLLECTIONS } from "@/config";
 import Link from "next/link";
 import Typography from "../Typography";
@@ -7,13 +7,12 @@ import CollectionItemLine from "../CollectionItemLine";
 import Button from "../Button";
 import DateTab from "../DateTab";
 import Loader from "./Loader";
-import { getTopCollection } from "@/actions/stat";
+import { getTopCollections } from "@/actions/stat";
 import { StatTypes } from "@/utils/types";
 
 const TopCollections: FC = () => {
-  const [range, setRange] = useState("1H_VOLUME");
-  const [topCollections, setTopCollections] = useState<StatTypes[]>([])
-
+  const [period, setPeriod] = useState("HOUR");
+  const [topCollections, setTopCollections] = useState<StatTypes[]>([]);
 
   // const collections = Array(12).fill(DEMO_COLLECTIONS[0]);
 
@@ -26,14 +25,14 @@ const TopCollections: FC = () => {
     }, 1200);
   }, []);
 
+  const handleGetTopCollections = useCallback(async () => {
+    const getData = await getTopCollections(period);
+    setTopCollections(getData);
+  }, [period]);
+
   useEffect(() => {
-    console.log("range", range)
-    const getTopCollections = async () => {
-      const getData = await getTopCollection(range)
-      setTopCollections(getData?.data)
-    }
-    getTopCollections()
-  }, [range])
+    handleGetTopCollections();
+  }, [handleGetTopCollections, period]);
 
   if (!loading) {
     return (
@@ -45,21 +44,22 @@ const TopCollections: FC = () => {
           >
             Top Collections
           </Typography>
-          <DateTab current={range} setTab={setRange} />
+          <DateTab current={period} setTab={setPeriod} />
         </div>
         <div className="mt-[42px]">
           <div className="grid xl:grid-cols-2 gap-[100px]">
             <div className="relative grid grid-cols-1 gap-7">
-              {topCollections && topCollections.map(
-                (item, index) =>
-                  index < 6 && (
-                    <CollectionItemLine
-                      item={item}
-                      num={index + 1}
-                      key={index}
-                    />
-                  )
-              )}
+              {topCollections &&
+                topCollections.map(
+                  (item, index) =>
+                    index < 6 && (
+                      <CollectionItemLine
+                        item={item}
+                        num={index + 1}
+                        key={index}
+                      />
+                    )
+                )}
               <div
                 className="h-[72px] w-full absolute left-0 bottom-0 z-10 rotate-180 pointer-events-none home-mask-1"
                 style={{
@@ -69,16 +69,17 @@ const TopCollections: FC = () => {
               />
             </div>
             <div className="relative hidden grid-cols-1 xl:grid gap-7">
-              {topCollections && topCollections.map(
-                (item, index) =>
-                  index >= 6 && (
-                    <CollectionItemLine
-                      item={item}
-                      num={index + 1}
-                      key={index}
-                    />
-                  )
-              )}
+              {topCollections &&
+                topCollections.map(
+                  (item, index) =>
+                    index >= 6 && (
+                      <CollectionItemLine
+                        item={item}
+                        num={index + 1}
+                        key={index}
+                      />
+                    )
+                )}
               <div
                 className="h-[72px] w-full absolute left-0 bottom-0 z-10 rotate-180 pointer-events-none"
                 style={{

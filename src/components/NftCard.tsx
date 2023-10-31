@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
@@ -33,6 +34,7 @@ const NftCard: FC<ItemProps> = ({
   setActiveBuy,
   setIsNoticed,
 }) => {
+  console.log("here", nft);
   const { id, image, name, owner, tokenId, tokenAddress } = nft;
   const favorited = false;
   const pathname = usePathname();
@@ -108,7 +110,7 @@ const NftCard: FC<ItemProps> = ({
           res?.transactionHash as `0x${string}`,
           listByNft.network
         );
-        successAlert("Canceled List")
+        successAlert("Canceled List");
 
         if (cancel && setIsNoticed) {
           setIsNoticed(false);

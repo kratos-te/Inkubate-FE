@@ -187,6 +187,7 @@ export interface NftTypes {
   ownerId: string;
   royalty: number;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface AttributesTypes {

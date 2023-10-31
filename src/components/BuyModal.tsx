@@ -22,7 +22,7 @@ interface BuyModalProps {
 
 export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
   const { closeBuyModal, isOpenedBuyModal } = useModal();
-  const { image, name, tokenId, tokenAddress, collection } = nft;
+  const { image, tokenId, tokenAddress, collection } = nft;
   const { address: walletAddress } = useAccount();
   const [isBuyStatus, setIsBuyStatus] = useState(false);
   const { buyListing } = useInkubate();
@@ -58,7 +58,7 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
       listing.network
     );
     console.log("buy", buy);
-    successAlert("Bought successfully!")
+    successAlert("Bought successfully!");
     setIsBuyStatus(false);
   };
 
@@ -95,9 +95,7 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
                   <p className="text-[24px] leading-[15px] font-semibold max-sm:text-[18px] lg:leading-[1.5] text-[#B3B3B3] font-poppins">
                     {collection?.name}
                   </p>
-                  {collection?.verified &&
-                    <VerifiedIcon color="#EA4492" />
-                  }
+                  {collection?.verified && <VerifiedIcon color="#EA4492" />}
                 </div>
                 <Typography
                   component="h1"

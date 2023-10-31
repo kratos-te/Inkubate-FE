@@ -14,15 +14,13 @@ import { CollectionParam, LaunchpadParam, NftTypes } from "@/utils/types";
 import { getCollectionById, getLaunchpadById, getNft } from "@/actions";
 import { weiToNum } from "@/utils/util";
 
-export default function CollectionPage() {
+export default function MintPage() {
   const pathname = usePathname();
 
-  const contract = "0x2f05e799C61b600c65238a9DF060cABA63Db8E78";
-  // const collectionId = query?.get("collectionId");
   const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
   const [nftByColletion, setNftByCollection] = useState<NftTypes[]>([]);
-  const [remainTime, setRemainTime] = useState<number>()
+  const [remainTime, setRemainTime] = useState<number>();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -44,19 +42,18 @@ export default function CollectionPage() {
       if ((pathname.split("/")[1] as string) === "mint" && collectionId) {
         const collection = await getCollectionById(collectionId);
         const launchpad = await getLaunchpadById(collection?.data.launchpadId);
-        const nfts = await getNft(collectionId);
+        const nfts = await getNft({ collectionId});
         const remainingTime = Math.floor(
           (new Date(launchpad?.data.startDate).getTime() - Date.now()) / 1000
         );
         setLaunchPadById(launchpad?.data);
         setCollectionById(collection?.data);
         setNftByCollection(nfts?.data);
-        setRemainTime(remainingTime)
+        setRemainTime(remainingTime);
       }
     };
     getCollection();
   }, [collectionId, pathname]);
-
 
   return (
     <>
@@ -67,7 +64,7 @@ export default function CollectionPage() {
         bgClass="absolute -translate-x-1/2 left-1/2 top-0 pointer-events-none w-[3131px] h-[3158px] object-cover opacity-80 lg:opacity-100"
         meta={
           <Meta
-            title={`${collectionId ? collectionId : ""} ${contract}`}
+            title={`${collectionId ? collectionId : ""}`}
             description="Lorem ipsum dolor sit amet."
           />
         }
@@ -75,7 +72,8 @@ export default function CollectionPage() {
         <div className="max-w-[1200px] mx-5 xl:mx-auto pt-[130px] xl:pt-[152px] relative z-10">
           {!loading ? (
             collectionById &&
-            launchpadById && remainTime && (
+            launchpadById &&
+            remainTime && (
               <MintDetail
                 collection={collectionById}
                 launchpad={launchpadById}
@@ -94,12 +92,15 @@ export default function CollectionPage() {
                   title={
                     <div className="flex gap-2.5 items-center">
                       <span>Allowlist Mint</span>
-                      {remainTime && remainTime > 0 ? <div className="rounded-lg bg-[#666666] px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
-                        Inactive
-                      </div> : <div className="rounded-lg bg-secondary px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
-                        active
-                      </div>}
-
+                      {remainTime && remainTime > 0 ? (
+                        <div className="rounded-lg bg-[#666666] px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
+                          Inactive
+                        </div>
+                      ) : (
+                        <div className="rounded-lg bg-secondary px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
+                          active
+                        </div>
+                      )}
                     </div>
                   }
                   defaultCollapsed={true}
@@ -136,11 +137,15 @@ export default function CollectionPage() {
                   title={
                     <div className="flex gap-2.5 items-center">
                       <span>Public Mint</span>
-                      {remainTime && remainTime > 0 ? <div className="rounded-lg bg-[#666666] px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
-                        Inactive
-                      </div> : <div className="rounded-lg bg-secondary px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
-                        active
-                      </div>}
+                      {remainTime && remainTime > 0 ? (
+                        <div className="rounded-lg bg-[#666666] px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
+                          Inactive
+                        </div>
+                      ) : (
+                        <div className="rounded-lg bg-secondary px-2.5 py-[6px] text-[12px] leading-[18px] font-sans">
+                          active
+                        </div>
+                      )}
                     </div>
                   }
                   defaultCollapsed={true}

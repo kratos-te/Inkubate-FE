@@ -5,14 +5,14 @@ import { SORT_LIST } from "@/config";
 interface DropdownProps {
   value: string;
   setValue: Function;
-  setAscending: Function;
+  setSortAscending: Function;
   className?: string;
 }
-const SortDropdown: FC<DropdownProps> = ({ value, setValue, setAscending, className }) => {
+const SortDropdown: FC<DropdownProps> = ({ value, setValue, setSortAscending, className }) => {
 
   const handelSetData = (item: any) => {
     setValue(item.value);
-    setAscending(item.ascending)
+    setSortAscending(item.ascending)
   }
   return (
     <div

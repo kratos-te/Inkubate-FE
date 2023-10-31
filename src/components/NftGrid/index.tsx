@@ -2,8 +2,6 @@ import { FC, useEffect, useMemo, useRef, useState } from "react";
 
 import { NftTypes } from "@/utils/types";
 import useWindowSize from "@/utils/useWindowSize";
-import NftCard from "../NftCard";
-import NftCardLoader from "../Common/NftCardLoader";
 
 interface GridProps {
   nftData: NftTypes[];
@@ -13,16 +11,11 @@ interface GridProps {
   setActiveBuy: (nft: NftTypes) => void;
 }
 
-const NftGrid: FC<GridProps> = ({
-  isDense,
-  nftData,
-  setActiveListing,
-  setActiveBuy,
-}) => {
+const NftGrid: FC<GridProps> = ({ isDense }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const windowSize = useWindowSize();
 
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   const colCont = useMemo(() => {
     let cnt = 5;
@@ -38,17 +31,17 @@ const NftGrid: FC<GridProps> = ({
     return cnt;
   }, [windowSize.width, isDense]);
 
-  const width = useMemo(() => {
-    let w = 250;
-    if (gridRef.current) {
-      const boxSize = gridRef.current.offsetWidth;
-      w = (boxSize - (colCont - 1) * 20) / colCont;
-      if (windowSize.width < 1400) {
-        w = (boxSize - (colCont - 1) * 20) / colCont;
-      }
-    }
-    return w;
-  }, [colCont, windowSize.width]);
+  // const width = useMemo(() => {
+  //   let w = 250;
+  //   if (gridRef.current) {
+  //     const boxSize = gridRef.current.offsetWidth;
+  //     w = (boxSize - (colCont - 1) * 20) / colCont;
+  //     if (windowSize.width < 1400) {
+  //       w = (boxSize - (colCont - 1) * 20) / colCont;
+  //     }
+  //   }
+  //   return w;
+  // }, [colCont, windowSize.width]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -64,7 +57,7 @@ const NftGrid: FC<GridProps> = ({
         gridTemplateColumns: `repeat(${colCont}, minmax(0, 1fr))`,
       }}
     >
-      {!loading && nftData
+      {/* {!loading && nftData
         ? nftData.map((item, key) => (
             <NftCard
               nft={item}
@@ -76,7 +69,7 @@ const NftGrid: FC<GridProps> = ({
           ))
         : Array.from({ length: 20 }).map((_, key) => (
             <NftCardLoader key={key} width={width} />
-          ))}
+          ))} */}
     </div>
   );
 };
