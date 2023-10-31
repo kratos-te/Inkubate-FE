@@ -2,7 +2,7 @@ import { FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { CollectionParam, LaunchpadParam, NftTypes } from "@/utils/types";
+import { LaunchpadParam } from "@/utils/types";
 import Typography from "./Typography";
 import {
   DiscordIcon,
@@ -18,19 +18,12 @@ import { useModal } from "@/contexts/ModalContext";
 import { weiToNum } from "@/utils/util";
 
 interface OverviewProps {
-  collection: CollectionParam;
   launchpad: LaunchpadParam;
-  nfts: NftTypes[];
   className?: string;
   remainingTime: number;
 }
 
-const MintDetail: FC<OverviewProps> = ({
-  collection,
-  launchpad,
-  nfts,
-  remainingTime,
-}) => {
+const MintDetail: FC<OverviewProps> = ({ launchpad, remainingTime }) => {
   // const { price, setPrice } = useState(launchpad.mintPrice)
   // const [supply, setSupply] = useState<string>("0")
   const router = useRouter();
@@ -62,7 +55,7 @@ const MintDetail: FC<OverviewProps> = ({
         }}
       >
         <Image
-          src={collection?.avatar?.url}
+          src={launchpad.logoImg.url}
           className="relative z-0"
           alt=""
           fill
@@ -75,7 +68,7 @@ const MintDetail: FC<OverviewProps> = ({
             component="h1"
             className="font-poppins text-[36px] lg:font-readex leading-[44px] lg:text-[28px] lg:leading-[35px] font-bold"
           >
-            {collection.name}
+            {launchpad.name}
           </Typography>
           <div className="flex gap-6">
             <Typography
@@ -94,7 +87,7 @@ const MintDetail: FC<OverviewProps> = ({
             </Typography>
           </div>
           <Typography className="text-[12px] mt-2 md:mt-6 flex items-center text-white">
-            {collection.desc}
+            {launchpad.desc}
           </Typography>
           <div className="flex gap-4 mt-5 xl:gap-6">
             <Link href={"#"} className="w-6 h-6">
@@ -113,7 +106,7 @@ const MintDetail: FC<OverviewProps> = ({
           <div className="w-full sm:w-[400px]">
             <MintProgress
               totalSupply={launchpad.supply}
-              minted={nfts.length}
+              minted={launchpad.collection.nfts.length}
               className="mt-6"
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 mt-5 gap-[14px] sm:gap-2.5">
@@ -126,7 +119,9 @@ const MintDetail: FC<OverviewProps> = ({
               </button>
               <button
                 className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300"
-                onClick={() => router.push(`/collection/${collection.id}`)}
+                onClick={() =>
+                  router.push(`/collection/${launchpad.collectionId}`)
+                }
               >
                 <GalleryIcon className="mr-1" color="#F2F3F4" />
                 View Collection

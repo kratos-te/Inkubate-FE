@@ -133,6 +133,8 @@ export interface LaunchpadParam {
   discord: string;
   facebook: string;
   reddit: string;
+  collection: CollectionParam;
+  collectionId: string;
   collectionUri: string;
 }
 
@@ -147,7 +149,7 @@ export interface CollectionParam {
   banner: PhotoItem;
   supply: number;
   mintPrice: bigint;
-  launchpadId: number;
+  launchpadId: string;
   network: string;
   twitter: string;
   discord: string;

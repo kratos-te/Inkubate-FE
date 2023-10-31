@@ -6,15 +6,14 @@ import { CloseCircleIcon, MinusIcon, PlusIcon } from "./SvgIcons";
 import { LoadingPad } from "./LoadingPad";
 import ClickAwayComponent from "./ClickAwayComponent";
 import { useErc721a } from "@/hooks/useErc721a";
-import { CollectionParam, LaunchpadParam, NftItem } from "@/utils/types";
+import { LaunchpadParam, NftItem } from "@/utils/types";
 import { createNft } from "@/actions/nft";
 import { errorAlert, successAlert } from "./ToastGroup";
 
 interface MintModalProps {
-  collection: CollectionParam;
   launchpad: LaunchpadParam;
 }
-export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
+export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
   const { mintNFT, getMintingStartTime } = useErc721a();
   const { closeMintModal, isOpenedMintModal } = useModal();
   const [mintValue, setMintValue] = useState<number>(1);
@@ -32,13 +31,19 @@ export const MintModal: FC<MintModalProps> = ({ collection, launchpad }) => {
   const handleMint = async (amount: number) => {
     setMintingProgress(true);
     try {
-      const startTimeRes = await getMintingStartTime(collection.address);
+      const startTimeRes = await getMintingStartTime(
+        launchpad.collection.address
+      );
       if (startTimeRes?.res) console.log("here", startTimeRes.res);
       const value = Number(launchpad.mintPrice) * amount;
-      const rept = await mintNFT(amount, value.toString(), collection.address);
+      const rept = await mintNFT(
+        amount,
+        value.toString(),
+        launchpad.collection.address
+      );
       console.log(rept);
       const createNfts = await createNft({
-        collectionId: collection.id,
+        collectionId: launchpad.collectionId,
         contractType: "ERC721",
         price: launchpad.mintPrice.toString(),
         txHash: rept.transactionHash || "",
