@@ -32,7 +32,8 @@ import { useAuth } from "@/contexts/AuthContext";
 const Header: FC = () => {
   const { openWalletModal, closeWalletModal, openSettingModal } = useModal();
   const [isNotificationModal, setIsNotificationModal] = useState(false);
-  const { userAddress, profile, userData, getUserData, getProfileData } = useUser();
+  const { userAddress, profile, userData, getUserData, getProfileData } =
+    useUser();
   const { logout, accessToken } = useAuth();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
@@ -116,16 +117,18 @@ const Header: FC = () => {
               <>
                 <div className="flex border-2 border-[#EA4492] rounded-full">
                   <div
-                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full  text-white items-center cursor-pointer ${isEther ? "bg-[#EA4492]" : ""
-                      }`}
+                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full  text-white items-center cursor-pointer ${
+                      isEther ? "bg-[#EA4492]" : ""
+                    }`}
                     onClick={handelSetEther}
                   >
                     <EthIcon color="white" />
                     <p className="text-[12px] text-white font-bold"> ETH</p>
                   </div>
                   <div
-                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full text-white items-center cursor-pointer ${isBnb ? "bg-[#EA4492]" : ""
-                      }`}
+                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full text-white items-center cursor-pointer ${
+                      isBnb ? "bg-[#EA4492]" : ""
+                    }`}
                     onClick={handleSetBnb}
                   >
                     <BnbIcon />
@@ -135,8 +138,9 @@ const Header: FC = () => {
                 <IconButton className="relative" onClick={handleNotification}>
                   <AlarmIcon />
                   <BadgeIcon
-                    className={`${!NOTIFICATIONS ? "hidden" : "absolute right-0"
-                      }`}
+                    className={`${
+                      !NOTIFICATIONS ? "hidden" : "absolute right-0"
+                    }`}
                   />
                 </IconButton>
                 <ClickAwayComponent
@@ -162,11 +166,13 @@ const Header: FC = () => {
                             key={key}
                             icon={<item.icon />}
                             title={item.title}
-                            link={`/profile/${userData.id}?tab=1`}
+                            link={item.link}
                           />
                         ))}
-                        <button className="flex w-full space-x-4 cursor-pointer"
-                          onClick={handleEditProfile}>
+                        <button
+                          className="flex w-full space-x-4 cursor-pointer"
+                          onClick={handleEditProfile}
+                        >
                           <MenuSettingIcon />
                           <p className="text-white text-lg font-semibold">
                             Settings
@@ -182,7 +188,7 @@ const Header: FC = () => {
                           </p>
                         </button>
                       </div>
-                      <Link href={`/profile/${userData.id}`} passHref>
+                      <Link href={`/profile`} passHref>
                         <div className="flex items-center p-6 gap-[14px] cursor-pointer bg-secondary rounded-b-2xl">
                           <Image
                             src={
@@ -282,7 +288,10 @@ const Header: FC = () => {
                           className="rounded-full cursor-pointer w-[44px] h-[44px]"
                         />
                         <div className="flex-col space-y-1">
-                          <p className="text-white text-lg"> {userData.username}</p>
+                          <p className="text-white text-lg">
+                            {" "}
+                            {userData.username}
+                          </p>
                           <p className="text-white text-[16px]">
                             {data?.formatted.slice(0, 7)} ETH
                           </p>
@@ -290,7 +299,7 @@ const Header: FC = () => {
                       </div>
                     ) : (
                       <button
-                          className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center bg-secondary rounded-b-2xl"
+                        className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center bg-secondary rounded-b-2xl"
                         onClick={openWalletModal}
                       >
                         Connect Wallet

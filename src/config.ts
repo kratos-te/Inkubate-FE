@@ -15,6 +15,10 @@ export const API_STAT_URL = process.env.NEXT_PUBLIC_API_STAT_URL
   ? process.env.NEXT_PUBLIC_API_STAT_URL
   : "https://marketapi.5thweb.io";
 
+export const ORIGIN_URI = "http://localhost:3000";
+
+export const SHARE_TWITTER_LINK = `https://twitter.com/intent/tweet?text=Check%20out%20this%20account%20on%20inkubate&url=${ORIGIN_URI}%2F0x3e3403F93fA2ea7061FcC3FDe36cCd789F72b94A&via=inkubate`;
+
 export const INFURN_APU_KEY = "dfb6591f687e4a37b958417070e73dab";
 
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -93,6 +97,29 @@ export const PROFILE_TABS = [
   },
 ];
 
+export const USER_TABS = [
+  {
+    tab: "1",
+    title: "NFTS",
+    value: "nfts",
+  },
+  {
+    tab: "2",
+    title: "ERC-1155 NFTS",
+    value: "erc-1155",
+  },
+  {
+    tab: "3",
+    title: "Created",
+    value: "created",
+  },
+  {
+    tab: "4",
+    title: "Activity",
+    value: "activity",
+  },
+];
+
 export const DROPDOWN_LINKS = [
   {
     icon: MenuUserIcon,
@@ -102,7 +129,7 @@ export const DROPDOWN_LINKS = [
   {
     icon: MenuFavorIcon,
     title: "Favourites",
-    link: "/",
+    link: "/profile?tab=4",
   },
   {
     icon: MenuListIcon,
@@ -255,12 +282,12 @@ export const DEMO_NFTS = [
 export const SORT_LIST = [
   {
     title: "Price low to high",
-    value: "",
+    value: "asc",
     ascending: true,
   },
   {
     title: "Price high to low",
-    value: "",
+    value: "desc",
     ascending: false,
   },
   {

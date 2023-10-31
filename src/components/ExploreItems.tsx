@@ -10,6 +10,7 @@ import { ListingTypes, NftTypes } from "@/utils/types";
 
 const ExploreItems: FC = () => {
   const [sort, setSort] = useState("p-l-h");
+  const [_sortAscending, setSortAscending] = useState(true);
   const [isDense, setIsDense] = useState(true);
   const [listingNft, setListingNft] = useState<NftTypes[]>([]);
 
@@ -43,7 +44,11 @@ const ExploreItems: FC = () => {
           />
         </div>
         <div className="hidden lg:block">
-          <SortDropdown value={sort} setValue={setSort} />
+          <SortDropdown
+            value={sort}
+            setValue={setSort}
+            setSortAscending={setSortAscending}
+          />
         </div>
         <div className="flex rounded-lg bg-dark-400 items-center h-11 overflow-hidden">
           <button

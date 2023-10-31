@@ -8,7 +8,7 @@ import { getLaunchpadById } from "@/actions";
 import { weiToNum } from "@/utils/util";
 
 interface ItemProps {
-  item: StatTypes;
+  item?: StatTypes;
   collection: CollectionParam;
   className?: string;
 }
@@ -30,8 +30,9 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
       className="inline-block min-w-[240px] xl:min-w-[360px]"
     >
       <div
-        className={`bg-dark-200 rounded-xl shadow-card relative ${className ? className : ""
-          }`}
+        className={`bg-dark-200 rounded-xl shadow-card relative ${
+          className ? className : ""
+        }`}
       >
         <div className="relative overflow-hidden rounded-t-xl h-[124px] xl:h-[235px]">
           {banner ? (
@@ -85,7 +86,7 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
                     <Typography className="font-[400] leading-[1.5] text-[8px] xl:text-[12px]">
                       Floor
                     </Typography>
-                    {launchpadById && (
+                    {launchpadById && item?.floorPrice !== undefined && (
                       <Typography className="font-bold leading-[1.5] text-[12px] xl:text-[14px]">
                         {weiToNum(item?.floorPrice)} ETH
                       </Typography>
@@ -95,9 +96,11 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
                     <Typography className="font-[400] leading-[1.5] text-[8px] xl:text-[12px]">
                       Total Volume
                     </Typography>
-                    <Typography className="font-bold leading-[1.5] text-[12px] xl:text-[14px]">
-                      {weiToNum(item?.volume).toFixed(2)} ETH
-                    </Typography>
+                    {item?.floorPrice !== undefined && (
+                      <Typography className="font-bold leading-[1.5] text-[12px] xl:text-[14px]">
+                        {weiToNum(item?.volume).toFixed(2)} ETH
+                      </Typography>
+                    )}
                   </div>
                 </div>
               </div>

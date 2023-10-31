@@ -30,6 +30,27 @@ export async function getUser(): Promise<UserItem | null> {
   }
 }
 
+export async function getUserById(userId: string): Promise<UserItem | null> {
+  try {
+    const response = await axios
+      .get(`${API_BASE_URL}/api/user/${userId}`)
+      .then((res) => res.data)
+      .catch((e) => {
+        throw e;
+      });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
+      console.error(`Axios Error: ${error.message}`);
+    } else {
+      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
+      console.error(error);
+    }
+    return null; // Return null when an error occurs
+  }
+}
+
 export async function availableUsername(
   username: string
 ): Promise<string | null> {

@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import AssetOverview from "@/components/AssetOverview";
 import AssetDetailBox from "@/components/AssetDetailBox";
@@ -29,6 +30,7 @@ import { BuyModal } from "@/components/BuyModal";
 import { usePathname } from "next/navigation";
 import { getNftByOne, getNft } from "@/actions/nft";
 import {
+  ActivityTypes,
   AdvancedOrder,
   CriteriaResolver,
   Fulfillment,
@@ -40,8 +42,8 @@ import {
 } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
 import NftCard from "@/components/NftCard";
-import { acceptListingOffer, getListByNft, getOffersByNftId } from "@/actions";
-import { weiToNum } from "@/utils/util";
+import { acceptListingOffer, getActivityByNft, getListByNft, getOffersByNftId } from "@/actions";
+import { shortenAddress, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
 import { useAccount } from "wagmi";
 import { INK_CONDUIT_KEY } from "@/utils/constants";
@@ -49,7 +51,7 @@ import { SALT } from "@/config";
 import { ZeroAddress, ZeroHash } from "ethers";
 import { useUser } from "@/contexts/UserContext";
 
-export default function CollectionPage() {
+export default function NftPage() {
   const pathname = usePathname();
   const { address: walletAddress } = useAccount();
   const { userData } = useUser();
@@ -57,8 +59,8 @@ export default function CollectionPage() {
   const [loading, setLoading] = useState(true);
   const [nftByOne, setNftByOne] = useState<NftTypes>();
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
+  const [activity, setActivity] = useState<ActivityTypes[]>([]);
   const [listByNft, setListByNft] = useState<ListingTypes>();
-  // const [user]
   const [offers, setOffers] = useState<OfferTypes[]>([]);
   const [offer, setOffer] = useState<OfferTypes>();
   const [isListed, setIsListed] = useState(false);
@@ -181,17 +183,20 @@ export default function CollectionPage() {
   useEffect(() => {
     const getNftData = async () => {
       const nft = await getNftByOne(tokenId, contract);
-      const nfts = await getNft(nft?.data.collectionId);
-      const listing = await getListByNft(nft?.data.id);
-      setNftByOne(nft?.data);
+      console.log("nft", nft);
+      const nfts = await getNft(nft?.collectionId);
+      const listing = await getListByNft(nft?.id);
+      const activities = await getActivityByNft(nft?.id)
+      setNftByOne(nft);
       setNftByCollection(nfts?.data);
       setListByNft(listing?.data);
+      setActivity(activities?.data)
 
       console.log("NFT", nft);
       console.log("Listing", listing);
 
       // ********* Get offers by nft id ************ //
-      const newOffers = await getOffersByNftId(nft?.data.id);
+      const newOffers = await getOffersByNftId(nft?.id);
       setOffers(newOffers);
     };
     getNftData();
@@ -262,22 +267,34 @@ export default function CollectionPage() {
                       {nftByOne?.collection.desc}
                     </Typography>
                     <div className="flex gap-[15px] mt-5">
-                      {nftByOne?.collection.website &&
-                        <Link href={nftByOne?.collection.website} className="w-5 h-5">
-                        <WebsiteIcon className="w-4 h-4" />
-                      </Link>
-                      }
-                      {nftByOne?.collection.twitter &&
-                        <Link href={nftByOne?.collection.twitter} className="w-5 h-5">
+                      {nftByOne?.collection.website && (
+                        <Link
+                          href={nftByOne?.collection.website}
+                          className="w-5 h-5"
+                        >
+                          <WebsiteIcon className="w-4 h-4" />
+                        </Link>
+                      )}
+                      {nftByOne?.collection.twitter && (
+                        <Link
+                          href={nftByOne?.collection.twitter}
+                          className="w-5 h-5"
+                        >
                           <TwitterIcon className="w-4 h-4" />
                         </Link>
-                      }
-                      {nftByOne?.collection.discord &&
-                        <Link href={nftByOne?.collection.discord} className="w-5 h-5">
+                      )}
+                      {nftByOne?.collection.discord && (
+                        <Link
+                          href={nftByOne?.collection.discord}
+                          className="w-5 h-5"
+                        >
                           <DiscordIcon className="w-4 h-4" />
                         </Link>
-                      }
-                      <Link href={`https://goerli.etherscan.io/address/${nftByOne?.tokenAddress}`} className="w-5 h-5">
+                      )}
+                      <Link
+                        href={`https://goerli.etherscan.io/address/${nftByOne?.tokenAddress}`}
+                        className="w-5 h-5"
+                      >
                         <EthscanIcon className="w-4 h-4" />
                       </Link>
                     </div>
@@ -307,16 +324,74 @@ export default function CollectionPage() {
                         ))}
                     </div>
                   </AssetDetailBox>
-                  <AssetDetailBox
-                    icon={<DetailIcon />}
-                    title="Details"
-                  ></AssetDetailBox>
+                  <AssetDetailBox icon={<DetailIcon />} title="Details">
+                    <div className="p-[15px] flex justify-between items-center">
+                      <div className="font-readex text-[12px] font-medium text-secondary">
+                        Contract Address
+                      </div>
+                      <Typography className="text-[14px] leading-[17.5px] font-bold font-readex">
+                        <Link
+                          href={`https://etherscan.io/address/${nftByOne?.tokenAddress}`}
+                          target="_blank"
+                          className="text-blue-300 hover:text-blue-600"
+                        >
+                          {shortenAddress(nftByOne?.tokenAddress)}
+                        </Link>
+                      </Typography>
+                    </div>
+                    <div className="p-[15px] flex justify-between items-center">
+                      <div className="font-readex text-[12px] font-medium text-secondary">
+                        Token ID
+                      </div>
+                      <Typography className="text-[14px] leading-[17.5px] font-bold font-readex">
+                        {nftByOne?.tokenId}
+                      </Typography>
+                    </div>
+                    <div className="p-[15px] flex justify-between items-center">
+                      <div className="font-readex text-[12px] font-medium text-secondary">
+                        Token Standard
+                      </div>
+                      <Typography className="text-[14px] leading-[17.5px] font-bold font-readex">
+                        {nftByOne?.contractType}
+                      </Typography>
+                    </div>
+                    <div className="p-[15px] flex justify-between items-center">
+                      <div className="font-readex text-[12px] font-medium text-secondary">
+                        Chain
+                      </div>
+                      <Typography className="text-[14px] leading-[17.5px] font-bold font-readex">
+                        {nftByOne?.collection.network}
+                      </Typography>
+                    </div>
+                    <div className="p-[15px] flex justify-between items-center">
+                      <div className="font-readex text-[12px] font-medium text-secondary">
+                        Last Updated
+                      </div>
+                      <Typography className="text-[14px] leading-[17.5px] font-bold font-readex">
+                        {nftByOne?.updatedAt}
+                      </Typography>
+                    </div>
+                    <div className="p-[15px] flex justify-between items-center">
+                      <div className="font-readex text-[12px] font-medium text-secondary">
+                        Creator Earnings
+                      </div>
+                      <Typography className="text-[14px] leading-[17.5px] font-bold font-readex">
+                        0
+                      </Typography>
+                    </div>
+                  </AssetDetailBox>
                 </div>
                 <div className="w-full md:w-1/2 xl:w-[calc(100%-544px)] flex flex-col gap-5 mt-5 md:mt-0">
                   <AssetDetailBox
                     icon={<HistoryIcon />}
                     title="Price History"
-                  ></AssetDetailBox>
+                  >
+                    {activity && (
+                      <div>
+
+                      </div>
+                    )}
+                  </AssetDetailBox>
                   <AssetDetailBox
                     icon={<OfferSmIcon />}
                     title="Offers"
@@ -367,7 +442,7 @@ export default function CollectionPage() {
                 </div>
               </div>
               <div className="mt-5">
-                {nftByOne &&
+                {nftByOne && (
                   <AssetDetailBox
                     icon={<ActivityIcon />}
                     title="Activity"
@@ -388,7 +463,7 @@ export default function CollectionPage() {
                       />
                     </div>
                   </AssetDetailBox>
-                }
+                )}
               </div>
               <div className="max-w-[1080px] mx-auto mt-[30px]">
                 <div className="p-5 flex gap-2.5 items-center">
@@ -398,16 +473,17 @@ export default function CollectionPage() {
                   </Typography>
                 </div>
                 <div className="flex justify-center gap-[25px] min-h-[390px] flex-wrap">
-                  {nftByCollection && nftByCollection.map((item, index) => (
-                    <NftCard
-                      key={index}
-                      nft={item}
-                      width={240}
-                      setActiveListing={() => selectActiveNftIdx(item)}
-                      setActiveBuy={() => selectBuyNftIdx(item)}
-                      setIsNoticed={setIsNoticed}
-                    />
-                  ))}
+                  {nftByCollection &&
+                    nftByCollection.map((item, index) => (
+                      <NftCard
+                        key={index}
+                        nft={item}
+                        width={240}
+                        setActiveListing={() => selectActiveNftIdx(item)}
+                        setActiveBuy={() => selectBuyNftIdx(item)}
+                        setIsNoticed={setIsNoticed}
+                      />
+                    ))}
                 </div>
                 <div className="text-center mt-[30px] lg:mt-5">
                   <Link href={`/collection/${nftByOne?.collectionId}`}>

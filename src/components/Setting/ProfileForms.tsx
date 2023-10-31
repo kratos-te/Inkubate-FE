@@ -31,6 +31,10 @@ const ProfileForms: FC = () => {
   const [selectedBannerFile, setSelectedBannerFile] = useState<File | null>(
     null
   );
+  const [changedTwitter, setChangeTwitter] = useState(profile?.twitter);
+  const [changedDiscord, setChangeDiscord] = useState(profile?.discord);
+  const [changedReddit, setChangeReddit] = useState(profile?.reddit);
+  const [changedFacebook, setChangeFacebook] = useState(profile?.facebook);
 
   const handleUsernameChange = (event: any) => {
     setChangeName(event.target.value);
@@ -55,6 +59,19 @@ const ProfileForms: FC = () => {
 
     setSelectedBannerFile(file);
     setChangeBanner(URL.createObjectURL(file));
+  };
+
+  const handleTwitterChange = (event: any) => {
+    setChangeTwitter(event.target.value);
+  };
+  const handleDiscordChange = (event: any) => {
+    setChangeDiscord(event.target.value);
+  };
+  const handleRedditChange = (event: any) => {
+    setChangeReddit(event.target.value);
+  };
+  const handleFacebookChange = (event: any) => {
+    setChangeFacebook(event.target.value);
   };
 
   const onSubmit = async (data: any) => {
@@ -115,14 +132,18 @@ const ProfileForms: FC = () => {
         ...profile,
         avatar,
         banner,
+        discord: changedDiscord,
+        facebook: changedFacebook,
+        twitter: changedTwitter,
+        reddit: changedReddit,
       });
 
       await updateProfile({
         bio: changedBio,
-        twitter: "",
-        discord: "",
-        facebook: "",
-        reddit: "",
+        discord: changedDiscord,
+        facebook: changedFacebook,
+        twitter: changedTwitter,
+        reddit: changedReddit,
         avatarId: avatar?.id || undefined,
         bannerId: banner?.id || undefined,
       });
@@ -130,7 +151,7 @@ const ProfileForms: FC = () => {
       getUserData();
       getProfileData();
       closeSettingModal();
-      successAlert("Updated succesfully!")
+      successAlert("Updated succesfully!");
     } catch (error) {
       console.log("error", error);
     }
@@ -188,37 +209,89 @@ const ProfileForms: FC = () => {
             </div>
           </div>
         </div>
-        <div className="mt-4 lg:mt-[45px] px-6 lg:px-[60px] xl:px-[137px]">
-          <Typography className="font-semibold leading-6">
-            Profile Image
-          </Typography>
-          <Typography className="font-[400] leading-6 !text-third mt-[14px]">
-            The suggested aspect ration is 1:1
-          </Typography>
-          <div className="mt-[22px]">
-            <label
-              htmlFor="pfp"
-              className="w-[116px] lg:w-[168px] h-[116px] lg:h-[168px] rounded-full bg-dark-400 grid place-content-center border border-dashed border-transparent hover:border-white relative"
-            >
-              <AddLargeIcon className="z-30" />
-              {changePfp && (
-                <Image
-                  src={changePfp}
-                  width={116}
-                  height={116}
-                  className="w-[116px] lg:w-[168px] h-[116px] lg:h-[168px] rounded-full absolute"
-                  alt="Selected File Preview"
-                />
-              )}
-            </label>
+        <div className="mt-4 lg:mt-[45px] px-6 lg:px-[60px] xl:px-[137px] flex gap-8 xl:gap-[45px] flex-col lg:flex-row">
+          <div className="w-full lg:w-1/2 flex flex-col gap-8 xl:gap-[45px]">
+            <Typography className="font-semibold leading-6">
+              Profile Image
+            </Typography>
+            <Typography className="font-[400] leading-6 !text-third mt-[14px]">
+              The suggested aspect ration is 1:1
+            </Typography>
+            <div className="mt-[22px]">
+              <label
+                htmlFor="pfp"
+                className="w-[116px] lg:w-[168px] h-[116px] lg:h-[168px] rounded-full bg-dark-400 grid place-content-center border border-dashed border-transparent hover:border-white relative"
+              >
+                <AddLargeIcon className="z-30" />
+                {changePfp && (
+                  <Image
+                    src={changePfp}
+                    width={116}
+                    height={116}
+                    className="w-[116px] lg:w-[168px] h-[116px] lg:h-[168px] rounded-full absolute"
+                    alt="Selected File Preview"
+                  />
+                )}
+              </label>
 
-            <input
-              id="pfp"
-              type="file"
-              className="hidden"
-              {...register("pfp", { required: false })}
-              onChange={handleChangePfp}
-            />
+              <input
+                id="pfp"
+                type="file"
+                className="hidden"
+                {...register("pfp", { required: false })}
+                onChange={handleChangePfp}
+              />
+            </div>
+          </div>
+          <div className="w-full lg:w-1/2 flex flex-col gap-8 xl:gap-[45px]">
+            <div className="">
+              <Typography className="font-semibold leading-6">
+                Twitter
+              </Typography>
+              <input
+                {...register("twitter", { required: false })}
+                className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third"
+                placeholder="Enter a your twitter"
+                value={changedTwitter}
+                onChange={handleTwitterChange}
+              />
+            </div>
+            <div className="">
+              <Typography className="font-semibold leading-6">
+                Discord
+              </Typography>
+              <input
+                {...register("discord", { required: false })}
+                className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third"
+                placeholder="Enter a your discord"
+                value={changedDiscord}
+                onChange={handleDiscordChange}
+              />
+            </div>
+            <div className="">
+              <Typography className="font-semibold leading-6">
+                Reddit
+              </Typography>
+              <input
+                {...register("reddit", { required: false })}
+                className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third"
+                placeholder="Enter a your reddit"
+                value={changedReddit}
+                onChange={handleRedditChange}
+              />
+            </div>
+            <div className="">
+              <Typography className="font-semibold leading-6">
+                Facebook
+              </Typography>
+              <input
+                {...register("facebook", { required: false })}
+                className="bg-dark-400 w-full rounded-xl mt-2 p-[14px] text-light-100 placeholder:text-third"
+                placeholder="Enter a your facebook"
+                value={changedFacebook}
+                onChange={handleFacebookChange}
+              />
+            </div>
           </div>
         </div>
         <div className="mt-[45px] px-6 lg:px-[60px] xl:px-[137px]">

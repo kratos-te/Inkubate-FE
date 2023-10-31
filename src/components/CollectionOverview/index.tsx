@@ -12,14 +12,14 @@ import Typography from "../Typography";
 import Image from "next/image";
 import Loader from "./Loader";
 import { NftTypes, StatTypes } from "@/utils/types";
-import { weiToNum } from "@/utils/util";
+import { formatNumberToK, weiToNum } from "@/utils/util";
 
 interface CollectionProps {
   stat: StatTypes;
   nfts: NftTypes[];
 }
 
-const CollectionOverview: FC<CollectionProps> = ({ stat, nfts }) => {
+const CollectionOverview: FC<CollectionProps> = ({ stat }) => {
   const { collection } = stat;
   const [showMoreDec, setShowMoreDec] = useState(false);
 
@@ -92,7 +92,7 @@ const CollectionOverview: FC<CollectionProps> = ({ stat, nfts }) => {
                 Items
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5]">
-                {nfts.length}
+                {formatNumberToK(collection.supply)}
               </Typography>
             </div>
             <div className="flex flex-col-reverse lg:flex-col">

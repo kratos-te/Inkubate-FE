@@ -25,7 +25,7 @@ import {
 import useScroll from "@/utils/useScroll";
 import { DEFAULT_LIST_ITEMS_COUNT } from "@/config";
 
-export default function Home() {
+export default function StatPage() {
   const [range, setRange] = useState<PeriodType>(PeriodType.DAY);
   const [search, setSearch] = useState("");
   const [chainId, setChainId] = useState("all");
@@ -114,7 +114,7 @@ export default function Home() {
     className,
   }: {
     title: string;
-      sort: StatsSortBy;
+    sort: StatsSortBy;
     align: "center" | "start" | "end";
     className: string;
   }) => {
@@ -135,8 +135,9 @@ export default function Home() {
             {title}
             {sortBy === sort ? (
               <ArrowDownLineIcon
-                className={`ml-0.5 rotate-${orderBy === SortType.DESC ? 0 : 180
-                  }`}
+                className={`ml-0.5 rotate-${
+                  orderBy === SortType.DESC ? 0 : 180
+                }`}
               />
             ) : (
               <ArrowUpDownIcon className="ml-0.5" />
@@ -161,8 +162,9 @@ export default function Home() {
             {width < 480 ? "Total Volume" : "Volume"}
             {sortBy === sort ? (
               <ArrowDownLineIcon
-                className={`ml-0.5 rotate-${orderBy === SortType.DESC ? 0 : 180
-                  }`}
+                className={`ml-0.5 rotate-${
+                  orderBy === SortType.DESC ? 0 : 180
+                }`}
               />
             ) : (
               <ArrowUpDownIcon className="ml-0.5" />

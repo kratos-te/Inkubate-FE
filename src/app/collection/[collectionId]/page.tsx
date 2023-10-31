@@ -35,8 +35,9 @@ import useScroll from "@/utils/useScroll";
 export default function CollectionPage() {
   const router = useRouter();
   const query = useSearchParams();
-  const [sort, setSort] = useState("");
-  const [ascending, setAscending] = useState(false);
+  const [sortBy, setSortBy] = useState("");
+  const [search, setSearch] = useState("");
+  const [sortAscending, setSortAscending] = useState<string>("asc");
   const [isDense, setIsDense] = useState(true);
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
   const [nftOne, setNftOne] = useState<NftTypes>();
@@ -73,6 +74,8 @@ export default function CollectionPage() {
 
   const collectionName = "Opbunnies";
 
+
+
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -83,19 +86,19 @@ export default function CollectionPage() {
   useEffect(() => {
     if (loading) return;
     handleFetchStatsData(true);
-  }, [sort, ascending]);
+  }, [sortAscending]);
 
   // Fetch initial data when reloading
   useEffect(() => {
     handleFetchStatsData(true);
   }, []);
 
-  // useEffect(() => {
-  //   if (loading) return;
-  //   if (top > 80 * nftByCollection.length - height) {
-  //     handleFetchStatsData(false);
-  //   }
-  // }, [top]);
+  useEffect(() => {
+    if (loading || !nftByCollection) return;
+    if (nftByCollection && top > 400 * nftByCollection.length - height) {
+      handleFetchStatsData(false);
+    }
+  }, [top]);
 
   const handleFetchStatsData = useCallback(
     (withClear: boolean) => {
@@ -103,26 +106,49 @@ export default function CollectionPage() {
       if (!withClear && endPageLoading) return;
       const lastSroll = top;
       setLoading(true);
-      getNft(
+      getNft({
         collectionId,
-        ascending,
-        sort,
-        withClear
+        sortAscending,
+        search: search || undefined,
+        sortBy,
+        startId: withClear
           ? 1
           : Math.floor(nftByCollection.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
-        DEFAULT_LIST_ITEMS_COUNT,
-        DEFAULT_LIST_ITEMS_COUNT,
-      )
+        offset: DEFAULT_LIST_ITEMS_COUNT,
+        limit: DEFAULT_LIST_ITEMS_COUNT,
+      })
         .then((res) => {
           setEndPageLoading(
             !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
           );
           if (withClear) {
-            setNftByCollection(res?.data);
+            const getData = async () => {
+              const collection = await getCollectionById(collectionId);
+              const activity = await getActivityByCollection(collectionId);
+              const getStat = await getStatByCollectionId(collectionId);
+              const nft = await getNftByOne("0", collection?.data?.address);
+              setNftByCollection(res);
+              setCollectionById(collection?.data);
+              setActByCollection(activity?.data);
+              setNftOne(nft);
+              setStat(getStat?.data);
+            }
+            getData();
           } else {
             const oldData: NftTypes[] = Object.assign(nftByCollection);
             oldData.push(...res);
-            setNftByCollection(oldData);
+            const getData = async () => {
+              const collection = await getCollectionById(collectionId);
+              const activity = await getActivityByCollection(collectionId);
+              const getStat = await getStatByCollectionId(collectionId);
+              const nft = await getNftByOne("0", collection?.data?.address);
+              setNftByCollection(oldData);
+              setCollectionById(collection?.data);
+              setActByCollection(activity?.data);
+              setNftOne(nft);
+              setStat(getStat?.data);
+            }
+            getData();
             window.scrollTo(0, lastSroll);
           }
         })
@@ -130,34 +156,32 @@ export default function CollectionPage() {
           setLoading(false);
         });
     },
-    [nftByCollection, sort, ascending, top, endPageLoading]
+    [nftByCollection, sortBy, sortAscending, top, endPageLoading]
   );
 
+  // useEffect(() => {
+  //   const getNftByCollection = async () => {
+  //     const nfts = await getNft({ collectionId, sortAscending, sortBy });
+  //     const collection = await getCollectionById(collectionId);
+  //     const activity = await getActivityByCollection(collectionId);
+  //     const getStat = await getStatByCollectionId(collectionId);
+  //     const nft = await getNftByOne("0", collection?.data?.address);
+  //     setNftByCollection(nfts);
+  //     setCollectionById(collection?.data);
+  //     setActByCollection(activity?.data);
+  //     setNftOne(nft?.data);
+  //     setStat(getStat?.data);
+  //   };
+  //   getNftByCollection();
+  // }, [sortAscending, collectionId, sortBy]);
 
-
-  useEffect(() => {
-    const getNftByCollection = async () => {
-      const nfts = await getNft(collectionId, ascending, sort);
-      const collection = await getCollectionById(collectionId);
-      const activity = await getActivityByCollection(collectionId);
-      const getStat = await getStatByCollectionId(collectionId);
-      const nft = await getNftByOne("0", collection?.data?.address)
-      setNftByCollection(nfts?.data);
-      setCollectionById(collection?.data);
-      setActByCollection(activity?.data);
-      setNftOne(nft?.data)
-      setStat(getStat?.data)
-    };
-    getNftByCollection();
-  }, [ascending, collectionId, sort]);
-
-  useEffect(() => {
-    const getNfts = async () => {
-      const nfts = await getNft(collectionId, ascending, sort)
-      setNftByCollection(nfts?.data);
-    }
-    getNfts();
-  }, [ascending, collectionId, sort])
+  // useEffect(() => {
+  //   const getNfts = async () => {
+  //     const nfts = await getNft({ collectionId, sortAscending, sortBy });
+  //     setNftByCollection(nfts?.data);
+  //   };
+  //   getNfts();
+  // }, [sortAscending, collectionId, sortBy]);
 
   const selectActiveNftIdx = (nft: NftTypes) => {
     setActiveListing(nft);
@@ -195,10 +219,7 @@ export default function CollectionPage() {
           src={collectionById?.banner?.url || "/assets/images/cover-demo.png"}
         />
         {collectionById && stat && (
-          <CollectionOverview
-            stat={stat}
-            nfts={nftByCollection || []}
-          />
+          <CollectionOverview stat={stat} nfts={nftByCollection || []} />
         )}
         <div className="max-w-[1600px] mx-5 2xl:mx-auto relative">
           <div className="border-b-[0.5px] py-9  border-light-400 relative z-10">
@@ -206,8 +227,8 @@ export default function CollectionPage() {
               <button
                 onClick={() => router.push(`${collectionId}?tab=1`)}
                 className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "1"
-                    ? " border-secondary bg-secondary"
-                    : "border-transparent"
+                  ? " border-secondary bg-secondary"
+                  : "border-transparent"
                   }`}
               >
                 Items
@@ -215,8 +236,8 @@ export default function CollectionPage() {
               <button
                 onClick={() => router.push(`${collectionId}?tab=2`)}
                 className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "2"
-                    ? " border-secondary bg-secondary"
-                    : "border-transparent"
+                  ? " border-secondary bg-secondary"
+                  : "border-transparent"
                   }`}
               >
                 Activity
@@ -238,10 +259,16 @@ export default function CollectionPage() {
               <input
                 className="font-readex text-[14px] text-light-100 bg-dark-400 rounded-lg w-full h-11 pl-9"
                 placeholder="Search items"
+                value={search}
+                onChange={(e) => setSearch(e.target.value || "")}
               />
             </div>
             <div className="hidden lg:block">
-              <SortDropdown value={sort} setValue={setSort} setAscending={setAscending} />
+              <SortDropdown
+                value={sortBy}
+                setValue={setSortBy}
+                setSortAscending={setSortAscending}
+              />
             </div>
             <div className="flex rounded-lg bg-dark-400 items-center h-11 overflow-hidden">
               <button
@@ -263,9 +290,7 @@ export default function CollectionPage() {
               }`}
           >
             <div className="hidden lg:block w-[300px]">
-              {nftOne && (
-                <CollectionFilter nft={nftOne} />
-              )}
+              {nftOne && <CollectionFilter nft={nftOne} />}
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
               {tab === "1" && (

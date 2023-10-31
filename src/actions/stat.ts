@@ -69,13 +69,13 @@ export async function getAllStats(
   }
 }
 
-export async function getTopCollection(range: string) {
+export async function getTopCollections(period: string) {
   try {
     const response = await axios.post(`${API_STAT_URL}/api/stat/top`, {
-      sortBy: range,
+      period,
     });
     console.log("top colleciton", response.data);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
@@ -92,7 +92,7 @@ export async function getFeature() {
   try {
     const response = await axios.get(`${API_STAT_URL}/api/stat/feature`);
     console.log("feature", response.data);
-    return response;
+    return response.data ?? [];
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

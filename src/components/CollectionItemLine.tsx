@@ -2,9 +2,10 @@ import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatNumberToK, weiToNum } from "@/utils/util";
-import { CollectionItem, CollectionParam, StatTypes } from "@/utils/types";
+import { StatTypes } from "@/utils/types";
 import Typography from "./Typography";
 import { VerifiedIcon } from "./SvgIcons";
+import { ethers } from "ethers";
 
 interface ItemProps {
   num: number;
@@ -13,18 +14,14 @@ interface ItemProps {
 }
 
 const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
-  const {
-    collectionId,
-    collection,
-    floorPrice,
-    volume,
-  } = item;
+  const { collectionId, collection, floorPrice, volume } = item;
 
   return (
     <Link href={`/collection/${collectionId}`}>
       <div
-        className={`flex justify-between items-center ${className ? className : ""
-          }`}
+        className={`flex justify-between items-center ${
+          className ? className : ""
+        }`}
       >
         <div className="flex items-center gap-5 max-w-[266px]">
           <div className="w-4 text-center">
@@ -42,7 +39,8 @@ const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
           />
           <div className="flex flex-col justify-between w-[calc(100%-66px)]">
             <Typography className="font-bold leading-[1.5] flex items-center text-[14px] lg:text-[20px]">
-              {collection?.name} {collection?.verified && <VerifiedIcon className="ml-1" />}
+              {collection?.name}{" "}
+              {collection?.verified && <VerifiedIcon className="ml-1" />}
             </Typography>
             <Typography className="text-[12px] leading-[18px] mt-1.5">
               {formatNumberToK(collection?.supply)} Items
@@ -55,7 +53,7 @@ const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
               Floor Price
             </Typography>
             <Typography className="font-bold text-[14px] lg:text-[20px]">
-              {weiToNum(floorPrice)} ETH
+              {ethers.formatEther(floorPrice)} ETH
             </Typography>
           </div>
           <div className="flex flex-col justify-between gap-2">
@@ -66,7 +64,6 @@ const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
             <Typography className="font-bold text-[14px] lg:text-[20px]">
               {weiToNum(volume).toFixed(2)} ETH
             </Typography>
-
           </div>
         </div>
       </div>

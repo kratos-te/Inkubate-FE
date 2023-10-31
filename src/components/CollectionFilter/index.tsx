@@ -81,9 +81,10 @@ const CollectionFilter: FC<{ nft: NftTypes }> = ({ nft }) => {
           setValue={setCurrency}
         />
       </FilterGroup>
-      {nft.attributes.map((item, key) => (
-        <FilterGroup key={key} title={item.trait_type}></FilterGroup>
-      ))}
+      {nft.attributes?.length > 0 &&
+        nft.attributes.map((item, key) => (
+          <FilterGroup key={key} title={item.trait_type}></FilterGroup>
+        ))}
     </div>
   ) : (
     <Loader />
