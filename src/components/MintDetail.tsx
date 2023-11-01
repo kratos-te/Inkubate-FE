@@ -106,7 +106,7 @@ const MintDetail: FC<OverviewProps> = ({ launchpad, remainingTime }) => {
           <div className="w-full sm:w-[400px]">
             <MintProgress
               totalSupply={launchpad.supply}
-              minted={launchpad.collection.nfts.length}
+              minted={(launchpad?.collection?.nfts || []).length}
               className="mt-6"
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 mt-5 gap-[14px] sm:gap-2.5">

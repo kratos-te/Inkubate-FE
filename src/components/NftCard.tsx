@@ -1,16 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import Link from "next/link";
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import Typography from "./Typography";
 import IconButton from "./IconButton";
 import { AddIcon, FavoriteIcon } from "./SvgIcons";
-import { cancelList } from "@/actions";
+import { cancelList, createHide } from "@/actions";
 import { getListByNft } from "@/actions";
 import { useModal } from "@/contexts/ModalContext";
-import { ListingTypes, NftTypes } from "@/utils/types";
+import { InactiveNftTypes, ListingTypes, NftTypes } from "@/utils/types";
 import { date2Timestamp, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
 import { SALT, ZERO_ADDRESS, ZERO_HASH } from "@/config";
@@ -18,21 +19,20 @@ import { INK_CONDUIT_KEY } from "@/utils/constants";
 import { successAlert } from "./ToastGroup";
 
 interface ItemProps {
-  nft: NftTypes;
+  nft: NftTypes | InactiveNftTypes;
   width: number;
-  setActiveListing: () => void;
-  setActiveBuy: () => void;
+  isInactive?: boolean;
+  setActiveItem: () => void;
   setIsNoticed?: Function;
 }
 
 const NftCard: FC<ItemProps> = ({
   nft,
   width,
-  setActiveListing,
-  setActiveBuy,
+  isInactive,
+  setActiveItem,
   setIsNoticed,
 }) => {
-  console.log("here", nft);
   const { id, image, name, owner, tokenId, tokenAddress } = nft;
   const favorited = false;
   const pathname = usePathname();
@@ -40,7 +40,7 @@ const NftCard: FC<ItemProps> = ({
   const { count, cancelListing } = useInkubate();
   const { address: walletAddress } = useAccount();
   const [listByNft, setListByNft] = useState<ListingTypes>();
-
+  const [hide, setHide] = useState(false)
   useEffect(() => {
     const getListing = async () => {
       const listing = await getListByNft(id);
@@ -50,14 +50,20 @@ const NftCard: FC<ItemProps> = ({
   }, [id]);
 
   const handleFavorite = () => {
-    console.log("favorite");
-    console.log("owner", owner);
+    setActiveItem();
   };
 
   const handleBuy = () => {
-    setActiveBuy();
+    setActiveItem();
     openBuyModal();
   };
+
+  const handleHide = async () => {
+    const hide = await createHide(id);
+    if (hide) {
+      setHide(true)
+    }
+  }
 
   const handleSell = async () => {
     if (listByNft?.nftId === id) {
@@ -116,7 +122,7 @@ const NftCard: FC<ItemProps> = ({
         console.log("cancel", cancel);
       }
     } else {
-      setActiveListing();
+      setActiveItem();
       openListModal();
     }
   };
@@ -181,20 +187,32 @@ const NftCard: FC<ItemProps> = ({
       </Link>
       <div className="h-0 group-hover:h-[50px] flex gap-[1px] group-hover:-mt-2 overflow-hidden duration-300  bg-dark-200 rounded-b-xl">
         {pathname === "/profile" ? (
-          <>
-            <button
-              className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-bl-xl font-bold text-white w-[calc(100%-61px)] duration-300"
-              onClick={handleSell}
-            >
-              {listByNft?.nftId === id ? "Cancel List" : "Sell Now"}
-            </button>
-            <button
-              className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300"
-              onClick={handleSell}
-            >
-              <AddIcon />
-            </button>
-          </>
+          isInactive ? (
+            <>
+              <button
+                className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-bl-xl font-bold text-white w-full duration-300"
+                onClick={handleFavorite}
+              >
+                Remove
+              </button>
+            </>
+          ) : (
+              <>
+                <button
+                  className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-bl-xl font-bold text-white w-[calc(100%-61px)] duration-300"
+                  onClick={handleSell}
+                >
+                  {listByNft?.nftId === id ? "Cancel List" : "Sell Now"}
+                </button>
+                <button
+                  className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300"
+                  onClick={handleHide}
+                >
+                  {!hide ? <AiOutlineEye color="white" /> : <AiOutlineEyeInvisible color="white" />}
+                  {/* <AddIcon /> */}
+                </button>
+              </>
+            )
         ) : (
           <>
             {owner.walletAddress === walletAddress ? (

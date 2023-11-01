@@ -20,14 +20,14 @@ export default function ExplorePage() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const getData = async () => {
-      const statData: StatTypes[] = [];
       const collections = await getAllCollections();
-      const stat = await getStatByCollectionId(collections.data.id)
-      statData.push(stat?.data)
-      setStats(statData)
-    }
+      const statPromises = collections.map((collection: { id: string; }) => getStatByCollectionId(collection.id));
+      const statData = await Promise.all(statPromises);
+      setStats(statData);
+    };
     getData();
   }, []);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -87,7 +87,7 @@ export default function ExplorePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 gap-x-[30px] gap-y-3 xl:gap-y-10 mt-[34px]">
               {!loading ? (
                 <>
-                  {stats.map((item, key) => (
+                  {stats && stats.map((item, key) => (
                     <CollectionCard item={item} collection={item.collection} key={key} />
                   ))}
                 </>

@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ListingTypes, NftTypes, OfferTypes, PhotoItem } from "@/utils/types";
+import { InactiveNftTypes, ListingTypes, NftTypes, OfferTypes, PhotoItem } from "@/utils/types";
 import Typography from "../Typography";
 import {
   AddCartIcon,
@@ -12,6 +14,7 @@ import {
   EditIcon,
   ExplorerIcon,
   FavoriteSmIcon,
+  FavouriteFullIcon,
   MoreSmIcon,
   OfferIcon,
   RefreshIcon,
@@ -22,7 +25,8 @@ import {
 import useWindowSize from "@/utils/useWindowSize";
 import { useModal } from "@/contexts/ModalContext";
 import { useAccount } from "wagmi";
-import { cancelList, cancelOffer, getPhoto } from "@/actions";
+import copy from "copy-to-clipboard";
+import { cancelList, cancelOffer, createLikes, getLikeByNft, getPhoto, removeLike } from "@/actions";
 import { format } from "date-fns";
 import { date2Timestamp, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
@@ -40,6 +44,7 @@ interface OverviewProps {
   isOffer?: boolean;
   setIsOffer: Function;
   offer?: OfferTypes;
+  setReload: Dispatch<SetStateAction<boolean>>
 }
 
 const AssetOverview: FC<OverviewProps> = ({
@@ -51,14 +56,19 @@ const AssetOverview: FC<OverviewProps> = ({
   isOffer,
   setIsOffer,
   offer,
+  setReload
 }) => {
   const { openOfferModal, openBuyModal, openListModal } = useModal();
 
   const { count, cancelListing } = useInkubate();
   const { address } = useAccount();
-  const { image, name, owner, tokenId, collection } = nft;
+  const { id, image, name, owner, tokenId, collection } = nft;
   const [nftAvatar, setNftAvatar] = useState<PhotoItem>();
+  const [copied, setCopied] = useState(false);
+  const [like, setLike] = useState(false);
+  const [likeNft, setLikeNft] = useState<InactiveNftTypes | null>()
 
+  const router = useRouter();
   const handleCancelList = async () => {
     if (!address) return;
     if (listing) {
@@ -126,6 +136,35 @@ const AssetOverview: FC<OverviewProps> = ({
     }
   };
 
+  const handleSetLike = async () => {
+    setLike(!like)
+    if (!like) {
+      const likeNft = await createLikes(id)
+      console.log("like!====", likeNft)
+    } else {
+      const unlikeNft = await removeLike(id)
+      console.log("unlike!========", unlikeNft)
+    }
+  }
+
+  const handleCopy = (link: string) => {
+    setCopied(true);
+    copy(link);
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  };
+
+  // const handleRefresh = async () => {
+  //   const refresh = await getNftByOne(tokenId, tokenAddress)
+  //   setNftByOne(refresh)
+  // }
+
+  const handleRefresh = () => {
+    setReload(prev => !prev)
+  }
+
+
   useEffect(() => {
     const getAvatar = async () => {
       const avatar = await getPhoto(collection.avatarId);
@@ -133,6 +172,29 @@ const AssetOverview: FC<OverviewProps> = ({
     };
     getAvatar();
   }, [collection]);
+
+  useEffect(() => {
+    const getLike = async () => {
+      const likes = await getLikeByNft(id)
+      console.log("get Likes=====", likes)
+      setLikeNft(likes)
+    }
+    getLike()
+  }, [id, like])
+
+  useEffect(() => {
+    if (copied === true) {
+      successAlert("Link copied successfully!")
+    }
+  }, [copied])
+
+  // useEffect(() => {
+  //   if (like) {
+  //     successAlert("Liked successfully!")
+  //   } else {
+  //     errorAlert("Unliked successfully!")
+  //   }
+  // }, [like])
 
   const { width } = useWindowSize();
   return (
@@ -186,15 +248,15 @@ const AssetOverview: FC<OverviewProps> = ({
             <Link href={"#"} className="hidden lg:block">
               <ExplorerIcon className="fill-hover" />
             </Link>
-            <Link href={"#"}>
-              <FavoriteSmIcon className="fill-hover" />
-            </Link>
-            <Link href={"#"} className="hidden lg:block">
+            <button onClick={handleSetLike}>
+              {likeNft ? <FavouriteFullIcon /> : <FavoriteSmIcon className="fill-hover" />}
+            </button>
+            <button className="hidden lg:block" onClick={handleRefresh}>
               <RefreshIcon className="fill-hover" />
-            </Link>
-            <Link href={"#"} className="hidden lg:block">
+            </button>
+            <button className="hidden lg:block" onClick={() => handleCopy(`${router}`)}>
               <ShareIcon className="fill-hover" />
-            </Link>
+            </button>
             <Link href={"#"} className="block lg:hidden">
               <MoreSmIcon className="fill-hover" />
             </Link>

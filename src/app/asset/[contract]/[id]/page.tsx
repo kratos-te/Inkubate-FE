@@ -42,7 +42,12 @@ import {
 } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
 import NftCard from "@/components/NftCard";
-import { acceptListingOffer, getActivityByNft, getListByNft, getOffersByNftId } from "@/actions";
+import {
+  acceptListingOffer,
+  getActivityByNft,
+  getListByNft,
+  getOffersByNftId,
+} from "@/actions";
 import { shortenAddress, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
 import { useAccount } from "wagmi";
@@ -67,10 +72,8 @@ export default function NftPage() {
   const [isListed, setIsListed] = useState(false);
   const [isNoticed, setIsNoticed] = useState(false);
   const [isOffer, setIsOffer] = useState(false);
-  const [_activeListing, setActiveListing] = useState<NftTypes | undefined>(
-    undefined
-  );
-  const [_activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
+
+  const [roload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -187,11 +190,11 @@ export default function NftPage() {
       console.log("nft", nft);
       const nfts = await getNft(nft?.collectionId);
       const listing = await getListByNft(nft?.id);
-      const activities = await getActivityByNft(nft?.id)
+      const activities = await getActivityByNft(nft?.id);
       setNftByOne(nft);
       setNftByCollection(nfts?.data);
       setListByNft(listing?.data);
-      setActivity(activities?.data)
+      setActivity(activities?.data);
 
       console.log("NFT", nft);
       console.log("Listing", listing);
@@ -201,7 +204,7 @@ export default function NftPage() {
       setOffers(newOffers);
     };
     getNftData();
-  }, [tokenId, contract]);
+  }, [tokenId, contract, roload]);
 
   useEffect(() => {
     const getOffer = async () => {
@@ -215,14 +218,6 @@ export default function NftPage() {
     };
     getOffer();
   }, [listByNft, offers]);
-
-  const selectActiveNftIdx = (nft: NftTypes) => {
-    setActiveListing(nft);
-  };
-
-  const selectBuyNftIdx = (nft: NftTypes) => {
-    setActiveBuy(nft);
-  };
 
   return (
     <>
@@ -250,6 +245,7 @@ export default function NftPage() {
                 setIsOffer={setIsOffer}
                 isOffer={isOffer}
                 offer={offer}
+                setReload={setReload}
               />
             )
           ) : (
@@ -383,10 +379,7 @@ export default function NftPage() {
                   </AssetDetailBox>
                 </div>
                 <div className="w-full md:w-1/2 xl:w-[calc(100%-544px)] flex flex-col gap-5 mt-5 md:mt-0">
-                  <AssetDetailBox
-                    icon={<HistoryIcon />}
-                    title="Price History"
-                  >
+                  <AssetDetailBox icon={<HistoryIcon />} title="Price History">
                     {activity && (
                       <div>
                         <ActivityChart actData={activity} />
@@ -405,8 +398,8 @@ export default function NftPage() {
                           <th className=" text-secondary text-left">price</th>
                           <th
                             className={` text-secondary text-left ${offer?.sellerId !== userData?.id
-                              ? "hidden"
-                              : "show"
+                                ? "hidden"
+                                : "show"
                               }`}
                           >
                             action
@@ -422,8 +415,8 @@ export default function NftPage() {
                               <td className="w-[20%] cursor-pointer hover:text-light-400">
                                 <button
                                   className={`bg-secondary px-4 py-2 rounded-[8px] ${offer.sellerId !== userData?.id
-                                    ? "hidden"
-                                    : "show"
+                                      ? "hidden"
+                                      : "show"
                                     }`}
                                   onClick={() => handleAccept(offer)}
                                 >
@@ -480,8 +473,7 @@ export default function NftPage() {
                         key={index}
                         nft={item}
                         width={240}
-                        setActiveListing={() => selectActiveNftIdx(item)}
-                        setActiveBuy={() => selectBuyNftIdx(item)}
+                        setActiveItem={() => { }}
                         setIsNoticed={setIsNoticed}
                       />
                     ))}

@@ -195,6 +195,33 @@ export interface NftTypes {
   updatedAt: string;
 }
 
+export interface InactiveNftTypes {
+  id: string;
+  tokenAddress: string;
+  assetUrl: string;
+  collectionId: string;
+  contractType: string;
+  image: string;
+  minterId: string;
+  name: string;
+  tokenId: string;
+  owner: UserItem;
+  ownerId: string;
+  royalty: number;
+  createdAt: string;
+  updatedAt: string;
+  like?: LikeTypes;
+  hide?: HideTypes;
+}
+
+export interface HideTypes {
+  id: string;
+}
+
+export interface LikeTypes {
+  id: string;
+}
+
 export interface AttributesTypes {
   trait_type: string;
   value: string;
@@ -404,6 +431,18 @@ export enum StatsSortBy {
 export enum SortType {
   ASC = "asc",
   DESC = "desc",
+}
+
+export enum UserFilterByOption {
+  ERC721_NFTS = "ERC721_NFTS",
+  ERC1155_NFTS = "ERC1155_NFTS",
+  CREATED = "CREATED",
+  ACTIVITY = "ACTIVITY",
+  FAVORITE = "FAVORITE",
+  HIDDEN = "HIDDEN",
+  LISTING = "LISTING",
+  BUY_OFFER = "BUY_OFFER",
+  SELL_OFFER = "SELL_OFFER",
 }
 
 export type CollectionStats = Omit<StatsItem, "index">;

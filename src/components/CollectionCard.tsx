@@ -37,8 +37,8 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
         <div className="relative overflow-hidden rounded-t-xl h-[124px] xl:h-[235px]">
           {banner ? (
             <Image
-              src={banner.url}
-              alt={banner.fileEntityId}
+              src={banner?.url}
+              alt={banner?.fileEntityId}
               fill
               objectFit="cover"
               priority
@@ -62,7 +62,7 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
                 {avatar && (
                   <div className="relative w-[66px] xl:w-[112px] h-[66px] xl:h-[112px] rounded-lg xl:rounded-[19px] overflow-hidden">
                     <Image
-                      src={avatar.url}
+                      src={avatar?.url}
                       fill
                       objectFit="cover"
                       priority

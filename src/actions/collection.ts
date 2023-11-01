@@ -4,7 +4,9 @@ import { API_BASE_URL } from "@/config";
 export async function getAllCollections(contains?: string) {
   try {
     const response = await axios
-      .get(`${API_BASE_URL}/api/collection?contains=${contains}`)
+      .get(
+        `${API_BASE_URL}/api/collection?contains=${contains ? contains : ""}`
+      )
       .then((res) => res.data);
     console.log("collection", response);
     return response;

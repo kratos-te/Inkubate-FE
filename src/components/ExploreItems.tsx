@@ -74,8 +74,7 @@ const ExploreItems: FC = () => {
             collectionId="opbunnies"
             isDense={isDense}
             nftData={listingNft}
-            setActiveBuy={() => {}}
-            setActiveListing={() => {}}
+            setActiveItem={() => {}}
           />
         </div>
       </div>
