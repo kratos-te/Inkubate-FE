@@ -69,6 +69,7 @@ export const shortenAddress = (address = "", chars = 4) => {
   return `${address.slice(0, chars + 2)}...${address.slice(-chars)}`;
 };
 
+
 // export const selectActiveNftIdx = (nft: NftTypes) => {
 //   setActiveListing(nft);
 // };

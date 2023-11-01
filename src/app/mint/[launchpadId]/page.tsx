@@ -38,14 +38,19 @@ export default function MintPage() {
 
   useEffect(() => {
     console.log("path", pathname.split("/")[1] as string, launchpadId);
+
     const getCollection = async () => {
       if ((pathname.split("/")[1] as string) === "mint" && launchpadId) {
         const launchpad = await getLaunchpadById(launchpadId);
-        const remainingTime = Math.floor(
-          (new Date(launchpad.startDate).getTime() - Date.now()) / 1000
-        );
         setLaunchPadById(launchpad);
-        setRemainTime(remainingTime);
+        const getTime = () => {
+          const remainingTime = Math.floor(
+            (new Date(launchpad.startDate).getTime() - Date.now()) / 1000
+          );
+          setRemainTime(remainingTime);
+          setTimeout(getTime, 1000)
+        }
+        getTime();
       }
     };
     getCollection();

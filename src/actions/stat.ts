@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_STAT_URL } from "@/config";
-import { API_INDEXER_URL, DEFAULT_LIST_ITEMS_COUNT } from "@/config";
+import { DEFAULT_LIST_ITEMS_COUNT } from "@/config";
 import {
   CollectionStats,
   PeriodType,
@@ -36,7 +36,7 @@ export async function getAllStats(
 
   try {
     const response = await axios
-      .get(`${API_INDEXER_URL}/api/stat?${queryString}`)
+      .get(`${API_STAT_URL}/api/stat?${queryString}`)
       .then((res) => res.data);
 
     let result = response.map((stat: any) => ({
