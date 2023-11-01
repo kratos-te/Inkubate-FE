@@ -129,8 +129,18 @@ const MintDetail: FC<OverviewProps> = ({ launchpad, remainingTime }) => {
             </div>
           </div>
           {remainingTime > 0 && (
-            <div className="w-full sm:w-[400px] text-light-100 mt-8 flex gap-8">
-              <span>{remainingTime}s remaining</span>
+            <div className="w-full sm:w-[400px] text-light-100 mt-8 flex gap-2">
+              {remainingTime / 3600 >= 1 && (
+                <span>
+                  {Math.floor(remainingTime / 3600)} hours
+                </span>
+              )}
+              {remainingTime % 3600 / 60 <= 59 && (
+                <span>
+                  {Math.floor(remainingTime % 3600 / 60)} mins
+                </span>
+              )}
+              <span>{remainingTime % 3600 % 60}s remaining</span>
             </div>
           )}
         </div>
