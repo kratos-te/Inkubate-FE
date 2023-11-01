@@ -197,6 +197,14 @@ export const FavoriteIcon: FC<IconProps> = ({ color, className }) => {
   );
 };
 
+export const FavouriteFullIcon = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M8.00067 3.01933C9.56667 1.61333 11.9867 1.66 13.4953 3.17133C15.0033 4.68333 15.0553 7.09133 13.6527 8.662L7.99933 14.3233L2.34733 8.662C0.944666 7.09133 0.997333 4.67933 2.50467 3.17133C4.01467 1.662 6.43 1.61133 8.00067 3.01933ZM11 5C10 3.99867 14.3105 6.80933 13.2638 7.74933L8 13L5.5 4.5C4.45 3.55867 8.50267 5.99733 7.5 7C6.58467 5.94933 6.50667 7.99333 7.5 7L8 12.436L12.68 7.74933C13.596 6.698 11.9947 5.99667 11 5Z" fill="#EA4492" />
+    </svg>
+  )
+}
+
 export const AddIcon: FC<IconProps> = ({ color, className }) => {
   return (
     <svg
@@ -2354,16 +2362,16 @@ export const MinuPlusIcon: FC = () => {
       <path
         d="M6 12H18"
         stroke="#B3B3B3"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M12 18V6"
         stroke="#B3B3B3"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

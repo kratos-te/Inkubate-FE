@@ -51,7 +51,7 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
       });
       console.log("created Nft", createNfts);
       setNfts(createNfts);
-      setMintSuccess(true)
+      setMintSuccess(true);
       successAlert("Minted Successfully!");
     } catch (e: any) {
       console.log(e.message);
@@ -63,6 +63,13 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
     }
   };
 
+  const handleCloseModal = () => {
+    closeMintModal();
+    setNfts([]);
+    setMintSuccess(false)
+    setMintValue(1)
+  }
+
   if (!isOpenedMintModal) return null;
   return (
     <div
@@ -70,12 +77,12 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
     >
       <div className="w-full h-full flex justify-center items-center overflow-auto">
         <ClickAwayComponent
-          onClickAway={closeMintModal}
+          onClickAway={handleCloseModal}
           className="bg-[#171C21] w-[530px] rounded-2xl  relative  bg-no-repeat bg-center bg-cover p-5"
         >
           <button
             className="group md:rounded-xl absolute right-0 md:right-4 top-4 md:top-6 z-10"
-            onClick={closeMintModal}
+            onClick={handleCloseModal}
           >
             <CloseCircleIcon className="group-hover:rotate-90 duration-300" />
           </button>
@@ -95,11 +102,11 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
             ) : nfts.length > 0 ? (
               <div className="w-full flex justify-center flex-wrap">
                 {nfts.map((nft) => (
-                  <div key={nft.id}>
-                    <img src={nft.image} alt={nft.name} className="w-20 h-20" />
-                    <span>
-                      {nft.name} #{nft.tokenId}
-                    </span>
+                  <div key={nft.id} className="flex-col gap-1">
+                    <img src={nft.image} alt={nft.name} className="w-20 h-20 rounded-md" />
+                    <div className="flex text-[16px] text-white text-right">
+                      #{nft.tokenId}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -128,47 +135,51 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
                 </div>
               </div>
             )}
-
-            <button
-              className={`w-full rounded-[12px] text-[16px] font-semibold py-3 mt-[38px] ${
-                mintingProgress ? "bg-[#666666] text-[#F2F2F2] " : "bg-white"
-              }`}
-              onClick={() => handleMint(mintValue)}
-            >
-              {mintingProgress ? "Cancel " : "Mint NFT"}
-            </button>
-            {mintSuccess && (
-              <div className="flex flex-col gap-[38px]">
+            {!mintSuccess && (
+              <button
+                className={`w-full rounded-[12px] text-[16px] font-semibold py-3 mt-[38px] ${mintingProgress ? "bg-[#666666] text-[#F2F2F2] " : "bg-white"
+                  }`}
+                onClick={() => handleMint(mintValue)}
+              >
+                {mintingProgress ? "Cancel " : "Mint NFT"}
+              </button>
+            )}
+            <div className="flex flex-col gap-[38px]">
+              {mintingProgress && (
                 <div className="flex  text-[18px] text-[#F2F2F2] font-medium text-left">
                   Your mint transaction is in progress, and your NFT will be
                   viewable in your wallet shortly.
-                </div>
-                <div className="flex flex-col gap-[14px]">
-                  <div className="flex justify-between">
-                    <p className="text-[18px] text-white font-bold">Status</p>
-                    <p className="text-[16px] text-[#B3B3B3] font-normal">
-                      Processing
-                    </p>
+                </div>)}
+              {mintSuccess && (
+                <>
+                  <div className="flex flex-col gap-[14px]">
+                    <div className="flex justify-between">
+                      <p className="text-[18px] text-white font-bold">Status</p>
+                      <p className="text-[16px] text-[#B3B3B3] font-normal">
+                        Processing
+                      </p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="text-[18px] text-white font-bold">
+                        Transaction
+                      </p>
+                      <p className="text-[16px] text-[#B3B3B3] font-normal">
+                        0xa4334...57c2
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <p className="text-[18px] text-white font-bold">
-                      Transaction
-                    </p>
-                    <p className="text-[16px] text-[#B3B3B3] font-normal">
-                      0xa4334...57c2
-                    </p>
+                  <div className="flex flex-col gap-[24px] mb-4">
+                    <button className="bg-secondary text-white py-3 text-[16px] font-semibold rounded-[12px]">
+                      View NFTs
+                    </button>
+                    <button className="bg-white py-3 text-[16px] font-semibold rounded-[12px]">
+                      View Transaction
+                    </button>
                   </div>
-                </div>
-                <div className="flex flex-col gap-[24px] mb-4">
-                  <button className="bg-secondary text-white py-3 text-[16px] font-semibold rounded-[12px]">
-                    View NFTs
-                  </button>
-                  <button className="bg-white py-3 text-[16px] font-semibold rounded-[12px]">
-                    View Transaction
-                  </button>
-                </div>
-              </div>
-            )}
+                </>
+              )}
+            </div>
+
           </div>
         </ClickAwayComponent>
       </div>

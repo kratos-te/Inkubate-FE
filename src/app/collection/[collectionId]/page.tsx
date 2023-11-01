@@ -45,9 +45,6 @@ export default function CollectionPage() {
   const [collectionById, setCollectionById] = useState<CollectionParam>();
   const [stat, setStat] = useState<StatTypes>();
   const [actByCollection, setActByCollection] = useState<ActivityTypes[]>([]);
-  const [_activeListing, setActiveListing] = useState<NftTypes | undefined>(
-    undefined
-  );
   const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
 
   const [endPageLoading, setEndPageLoading] = useState(false);
@@ -73,8 +70,6 @@ export default function CollectionPage() {
   }, [pathname]);
 
   const collectionName = "Opbunnies";
-
-
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -132,7 +127,7 @@ export default function CollectionPage() {
               setActByCollection(activity?.data);
               setNftOne(nft);
               setStat(getStat?.data);
-            }
+            };
             getData();
           } else {
             const oldData: NftTypes[] = Object.assign(nftByCollection);
@@ -147,7 +142,7 @@ export default function CollectionPage() {
               setActByCollection(activity?.data);
               setNftOne(nft);
               setStat(getStat?.data);
-            }
+            };
             getData();
             window.scrollTo(0, lastSroll);
           }
@@ -183,10 +178,6 @@ export default function CollectionPage() {
   //   getNfts();
   // }, [sortAscending, collectionId, sortBy]);
 
-  const selectActiveNftIdx = (nft: NftTypes) => {
-    setActiveListing(nft);
-  };
-
   useEffect(() => {
     const getLisiting = async () => {
       if (activeBuy) {
@@ -196,10 +187,6 @@ export default function CollectionPage() {
     };
     getLisiting();
   }, [activeBuy]);
-
-  const selectBuyNftIdx = (nft: NftTypes) => {
-    setActiveBuy(nft);
-  };
 
   return (
     <>
@@ -226,27 +213,30 @@ export default function CollectionPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => router.push(`${collectionId}?tab=1`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "1"
-                  ? " border-secondary bg-secondary"
-                  : "border-transparent"
-                  }`}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${
+                  tab === "1"
+                    ? " border-secondary bg-secondary"
+                    : "border-transparent"
+                }`}
               >
                 Items
               </button>
               <button
                 onClick={() => router.push(`${collectionId}?tab=2`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "2"
-                  ? " border-secondary bg-secondary"
-                  : "border-transparent"
-                  }`}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${
+                  tab === "2"
+                    ? " border-secondary bg-secondary"
+                    : "border-transparent"
+                }`}
               >
                 Activity
               </button>
             </div>
           </div>
           <div
-            className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${tab === "1" || tab === "2" ? "show" : "hidden"
-              }`}
+            className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${
+              tab === "1" || tab === "2" ? "show" : "hidden"
+            }`}
           >
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
@@ -286,8 +276,9 @@ export default function CollectionPage() {
             </div>
           </div>
           <div
-            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${tab === "1" || tab === "2" ? "show" : "hidden"
-              }`}
+            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${
+              tab === "1" || tab === "2" ? "show" : "hidden"
+            }`}
           >
             <div className="hidden lg:block w-[300px]">
               {nftOne && <CollectionFilter nft={nftOne} />}
@@ -298,8 +289,9 @@ export default function CollectionPage() {
                   nftData={nftByCollection}
                   collectionId={collectionId}
                   isDense={isDense}
-                  setActiveListing={selectActiveNftIdx}
-                  setActiveBuy={selectBuyNftIdx}
+                  setActiveItem={(item) =>
+                    setActiveBuy(item as unknown as NftTypes)
+                  }
                 />
               )}
               {tab === "2" && <ActivityDetail actData={actByCollection} />}

@@ -6,7 +6,9 @@ BigInt.prototype.toJSON = function () {
 export * from "./activity";
 export * from "./auth";
 export * from "./collection";
+export * from "./hide";
 export * from "./launchpad";
+export * from "./like";
 export * from "./listing";
 export * from "./nft";
 export * from "./offer";

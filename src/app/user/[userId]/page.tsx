@@ -5,7 +5,7 @@ import Skeleton from "react-loading-skeleton";
 
 import {
   getActivityByUser,
-  getNftbyOwner,
+  getNftsByUser,
   getProfileById,
   getUserById,
 } from "@/actions";
@@ -26,7 +26,13 @@ import ActivityDetail from "@/components/ActivityDetail";
 import { USER_TABS } from "@/config";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
-import { ActivityTypes, NftTypes, ProfileItem, UserItem } from "@/utils/types";
+import {
+  ActivityTypes,
+  NftTypes,
+  ProfileItem,
+  UserFilterByOption,
+  UserItem,
+} from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
 
 const profileName = "User Page";
@@ -69,7 +75,6 @@ export default function UserPage() {
   const [activeListing, setActiveListing] = useState<NftTypes | undefined>(
     undefined
   );
-  const [_activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
   const [actByUser, setActByUser] = useState<ActivityTypes[]>([]);
 
   const tab = useMemo(() => {
@@ -90,17 +95,38 @@ export default function UserPage() {
 
   useEffect(() => {
     setLoading(true);
-    getUserData(userId);
     const getNftData = async () => {
-      const nftData = await getNftbyOwner(userId);
-      const activity = await getActivityByUser();
-      setActByUser(activity?.data);
-      if (nftData) {
-        setNftByOwner(nftData.data);
+      switch (tab) {
+        case "4":
+          const activity = await getActivityByUser(userId);
+          setActByUser(activity?.data);
+          break;
+        case "1":
+          await getNftsByUser(userId, UserFilterByOption.ERC721_NFTS)
+            .then((res) => res?.data)
+            .then((nftData) => setNftByOwner(nftData));
+          break;
+        case "2":
+          await getNftsByUser(userId, UserFilterByOption.ERC1155_NFTS)
+            .then((res) => res?.data)
+            .then((nftData) => setNftByOwner(nftData));
+          break;
+        case "3":
+          await getNftsByUser(userId, UserFilterByOption.CREATED)
+            .then((res) => res?.data)
+            .then((nftData) => setNftByOwner(nftData));
+          break;
       }
       setLoading(false);
     };
     getNftData();
+  }, [userId, tab]);
+
+  useEffect(() => {
+    setLoading(true);
+    getUserData(userId).then(() => {
+      setLoading(false);
+    });
   }, [userId]);
 
   const getUserData = async (userId: string) => {
@@ -116,10 +142,6 @@ export default function UserPage() {
 
   const selectActiveNftIdx = (nft: NftTypes) => {
     setActiveListing(nft);
-  };
-
-  const selectBuyNftIdx = (nft: NftTypes) => {
-    setActiveBuy(nft);
   };
 
   return (
@@ -211,12 +233,12 @@ export default function UserPage() {
               {nftByOwner[0] && <CollectionFilter nft={nftByOwner[0]} />}
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
-              {tab === "1" && (
+              {(tab === "1" || tab === "2" || tab === "3") && (
                 <NftGrid
                   nftData={nftByOwner}
-                  setActiveListing={selectActiveNftIdx}
-                  setActiveBuy={selectBuyNftIdx}
-                  collectionId="opbunnies"
+                  setActiveItem={(item) =>
+                    selectActiveNftIdx(item as unknown as NftTypes)
+                  }
                   isDense={isDense}
                 />
               )}

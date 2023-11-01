@@ -128,7 +128,7 @@ export async function getStatByCollectionId(collectionId: string) {
       `${API_STAT_URL}/api/stat/${collectionId}`
     );
     console.log("stat collection", response.data);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

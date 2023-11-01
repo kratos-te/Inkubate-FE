@@ -1,18 +1,11 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
-import { checkAuthorization } from ".";
 
-export async function getActivityByUser() {
+export async function getActivityByUser(userId: string) {
   try {
-    await checkAuthorization();
-    const accessToken = localStorage.getItem("accessToken");
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.get(`${API_BASE_URL}/api/activity/user`, {
-      headers,
-    });
+    const response = await axios.get(
+      `${API_BASE_URL}/api/activity/user/${userId}?filterBy=ACTIVITY`
+    );
     console.log("activity", response);
     return response;
   } catch (error) {

@@ -5,10 +5,14 @@ import Skeleton from "react-loading-skeleton";
 
 import {
   getActivityByUser,
+  getHides,
+  getLikes,
   getListByUser,
-  getNftbyOwner,
+  getNftsByUser,
   getOfferByBuy,
   getOfferBySell,
+  removeHide,
+  removeLike,
 } from "@/actions";
 import {
   EditIcon,
@@ -34,11 +38,14 @@ import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import {
   ActivityTypes,
+  InactiveNftTypes,
   ListingTypes,
   NftTypes,
   OfferTypes,
+  UserFilterByOption,
 } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
+import { errorAlert, successAlert } from "@/components/ToastGroup";
 
 const profileName = "My Profile";
 
@@ -53,11 +60,12 @@ export default function ProfilePage() {
 
   const [isDense, setIsDense] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [nftByOwner, setNftByOwner] = useState<NftTypes[]>([]);
-  const [activeListing, setActiveListing] = useState<NftTypes | undefined>(
-    undefined
+  const [nftByOwner, setNftByOwner] = useState<NftTypes[] | InactiveNftTypes[]>(
+    []
   );
-  const [_activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
+  const [activeListing, setActiveListing] = useState<
+    NftTypes | InactiveNftTypes | undefined
+  >(undefined);
   const [listByUser, setListByUSer] = useState<ListingTypes[]>([]);
   const [offerByBuy, setOfferByBuy] = useState<OfferTypes[]>([]);
   const [offerBySell, setOfferBySell] = useState<OfferTypes[]>([]);
@@ -74,22 +82,53 @@ export default function ProfilePage() {
   useEffect(() => {
     setLoading(true);
     const getNftData = async () => {
-      const nftData = await getNftbyOwner(userData.id);
-      const listingData = await getListByUser();
-      const buyOffer = await getOfferByBuy();
-      const sellOffer = await getOfferBySell();
-      const activity = await getActivityByUser();
-      setListByUSer(listingData?.data);
-      setOfferByBuy(buyOffer?.data);
-      setOfferBySell(sellOffer?.data);
-      setActByUser(activity?.data);
-      if (nftData) {
-        setNftByOwner(nftData.data);
+      switch (tab) {
+        case "7":
+          const listingData = await getListByUser();
+          setListByUSer(listingData?.data);
+          break;
+        case "8":
+          const buyOffer = await getOfferByBuy();
+          setOfferByBuy(buyOffer?.data);
+          break;
+        case "9":
+          const sellOffer = await getOfferBySell();
+          setOfferBySell(sellOffer?.data);
+          break;
+        case "6":
+          const activity = await getActivityByUser(userData.id);
+          setActByUser(activity?.data);
+          break;
+        case "1":
+          await getNftsByUser(userData.id, UserFilterByOption.ERC721_NFTS)
+            .then((res) => res?.data)
+            .then((nftData) => setNftByOwner(nftData));
+          break;
+        case "2":
+          await getNftsByUser(userData.id, UserFilterByOption.ERC1155_NFTS)
+            .then((res) => res?.data)
+            .then((nftData) => setNftByOwner(nftData));
+          break;
+        case "3":
+          await getNftsByUser(userData.id, UserFilterByOption.CREATED)
+            .then((res) => res?.data)
+            .then((nftData) => setNftByOwner(nftData));
+          break;
+        case "4":
+          await getLikes().then((nftData) => {
+            if (nftData) setNftByOwner(nftData);
+          });
+          break;
+        case "5":
+          await getHides().then((nftData) => {
+            if (nftData) setNftByOwner(nftData);
+          });
+          break;
       }
       setLoading(false);
     };
     getNftData();
-  }, [userData]);
+  }, [userData, tab]);
 
   const handleEditProfile = async () => {
     openSettingModal();
@@ -97,12 +136,34 @@ export default function ProfilePage() {
     getUserData();
   };
 
-  const selectActiveNftIdx = (nft: NftTypes) => {
+  const selectActiveIdx = (nft: NftTypes | InactiveNftTypes) => {
     setActiveListing(nft);
   };
 
-  const selectBuyNftIdx = (nft: NftTypes) => {
-    setActiveBuy(nft);
+  const removeNftLike = async (nft: InactiveNftTypes) => {
+    if (!nft?.like) return;
+    const succes = await removeLike(nft.like.id);
+    if (succes) {
+      successAlert("Favourite removed!");
+      await getLikes().then((nftData) => {
+        if (nftData) setNftByOwner(nftData);
+      });
+    } else {
+      errorAlert("Remove failed!");
+    }
+  };
+
+  const removeNftHide = async (nft: InactiveNftTypes) => {
+    if (!nft?.hide) return;
+    const succes = await removeHide(nft.hide.id);
+    if (succes) {
+      successAlert("Hidden removed!");
+      await getHides().then((nftData) => {
+        if (nftData) setNftByOwner(nftData);
+      });
+    } else {
+      errorAlert("Remove failed!");
+    }
   };
 
   return (
@@ -164,7 +225,13 @@ export default function ProfilePage() {
           <div className="border-b-[0.5px] border-light-400 relative z-10  mt-6"></div>
           <div
             className={`relative flex gap-3 mt-6 lg:mt-12 z-20 ${
-              tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
+              tab === "4" ||
+              tab === "5" ||
+              tab === "7" ||
+              tab === "8" ||
+              tab === "9"
+                ? "hidden"
+                : "show"
             }`}
           >
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
@@ -207,17 +274,37 @@ export default function ProfilePage() {
               tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
             }`}
           >
-            <div className="hidden lg:block w-[300px]">
-              {nftByOwner[0] && <CollectionFilter nft={nftByOwner[0]} />}
+            <div
+              className={`hidden w-[300px] ${
+                tab === "4" || tab === "5" ? "lg:hidden" : "lg:block"
+              }`}
+            >
+              {nftByOwner && nftByOwner.length > 0 && nftByOwner[0] && (
+                <CollectionFilter nft={nftByOwner[0] as unknown as NftTypes} />
+              )}
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
-              {tab === "1" && (
+              {(tab === "1" || tab === "2" || tab === "3") && (
                 <NftGrid
                   nftData={nftByOwner}
-                  setActiveListing={selectActiveNftIdx}
-                  setActiveBuy={selectBuyNftIdx}
-                  collectionId="opbunnies"
+                  setActiveItem={selectActiveIdx}
                   isDense={isDense}
+                />
+              )}
+              {tab === "4" && (
+                <NftGrid
+                  nftData={nftByOwner}
+                  setActiveItem={removeNftLike}
+                  isDense={isDense}
+                  isInactive={true}
+                />
+              )}
+              {tab === "5" && (
+                <NftGrid
+                  nftData={nftByOwner}
+                  setActiveItem={removeNftHide}
+                  isDense={isDense}
+                  isInactive={true}
                 />
               )}
               {tab === "6" && <ActivityDetail actData={actByUser} />}
@@ -240,7 +327,9 @@ export default function ProfilePage() {
           )}
         </div>
       </MainLayout>
-      {activeListing && <ListModal nft={activeListing} />}
+      {activeListing && (
+        <ListModal nft={activeListing as unknown as NftTypes} />
+      )}
     </>
   );
 }
