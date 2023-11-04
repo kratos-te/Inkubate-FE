@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Skeleton from "react-loading-skeleton";
 
 import {
@@ -23,17 +24,17 @@ import CoverBanner from "@/components/CoverBanner";
 import ProfileOverview from "@/components/ProfileOverview";
 import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
 import ActivityDetail from "@/components/ActivityDetail";
-import { USER_TABS } from "@/config";
+import { DEFAULT_LIST_ITEMS_COUNT, USER_TABS } from "@/config";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import {
   ActivityTypes,
   NftTypes,
   ProfileItem,
-  UserFilterByOption,
   UserItem,
 } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
+import useScroll from "@/utils/useScroll";
 
 const profileName = "User Page";
 
@@ -42,8 +43,8 @@ export default function UserPage() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [sortBy, setSortBy] = useState<string>("nfts");
-  const [_sortAscending, setSortAscending] = useState<string>("desc");
+  const [sort, setSort] = useState<string>("nfts");
+  const [sortAscending, setSortAscending] = useState<string>("desc");
 
   const [userData, setUserData] = useState<UserItem>({
     id: "",
@@ -69,6 +70,8 @@ export default function UserPage() {
       fileEntityId: "",
     },
   });
+  // const [sort, setSort] = useState("");
+  const [search, setSearch] = useState("");
   const [isDense, setIsDense] = useState(true);
   const [loading, setLoading] = useState(true);
   const [nftByOwner, setNftByOwner] = useState<NftTypes[]>([]);
@@ -76,6 +79,8 @@ export default function UserPage() {
     undefined
   );
   const [actByUser, setActByUser] = useState<ActivityTypes[]>([]);
+  const [endPageLoading, setEndPageLoading] = useState(false);
+
 
   const tab = useMemo(() => {
     let t = "1";
@@ -92,35 +97,152 @@ export default function UserPage() {
     }
     return path;
   }, [pathname]);
+  const { top, height } = useScroll();
+
 
   useEffect(() => {
-    setLoading(true);
-    const getNftData = async () => {
-      switch (tab) {
-        case "4":
-          const activity = await getActivityByUser(userId);
-          setActByUser(activity?.data);
-          break;
-        case "1":
-          await getNftsByUser(userId, UserFilterByOption.ERC721_NFTS)
-            .then((res) => res?.data)
-            .then((nftData) => setNftByOwner(nftData));
-          break;
-        case "2":
-          await getNftsByUser(userId, UserFilterByOption.ERC1155_NFTS)
-            .then((res) => res?.data)
-            .then((nftData) => setNftByOwner(nftData));
-          break;
-        case "3":
-          await getNftsByUser(userId, UserFilterByOption.CREATED)
-            .then((res) => res?.data)
-            .then((nftData) => setNftByOwner(nftData));
-          break;
+    if (loading) return;
+    handleFetchStatsData(true);
+  }, [sortAscending, loading]);
+
+  // Fetch initial data when reloading
+  useEffect(() => {
+    handleFetchStatsData(true);
+  }, [search]);
+
+  useEffect(() => {
+    if (loading || !nftByOwner) return;
+    if (nftByOwner && top > 400 * nftByOwner.length - height) {
+      handleFetchStatsData(false);
+    }
+  }, [top, height, loading]);
+
+  const handleFetchStatsData = useCallback(
+    (withClear: boolean) => {
+      if (withClear) setEndPageLoading(false);
+      if (!withClear && endPageLoading) return;
+      const lastSroll = top;
+      setLoading(true);
+      if (tab === "1") {
+        getNftsByUser({
+          userId: userData.id,
+          sortAscending: sortAscending,
+          sortBy: sort,
+          filterBy: "ERC721_NFTS",
+          search,
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear) {
+              setNftByOwner(res)
+            } else {
+              const oldData: NftTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setNftByOwner(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       }
-      setLoading(false);
-    };
-    getNftData();
-  }, [userId, tab]);
+      if (tab === "2") {
+        getNftsByUser({
+          userId: userData.id,
+          sortAscending: sortAscending,
+          sortBy: sort,
+          filterBy: "ERC1155_NFTS",
+          search,
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear) {
+              setNftByOwner(res)
+            } else {
+              const oldData: NftTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setNftByOwner(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+      if (tab === "3") {
+        getNftsByUser({
+          userId: userData.id,
+          sortAscending: sortAscending,
+          sortBy: sort,
+          filterBy: "CREATED",
+          search,
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear) {
+              setNftByOwner(res)
+            } else {
+              const oldData: NftTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setNftByOwner(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+      if (tab === "4") {
+        getActivityByUser({
+          userId: userData.id,
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear) {
+              setActByUser(res)
+            } else {
+              const oldData: ActivityTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setActByUser(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    },
+    [search, top, tab]
+  );
+
 
   useEffect(() => {
     setLoading(true);
@@ -180,11 +302,10 @@ export default function UserPage() {
                 <button
                   key={key}
                   onClick={() => router.push(`?tab=${item.tab}`)}
-                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${
-                    tab === item.tab
+                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${tab === item.tab
                       ? "bg-secondary hover:bg-[#AE115B]"
                       : "bg-dark-400 hover:bg-[#444]"
-                  }`}
+                    }`}
                 >
                   {item.title}
                 </button>
@@ -204,12 +325,14 @@ export default function UserPage() {
               <input
                 className="font-readex text-[14px] text-light-100 bg-dark-400 rounded-lg w-full h-11 pl-9"
                 placeholder="Search items"
+                value={search}
+                onChange={(e) => setSearch(e.target.value || "")}
               />
             </div>
             <div className="hidden lg:block">
               <SortDropdown
-                value={sortBy}
-                setValue={setSortBy}
+                value={sort}
+                setValue={setSort}
                 setSortAscending={setSortAscending}
               />
             </div>

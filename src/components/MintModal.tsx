@@ -9,6 +9,8 @@ import { useErc721a } from "@/hooks/useErc721a";
 import { LaunchpadParam, NftItem } from "@/utils/types";
 import { createNft } from "@/actions/nft";
 import { errorAlert, successAlert } from "./ToastGroup";
+import { shortenAddress } from "@/utils/util";
+import Link from "next/link";
 
 interface MintModalProps {
   launchpad: LaunchpadParam;
@@ -164,22 +166,25 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
                         Transaction
                       </p>
                       <p className="text-[16px] text-[#B3B3B3] font-normal">
-                        0xa4334...57c2
+                        {shortenAddress(launchpad?.collection.address)}
                       </p>
                     </div>
                   </div>
                   <div className="flex flex-col gap-[24px] mb-4">
-                    <button className="bg-secondary text-white py-3 text-[16px] font-semibold rounded-[12px]">
-                      View NFTs
-                    </button>
-                    <button className="bg-white py-3 text-[16px] font-semibold rounded-[12px]">
-                      View Transaction
-                    </button>
+                    <Link href={`/profile?tab=1`}>
+                      <button className="bg-secondary text-white py-3 text-[16px] font-semibold rounded-[12px]" >
+                        View NFTs
+                      </button>
+                    </Link>
+                    <Link href={`https://goerli.etherscan.io/tx/${launchpad?.collection.address}`}>
+                      <button className="bg-white py-3 text-[16px] font-semibold rounded-[12px]">
+                        View Transaction
+                      </button>
+                    </Link>
                   </div>
                 </>
               )}
             </div>
-
           </div>
         </ClickAwayComponent>
       </div>

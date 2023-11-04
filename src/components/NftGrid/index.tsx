@@ -1,5 +1,4 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
-
 import { InactiveNftTypes, NftTypes } from "@/utils/types";
 import useWindowSize from "@/utils/useWindowSize";
 import NftCard from "../NftCard";
@@ -61,17 +60,17 @@ const NftGrid: FC<GridProps> = ({ nftData, isDense, isInactive, setActiveItem })
     >
       {!loading && nftData
         ? nftData.map((item, key) => (
-            <NftCard
-              nft={item}
-              key={key}
-              width={width}
-              isInactive={isInactive}
-              setActiveItem={() => setActiveItem(item)}
-            />
-          ))
+          <NftCard
+            nft={item}
+            key={key}
+            width={width}
+            isInactive={isInactive}
+            setActiveItem={() => setActiveItem(item)}
+          />
+        ))
         : Array.from({ length: 20 }).map((_, key) => (
-            <NftCardLoader key={key} width={width} />
-          ))}
+          <NftCardLoader key={key} width={width} />
+        ))}
     </div>
   );
 };

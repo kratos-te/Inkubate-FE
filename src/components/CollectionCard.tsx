@@ -1,44 +1,43 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CollectionParam, LaunchpadParam, StatTypes } from "@/utils/types";
+import { CollectionParam } from "@/utils/types";
 import Typography from "./Typography";
 import { VerifiedIcon } from "./SvgIcons";
-import { getLaunchpadById } from "@/actions";
+// import { getLaunchpadById } from "@/actions";
 import { weiToNum } from "@/utils/util";
 
 interface ItemProps {
-  item?: StatTypes;
   collection: CollectionParam;
   className?: string;
 }
 
-const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
-  const { name, avatar, banner, id, verified, launchpadId, desc } = collection;
-  const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
+const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
+  console.log("--------------->", collection)
+  const { stats } = collection;
+// const [launchpadById, setLaunchPadById] = useState<LaunchpadParam>();
 
-  useEffect(() => {
-    const getLaunchpad = async () => {
-      const launchpad = await getLaunchpadById(launchpadId);
-      setLaunchPadById(launchpad?.data);
-    };
-    getLaunchpad();
-  }, [launchpadId]);
+  // useEffect(() => {
+  //   const getLaunchpad = async () => {
+  //     const launchpad = await getLaunchpadById(collection?.launchpadId);
+  //     setLaunchPadById(launchpad?.data);
+  //   };
+  //   getLaunchpad();
+  // }, [collection?.launchpadId]);
   return (
     <Link
-      href={`/collection/${id}`}
+      href={`/collection/${collection?.id}`}
       className="inline-block min-w-[240px] xl:min-w-[360px]"
     >
-      <div
-        className={`bg-dark-200 rounded-xl shadow-card relative ${
-          className ? className : ""
-        }`}
+      {collection && <div
+        className={`bg-dark-200 rounded-xl shadow-card relative ${className ? className : ""
+          }`}
       >
         <div className="relative overflow-hidden rounded-t-xl h-[124px] xl:h-[235px]">
-          {banner ? (
+          {collection?.banner ? (
             <Image
-              src={banner?.url}
-              alt={banner?.fileEntityId}
+              src={collection?.banner?.url}
+              alt={collection?.banner?.fileEntityId}
               fill
               objectFit="cover"
               priority
@@ -59,10 +58,10 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
                   background: "linear-gradient(90deg, #428CD4, #FF9CDA)",
                 }}
               >
-                {avatar && (
+                {collection?.avatar && (
                   <div className="relative w-[66px] xl:w-[112px] h-[66px] xl:h-[112px] rounded-lg xl:rounded-[19px] overflow-hidden">
                     <Image
-                      src={avatar?.url}
+                      src={collection?.avatar?.url}
                       fill
                       objectFit="cover"
                       priority
@@ -73,22 +72,22 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
               </div>
               <div className="w-[calc(100%-84px)] xl:w-[calc(100%-150px)]">
                 <Typography className="font-bold font-secondary flex items-center text-[16px] xl:text-[24px] leading-[1.5]">
-                  <span>{name}</span>
-                  {verified && (
+                  <span>{collection?.name}</span>
+                  {collection?.verified && (
                     <VerifiedIcon color="#428CD4" className="ml-1" />
                   )}{" "}
                 </Typography>
                 <Typography className="font-[400] text-[12px] leading-[18px] mt-[3px] hidden xl:block">
-                  {desc.slice(0, 50)}...
+                  {collection?.desc.slice(0, 50)}...
                 </Typography>
                 <div className="flex justify-between mt-4">
                   <div className="w-1/2">
                     <Typography className="font-[400] leading-[1.5] text-[8px] xl:text-[12px]">
                       Floor
                     </Typography>
-                    {launchpadById && item?.floorPrice !== undefined && (
-                      <Typography className="font-bold leading-[1.5] text-[12px] xl:text-[14px]">
-                        {weiToNum(item?.floorPrice)} ETH
+                    {stats[0]?.floorPrice !== undefined && (
+                      <Typography className="font-bold leading-[1.5] text-[12px] xl:text-[14px] text-white">
+                        {weiToNum(stats[0]?.floorPrice)} ETH
                       </Typography>
                     )}
                   </div>
@@ -96,9 +95,9 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
                     <Typography className="font-[400] leading-[1.5] text-[8px] xl:text-[12px]">
                       Total Volume
                     </Typography>
-                    {item?.floorPrice !== undefined && (
+                    {stats[0]?.floorPrice !== undefined && (
                       <Typography className="font-bold leading-[1.5] text-[12px] xl:text-[14px]">
-                        {weiToNum(item?.volume).toFixed(2)} ETH
+                        {weiToNum(stats[0]?.volume).toFixed(2)} ETH
                       </Typography>
                     )}
                   </div>
@@ -108,6 +107,7 @@ const CollectionCard: FC<ItemProps> = ({ item, collection, className }) => {
           </div>
         </div>
       </div>
+      }
     </Link>
   );
 };

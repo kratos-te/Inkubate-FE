@@ -29,7 +29,7 @@ const SortDropdown: FC<DropdownProps> = ({ value, setValue, setSortAscending, cl
         <div className="text-white bg-dark-400 flex-col justify-start rounded-lg mt-1">
           {SORT_LIST.map(
             (item, key) =>
-              item.value !== value && (
+              // item.value !== value && (
                 <button
                   onClick={() => handelSetData(item)} 
                   key={key}
@@ -37,7 +37,7 @@ const SortDropdown: FC<DropdownProps> = ({ value, setValue, setSortAscending, cl
                 >
                   {item.title}
                 </button>
-              )
+            // )
           )}
         </div>
       </div>

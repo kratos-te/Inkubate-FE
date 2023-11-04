@@ -2,6 +2,12 @@ import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { checkAuthorization } from ".";
 
+interface GetLIST {
+  startId: number;
+  offset: number;
+  limit: number;
+}
+
 export async function listingNft(
   id: string,
   signature: string,
@@ -98,7 +104,7 @@ export async function cancelList(
   }
 }
 
-export async function getListByUser() {
+export async function getListByUser({ startId, offset, limit }: GetLIST) {
   try {
     await checkAuthorization();
     const accessToken = localStorage.getItem("accessToken");
@@ -106,11 +112,16 @@ export async function getListByUser() {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios.get(`${API_BASE_URL}/api/listing/mine`, {
-      headers,
-    });
+    const response = await axios.get(
+      `${API_BASE_URL}/api/listing/user${startId ? "?startId=" + startId : ""}${
+        offset ? "&offset=" + offset : ""
+      }${limit ? "&limit=" + limit : ""}`,
+      {
+        headers,
+      }
+    );
     console.log("listing", response);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

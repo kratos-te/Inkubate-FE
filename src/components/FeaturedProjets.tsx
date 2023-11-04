@@ -47,7 +47,7 @@ const FeaturedProjects: FC = () => {
           {!loading
             ? collections.map((item, key) => (
                 <CollectionCard
-                  item={item}
+                // item={item}
                   collection={item.collection}
                   key={key}
                 />

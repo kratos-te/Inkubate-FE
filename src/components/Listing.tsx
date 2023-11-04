@@ -35,10 +35,10 @@ export const Listing: FC<ListingProps> = ({ listing }) => {
             </div>
             <div className="flex-col gap-[2px]">
               <Typography className="flex items-center gap-2  ml-2 text-[30px] font-semibold max-[640px]:text-[20px] max-sm:text-[16px]">
-                {`${listing.nft.name}#${listing.nft.tokenId}`}
+                {`${listing.nft.name}`}
               </Typography>
               <p className="flex items-center gap-2  ml-2 text-[30px] font-semibold text-[#555555] max-[640px]:text-[20px] max-sm:text-[16px]">
-                {listing.nft.name}
+                #{listing.nft.tokenId}
               </p>
             </div>
           </div>

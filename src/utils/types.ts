@@ -156,6 +156,7 @@ export interface CollectionParam {
   website: string;
   verified: boolean;
   nfts: NftTypes[];
+  stats: StatTypes[];
 }
 
 export interface InputData {
@@ -382,6 +383,7 @@ export type StatTypes = {
   salesItems: number;
   floorPrice: bigint;
   volume: bigint;
+  period: PeriodType;
 };
 enum BasicOrderType {
   ETH_TO_ERC721_FULL_OPEN,
@@ -446,3 +448,4 @@ export enum UserFilterByOption {
 }
 
 export type CollectionStats = Omit<StatsItem, "index">;
+

@@ -287,7 +287,7 @@ export const SORT_LIST = [
   },
   {
     title: "Price high to low",
-    value: "",
+    value: "PRICE",
     ascending: false,
   },
   {
@@ -327,7 +327,7 @@ export const SORT_LIST = [
   },
   {
     title: "Most favorited",
-    value: "FAVOURITE_COUNT",
+    value: "FAVORITE_COUNT",
     ascending: false,
   },
   {
