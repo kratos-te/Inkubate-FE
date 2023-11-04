@@ -66,8 +66,11 @@ const NftCard: FC<ItemProps> = ({
   }
 
   const handleSell = async () => {
+    console.log(listByNft)
     if (listByNft?.nftId === id) {
+      console.log(2)
       if (!tokenAddress) return;
+      console.log(3)
       if (listByNft) {
         // const startAmount = (weiToNum(listing.price) / 100) * 95;
         const startDay = date2Timestamp(listByNft.startTime).toString();

@@ -1,13 +1,27 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 
-export async function getActivityByUser(userId: string) {
+interface ACTAPIParam {
+  userId: string;
+  startId?: number;
+  offset?: number;
+  limit?: number;
+}
+
+export async function getActivityByUser({
+  userId,
+  startId,
+  offset,
+  limit,
+}: ACTAPIParam) {
   try {
     const response = await axios.get(
-      `${API_BASE_URL}/api/activity/user/${userId}?filterBy=ACTIVITY`
+      `${API_BASE_URL}/api/activity/user/${userId}?filterBy=ACTIVITY${
+        startId ? "&startId=" + startId : ""
+      }${offset ? "&offset=" + offset : ""}${limit ? "&limit=" + limit : ""}`
     );
     console.log("activity", response);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

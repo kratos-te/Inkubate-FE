@@ -1,7 +1,13 @@
 import axios from "axios";
-import { InactiveNftTypes, UserFilterByOption } from "@/utils/types";
+import { UserFilterByOption } from "@/utils/types";
 import { API_BASE_URL } from "@/config";
 import { checkAuthorization } from ".";
+
+interface NftAPIParam {
+  startId?: number;
+  offset?: number;
+  limit?: number;
+}
 
 export async function createHide(nftId: string) {
   try {
@@ -30,7 +36,7 @@ export async function createHide(nftId: string) {
   }
 }
 
-export async function getHides(): Promise<InactiveNftTypes[] | null> {
+export async function getHides({ startId, offset, limit }: NftAPIParam) {
   try {
     await checkAuthorization();
     const accessToken = localStorage.getItem("accessToken");
@@ -39,9 +45,14 @@ export async function getHides(): Promise<InactiveNftTypes[] | null> {
       "Content-Type": "application/json",
     };
     const response = await axios
-      .get(`${API_BASE_URL}/api/hide?filterBy=${UserFilterByOption.HIDDEN}`, {
-        headers,
-      })
+      .get(
+        `${API_BASE_URL}/api/hide?filterBy=${UserFilterByOption.HIDDEN}${
+          startId ? "&startId=" + startId : ""
+        }${offset ? "&offset=" + offset : ""}${limit ? "&limit=" + limit : ""}`,
+        {
+          headers,
+        }
+      )
       .then((res) => res.data)
       .catch((e) => {
         throw e;

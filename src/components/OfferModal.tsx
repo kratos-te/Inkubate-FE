@@ -30,7 +30,7 @@ export const OfferModal: FC<{
   listing?: ListingTypes;
   className?: string;
   setIsOffer: Dispatch<SetStateAction<boolean>>;
-}> = ({ nft, listing, setIsOffer }) => {
+}> = ({ nft, setIsOffer }) => {
   const { address: walletAddress } = useAccount();
   const { closeOfferModal, isOpenedOfferModal } = useModal();
   const { approve } = useErc20();
@@ -107,7 +107,7 @@ export const OfferModal: FC<{
   };
 
   const handleOffer = async () => {
-    if (!listing || !walletAddress) return;
+    if (!walletAddress) return;
 
     setMakeOffer(true);
     const startAmount = numToWei(parseFloat(amount));
@@ -123,7 +123,7 @@ export const OfferModal: FC<{
       const { signature, data } = await handleSign();
       if (signature) {
         const res = await createOffer(
-          listing.id,
+          nft.id,
           signature,
           JSON.stringify(data),
           nft.collection.network

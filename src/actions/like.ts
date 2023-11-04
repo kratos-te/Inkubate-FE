@@ -3,6 +3,12 @@ import { InactiveNftTypes, UserFilterByOption } from "@/utils/types";
 import { API_BASE_URL } from "@/config";
 import { checkAuthorization } from ".";
 
+interface NftAPIParam {
+  startId?: number;
+  offset?: number;
+  limit?: number;
+}
+
 export async function createLikes(
   nftId: string
 ): Promise<InactiveNftTypes[] | null> {
@@ -32,7 +38,7 @@ export async function createLikes(
   }
 }
 
-export async function getLikes(): Promise<InactiveNftTypes[] | null> {
+export async function getLikes({ startId, offset, limit }: NftAPIParam) {
   try {
     await checkAuthorization();
     const accessToken = localStorage.getItem("accessToken");
@@ -40,21 +46,22 @@ export async function getLikes(): Promise<InactiveNftTypes[] | null> {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios
-      .get(`${API_BASE_URL}/api/like?filterBy=${UserFilterByOption.FAVORITE}`, {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/like?filterBy=${UserFilterByOption.FAVORITE}${
+        startId ? "&startId=" + startId : ""
+      }${offset ? "&offset=" + offset : ""}${limit ? "&limit=" + limit : ""}`,
+      {
         headers,
-      })
-      .then((res) => res.data)
-      .catch((e) => {
-        throw e;
-      });
-    return response.map((data: any) => ({
-      ...data.nft,
-      assetUrl: data.tokenUri,
-      like: {
-        id: data.id,
-      },
-    }));
+      }
+    );
+    // return response.map((data: any) => ({
+    //   ...data.nft,
+    //   assetUrl: data.tokenUri,
+    //   like: {
+    //     id: data.id,
+    //   },
+    // }));
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

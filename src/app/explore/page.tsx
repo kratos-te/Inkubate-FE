@@ -9,21 +9,17 @@ import ExploreItems from "@/components/ExploreItems";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import { getAllCollections } from "@/actions/collection";
-import { StatTypes } from "@/utils/types";
-import { getStatByCollectionId } from "@/actions";
+import { CollectionParam } from "@/utils/types";
 
 export default function ExplorePage() {
   const router = useRouter();
   const query = useSearchParams();
   const tab = query?.get("tab");
-  const [stats, setStats] = useState<StatTypes[]>([]);
+  const [collections, setCollections] = useState<CollectionParam[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const getData = async () => {
-      const collections = await getAllCollections();
-      const statPromises = collections.map((collection: { id: string; }) => getStatByCollectionId(collection.id));
-      const statData = await Promise.all(statPromises);
-      setStats(statData);
+      setCollections(await getAllCollections());
     };
     getData();
   }, []);
@@ -87,9 +83,13 @@ export default function ExplorePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 gap-x-[30px] gap-y-3 xl:gap-y-10 mt-[34px]">
               {!loading ? (
                 <>
-                  {stats && stats.map((item, key) => (
-                    <CollectionCard item={item} collection={item.collection} key={key} />
-                  ))}
+                  {
+                    collections.map((item, key) => (
+                      <CollectionCard
+                        collection={item}
+                        key={key}
+                      />
+                    ))}
                 </>
               ) : (
                 Array.from({ length: 8 }).map((_, key) => (

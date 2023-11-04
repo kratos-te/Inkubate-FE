@@ -1,13 +1,24 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { checkAuthorization } from ".";
-import { NftParams, UserFilterByOption } from "@/utils/types";
+import { NftParams } from "@/utils/types";
 
 interface IGetNft {
   collectionId: string;
   sortAscending?: string;
   search?: string;
   sortBy?: string;
+  startId?: number;
+  offset?: number;
+  limit?: number;
+}
+
+interface UGetNft {
+  userId: string;
+  sortAscending?: string;
+  search?: string;
+  sortBy?: string;
+  filterBy?: string;
   startId?: number;
   offset?: number;
   limit?: number;
@@ -27,7 +38,7 @@ export async function getNft({
       sortBy ? "&sortBy=" + sortBy : ""
     }${startId ? "&startId=" + startId : ""}${
       offset ? "&offset=" + offset : ""
-    }${limit ? "&limit=" + limit : ""}&contains=${search}`;
+    }${limit ? "&limit=" + limit : ""}${search ? "&contains=" + search : ""}`;
 
     const response = await axios.get(query);
     console.log("nfts", response);
@@ -44,18 +55,30 @@ export async function getNft({
   }
 }
 
-export async function getNftsByUser(
-  userId: string,
-  filterBy?: UserFilterByOption
-) {
+export async function getNftsByUser({
+  userId,
+  sortAscending,
+  sortBy,
+  search,
+  filterBy,
+  startId,
+  offset,
+  limit,
+}: UGetNft) {
   try {
-    let query = "";
-    if (filterBy) query = `?filterBy=${filterBy}`;
+    // let query = "";
+    // if (filterBy) query = `?filterBy=${filterBy}`;
     const response = await axios.get(
-      `${API_BASE_URL}/api/nft/user/${userId}${query}`
+      `${API_BASE_URL}/api/nft/user/${userId}?sortAscending=${sortAscending}${
+        filterBy ? "&filterBy=" + filterBy : ""
+      }${sortBy ? "&sortBy=" + sortBy : ""}${
+        startId ? "&startId=" + startId : ""
+      }${offset ? "&offset=" + offset : ""}${limit ? "&limit=" + limit : ""}${
+        search ? "&contains=" + search : ""
+      }`
     );
     console.log("nft by owner", response);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

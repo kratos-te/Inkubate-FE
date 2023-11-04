@@ -33,8 +33,8 @@ import { DEFAULT_LIST_ITEMS_COUNT } from "@/config";
 import useScroll from "@/utils/useScroll";
 
 export default function CollectionPage() {
-  const router = useRouter();
-  const query = useSearchParams();
+  const collectionName = "Opbunnies";
+
   const [sortBy, setSortBy] = useState("");
   const [search, setSearch] = useState("");
   const [sortAscending, setSortAscending] = useState<string>("asc");
@@ -48,7 +48,11 @@ export default function CollectionPage() {
   const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
 
   const [endPageLoading, setEndPageLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  const router = useRouter();
+  const pathname = usePathname();
+  const query = useSearchParams();
   const { top, height } = useScroll();
 
   const tab = useMemo(() => {
@@ -59,7 +63,6 @@ export default function CollectionPage() {
     return t;
   }, [query]);
 
-  const pathname = usePathname();
 
   const collectionId = useMemo(() => {
     let path = "";
@@ -69,15 +72,6 @@ export default function CollectionPage() {
     return path;
   }, [pathname]);
 
-  const collectionName = "Opbunnies";
-
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1200);
-  }, []);
-
   useEffect(() => {
     if (loading) return;
     handleFetchStatsData(true);
@@ -86,7 +80,7 @@ export default function CollectionPage() {
   // Fetch initial data when reloading
   useEffect(() => {
     handleFetchStatsData(true);
-  }, []);
+  }, [search]);
 
   useEffect(() => {
     if (loading || !nftByCollection) return;
@@ -104,10 +98,10 @@ export default function CollectionPage() {
       getNft({
         collectionId,
         sortAscending,
-        search: search || undefined,
+        search,
         sortBy,
         startId: withClear
-          ? 1
+          ? 0
           : Math.floor(nftByCollection.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
         offset: DEFAULT_LIST_ITEMS_COUNT,
         limit: DEFAULT_LIST_ITEMS_COUNT,
@@ -151,7 +145,7 @@ export default function CollectionPage() {
           setLoading(false);
         });
     },
-    [nftByCollection, sortBy, sortAscending, top, endPageLoading]
+    [nftByCollection, sortBy, sortAscending, search, top, endPageLoading]
   );
 
   // useEffect(() => {
@@ -213,30 +207,27 @@ export default function CollectionPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => router.push(`${collectionId}?tab=1`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${
-                  tab === "1"
-                    ? " border-secondary bg-secondary"
-                    : "border-transparent"
-                }`}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "1"
+                  ? " border-secondary bg-secondary"
+                  : "border-transparent"
+                  }`}
               >
                 Items
               </button>
               <button
                 onClick={() => router.push(`${collectionId}?tab=2`)}
-                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${
-                  tab === "2"
-                    ? " border-secondary bg-secondary"
-                    : "border-transparent"
-                }`}
+                className={`text-[15px] font-semibold py-[10px] px-[14px] bg-dark-400 rounded-[12px] text-white ${tab === "2"
+                  ? " border-secondary bg-secondary"
+                  : "border-transparent"
+                  }`}
               >
                 Activity
               </button>
             </div>
           </div>
           <div
-            className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${
-              tab === "1" || tab === "2" ? "show" : "hidden"
-            }`}
+            className={`flex gap-3 mt-6 lg:mt-12  relative z-20 ${tab === "1" || tab === "2" ? "show" : "hidden"
+              }`}
           >
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
@@ -276,9 +267,8 @@ export default function CollectionPage() {
             </div>
           </div>
           <div
-            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${
-              tab === "1" || tab === "2" ? "show" : "hidden"
-            }`}
+            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${tab === "1" || tab === "2" ? "show" : "hidden"
+              }`}
           >
             <div className="hidden lg:block w-[300px]">
               {nftOne && <CollectionFilter nft={nftOne} />}

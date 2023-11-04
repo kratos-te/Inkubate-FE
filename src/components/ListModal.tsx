@@ -203,8 +203,8 @@ export const ListModal: FC<{
             <div className="flex justify-between border border-white rounded-3xl mt-12 overflow-hidden">
               <div
                 className={`flex h-12 space-x-1 justify-center border-white py-2 w-1/2 rounded-r-full items-center cursor-pointer ${tab === "eth"
-                    ? "bg-white text-black"
-                    : "bg-transparent text-white"
+                  ? "bg-white text-black"
+                  : "bg-transparent text-white"
                   }`}
                 onClick={handelSetEther}
               >
@@ -213,8 +213,8 @@ export const ListModal: FC<{
               </div>
               <div
                 className={`flex h-12 space-x-1 justify-center w-1/2 border-white py-2 px-4 rounded-l-full items-center cursor-pointer ${tab === "bnb"
-                    ? "bg-white text-black"
-                    : "bg-transparent text-white"
+                  ? "bg-white text-black"
+                  : "bg-transparent text-white"
                   }`}
                 onClick={handleSetBnb}
               >

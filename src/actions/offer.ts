@@ -2,8 +2,14 @@ import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { checkAuthorization } from ".";
 
+interface GetOffer {
+  startId: number;
+  offset: number;
+  limit: number;
+}
+
 export async function createOffer(
-  listingId: string,
+  nftId: string,
   signature: string,
   parameters: string,
   network: string
@@ -18,7 +24,7 @@ export async function createOffer(
     const response = await axios.post(
       `${API_BASE_URL}/api/offer`,
       {
-        listingId,
+        nftId,
         signature,
         parameters,
         network,
@@ -39,7 +45,7 @@ export async function createOffer(
   }
 }
 
-export async function getOfferBySell() {
+export async function getOfferBySell({ startId, offset, limit }: GetOffer) {
   try {
     await checkAuthorization();
     const accessToken = localStorage.getItem("accessToken");
@@ -47,10 +53,15 @@ export async function getOfferBySell() {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios.get(`${API_BASE_URL}/api/offer/sell`, {
-      headers,
-    });
-    return response;
+    const response = await axios.get(
+      `${API_BASE_URL}/api/offer/sell${startId ? "?startId=" + startId : ""}${
+        offset ? "&offset=" + offset : ""
+      }${limit ? "&limit=" + limit : ""}`,
+      {
+        headers,
+      }
+    );
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
@@ -64,7 +75,7 @@ export async function getOfferBySell() {
   }
 }
 
-export async function getOfferByBuy() {
+export async function getOfferByBuy({ startId, offset, limit }: GetOffer) {
   try {
     await checkAuthorization();
     const accessToken = localStorage.getItem("accessToken");
@@ -72,11 +83,16 @@ export async function getOfferByBuy() {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios.get(`${API_BASE_URL}/api/offer/buy`, {
-      headers,
-    });
+    const response = await axios.get(
+      `${API_BASE_URL}/api/offer/buy${startId ? "?startId=" + startId : ""}${
+        offset ? "&offset=" + offset : ""
+      }${limit ? "&limit=" + limit : ""}`,
+      {
+        headers,
+      }
+    );
     console.log("offer", response);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

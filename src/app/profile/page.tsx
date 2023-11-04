@@ -1,16 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Skeleton from "react-loading-skeleton";
 
 import {
   getActivityByUser,
   getHides,
   getLikes,
-  getListByUser,
   getNftsByUser,
-  getOfferByBuy,
-  getOfferBySell,
   removeHide,
   removeLike,
 } from "@/actions";
@@ -31,7 +29,7 @@ import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
 import ActivityDetail from "@/components/ActivityDetail";
 import { Listings } from "@/components/Listings";
 import { Offers } from "@/components/Offers";
-import { PROFILE_TABS } from "@/config";
+import { DEFAULT_LIST_ITEMS_COUNT, PROFILE_TABS } from "@/config";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
 import MainLayout from "@/layouts/MainLayout";
@@ -39,13 +37,11 @@ import { Meta } from "@/layouts/Meta";
 import {
   ActivityTypes,
   InactiveNftTypes,
-  ListingTypes,
   NftTypes,
-  OfferTypes,
-  UserFilterByOption,
 } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
 import { errorAlert, successAlert } from "@/components/ToastGroup";
+import useScroll from "@/utils/useScroll";
 
 const profileName = "My Profile";
 
@@ -56,21 +52,21 @@ export default function ProfilePage() {
   const { profile, userData, getUserData, getProfileData } = useUser();
 
   const [sort, setSort] = useState("");
-  const [_ascending, setAscending] = useState(false);
-
+  const [sortAscending, setSortAscending] = useState<string>("asc");;
+  const [search, setSearch] = useState("");
   const [isDense, setIsDense] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [endPageLoading, setEndPageLoading] = useState(false);
+
   const [nftByOwner, setNftByOwner] = useState<NftTypes[] | InactiveNftTypes[]>(
     []
   );
   const [activeListing, setActiveListing] = useState<
     NftTypes | InactiveNftTypes | undefined
-  >(undefined);
-  const [listByUser, setListByUSer] = useState<ListingTypes[]>([]);
-  const [offerByBuy, setOfferByBuy] = useState<OfferTypes[]>([]);
-  const [offerBySell, setOfferBySell] = useState<OfferTypes[]>([]);
+    >(undefined);
   const [actByUser, setActByUser] = useState<ActivityTypes[]>([]);
 
+  const { top, height } = useScroll();
   const tab = useMemo(() => {
     let t = "1";
     if (query && query?.get("tab")) {
@@ -80,55 +76,197 @@ export default function ProfilePage() {
   }, [query]);
 
   useEffect(() => {
-    setLoading(true);
-    const getNftData = async () => {
-      switch (tab) {
-        case "7":
-          const listingData = await getListByUser();
-          setListByUSer(listingData?.data);
-          break;
-        case "8":
-          const buyOffer = await getOfferByBuy();
-          setOfferByBuy(buyOffer?.data);
-          break;
-        case "9":
-          const sellOffer = await getOfferBySell();
-          setOfferBySell(sellOffer?.data);
-          break;
-        case "6":
-          const activity = await getActivityByUser(userData.id);
-          setActByUser(activity?.data);
-          break;
-        case "1":
-          await getNftsByUser(userData.id, UserFilterByOption.ERC721_NFTS)
-            .then((res) => res?.data)
-            .then((nftData) => setNftByOwner(nftData));
-          break;
-        case "2":
-          await getNftsByUser(userData.id, UserFilterByOption.ERC1155_NFTS)
-            .then((res) => res?.data)
-            .then((nftData) => setNftByOwner(nftData));
-          break;
-        case "3":
-          await getNftsByUser(userData.id, UserFilterByOption.CREATED)
-            .then((res) => res?.data)
-            .then((nftData) => setNftByOwner(nftData));
-          break;
-        case "4":
-          await getLikes().then((nftData) => {
-            if (nftData) setNftByOwner(nftData);
+    if (loading) return;
+    handleFetchStatsData(true);
+  }, [sortAscending, loading]);
+
+  // Fetch initial data when reloading
+  useEffect(() => {
+    handleFetchStatsData(true);
+  }, [search]);
+
+  useEffect(() => {
+    if (loading || !nftByOwner) return;
+    if (nftByOwner && top > 400 * nftByOwner.length - height) {
+      handleFetchStatsData(false);
+    }
+  }, [top, height, loading]);
+
+  const handleFetchStatsData = useCallback(
+    (withClear: boolean) => {
+      if (withClear) setEndPageLoading(false);
+      if (!withClear && endPageLoading) return;
+      const lastSroll = top;
+      setLoading(true);
+      if (tab === "1") {
+        getNftsByUser({
+          userId: userData.id,
+          sortAscending: sortAscending,
+          sortBy: sort,
+          filterBy: "ERC721_NFTS",
+          search,
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear) {
+              setNftByOwner(res)
+            } else {
+              const oldData: NftTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setNftByOwner(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
           });
-          break;
-        case "5":
-          await getHides().then((nftData) => {
-            if (nftData) setNftByOwner(nftData);
-          });
-          break;
       }
-      setLoading(false);
-    };
-    getNftData();
-  }, [userData, tab]);
+      if (tab === "2") {
+        getNftsByUser({
+          userId: userData.id,
+          sortAscending: sortAscending,
+          sortBy: sort,
+          filterBy: "ERC1155_NFTS",
+          search,
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear) {
+              setNftByOwner(res)
+            } else {
+              const oldData: NftTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setNftByOwner(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+      if (tab === "3") {
+        getNftsByUser({
+          userId: userData.id,
+          sortAscending: sortAscending,
+          sortBy: sort,
+          filterBy: "CREATED",
+          search,
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear) {
+              setNftByOwner(res)
+            } else {
+              const oldData: NftTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setNftByOwner(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+      if (tab === "4") {
+        getLikes({
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear && res) {
+              setNftByOwner(res)
+            } else {
+              const oldData: NftTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setNftByOwner(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+      if (tab === "5") {
+        getHides({
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear && res) {
+              setNftByOwner(res)
+            } else {
+              const oldData: NftTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setNftByOwner(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+      if (tab === "6") {
+        getActivityByUser({
+          userId: userData.id,
+          startId: withClear
+            ? 0
+            : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+          offset: DEFAULT_LIST_ITEMS_COUNT,
+          limit: DEFAULT_LIST_ITEMS_COUNT,
+        })
+          .then((res) => {
+            setEndPageLoading(
+              !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+            );
+            if (withClear) {
+              setActByUser(res)
+            } else {
+              const oldData: ActivityTypes[] = Object.assign(nftByOwner);
+              oldData.push(...res);
+              setActByUser(oldData)
+              window.scrollTo(0, lastSroll);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    },
+    [search, top, tab]
+  );
 
   const handleEditProfile = async () => {
     openSettingModal();
@@ -145,7 +283,11 @@ export default function ProfilePage() {
     const succes = await removeLike(nft.like.id);
     if (succes) {
       successAlert("Favourite removed!");
-      await getLikes().then((nftData) => {
+      await getLikes({
+        startId: 0,
+        offset: DEFAULT_LIST_ITEMS_COUNT,
+        limit: DEFAULT_LIST_ITEMS_COUNT,
+      }).then((nftData) => {
         if (nftData) setNftByOwner(nftData);
       });
     } else {
@@ -158,7 +300,11 @@ export default function ProfilePage() {
     const succes = await removeHide(nft.hide.id);
     if (succes) {
       successAlert("Hidden removed!");
-      await getHides().then((nftData) => {
+      await getHides({
+        startId: 0,
+        offset: DEFAULT_LIST_ITEMS_COUNT,
+        limit: DEFAULT_LIST_ITEMS_COUNT,
+      }).then((nftData) => {
         if (nftData) setNftByOwner(nftData);
       });
     } else {
@@ -202,11 +348,10 @@ export default function ProfilePage() {
                 <button
                   key={key}
                   onClick={() => router.push(`?tab=${item.tab}`)}
-                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${
-                    tab === item.tab
-                      ? "bg-secondary hover:bg-[#AE115B]"
-                      : "bg-dark-400 hover:bg-[#444]"
-                  }`}
+                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${tab === item.tab
+                    ? "bg-secondary hover:bg-[#AE115B]"
+                    : "bg-dark-400 hover:bg-[#444]"
+                    }`}
                 >
                   {item.title}
                 </button>
@@ -224,15 +369,14 @@ export default function ProfilePage() {
           </div>
           <div className="border-b-[0.5px] border-light-400 relative z-10  mt-6"></div>
           <div
-            className={`relative flex gap-3 mt-6 lg:mt-12 z-20 ${
-              tab === "4" ||
+            className={`relative flex gap-3 mt-6 lg:mt-12 z-20 ${tab === "4" ||
               tab === "5" ||
               tab === "7" ||
               tab === "8" ||
               tab === "9"
-                ? "hidden"
-                : "show"
-            }`}
+              ? "hidden"
+              : "show"
+              }`}
           >
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
@@ -245,13 +389,15 @@ export default function ProfilePage() {
               <input
                 className="font-readex text-[14px] text-light-100 bg-dark-400 rounded-lg w-full h-11 pl-9"
                 placeholder="Search items"
+                value={search}
+                onChange={(e) => setSearch(e.target.value || "")}
               />
             </div>
             <div className="hidden lg:block">
               <SortDropdown
                 value={sort}
                 setValue={setSort}
-                setSortAscending={setAscending}
+                setSortAscending={setSortAscending}
               />
             </div>
             <div className="flex rounded-lg bg-dark-400 items-center h-11 overflow-hidden">
@@ -270,14 +416,12 @@ export default function ProfilePage() {
             </div>
           </div>
           <div
-            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${
-              tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
-            }`}
+            className={`mt-[28px] lg:mt-[38px] flex relative z-10 ${tab === "7" || tab === "8" || tab === "9" ? "hidden" : "show"
+              }`}
           >
             <div
-              className={`hidden w-[300px] ${
-                tab === "4" || tab === "5" ? "lg:hidden" : "lg:block"
-              }`}
+              className={`hidden w-[300px] ${tab === "4" || tab === "5" ? "lg:hidden" : "lg:block"
+                }`}
             >
               {nftByOwner && nftByOwner.length > 0 && nftByOwner[0] && (
                 <CollectionFilter nft={nftByOwner[0] as unknown as NftTypes} />
@@ -312,17 +456,17 @@ export default function ProfilePage() {
           </div>
           {tab === "7" && (
             <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
-              <Listings listData={listByUser} />
+              <Listings loading={loading} setLoading={setLoading} />
             </div>
           )}
           {tab === "8" && (
             <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
-              <Offers offerData={offerByBuy} />
+              <Offers loading={loading} tab={tab} setLoading={setLoading} />
             </div>
           )}
           {tab === "9" && (
             <div className="flex gap-3 mt-9 lg:mt-12  relative z-20">
-              <Offers offerData={offerBySell} />
+              <Offers loading={loading} tab={tab} setLoading={setLoading} />
             </div>
           )}
         </div>
