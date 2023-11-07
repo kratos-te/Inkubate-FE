@@ -494,3 +494,64 @@ export const NOTIFICATIONS = [
     time: "3 minutes ago",
   },
 ];
+
+export const metaFaviconData = [
+  {
+    rel: "apple-touch-icon",
+    url: "/apple-touch-icon.png",
+  },
+  {
+    rel: "icon",
+    type: "image/png",
+    sizes: "32x32",
+    url: "/favicon-32x32.png",
+  },
+  {
+    rel: "icon",
+    type: "image/png",
+    sizes: "16x16",
+    url: "/favicon-16x16.png",
+  },
+  {
+    rel: "icon",
+    url: "/favicon.ico",
+  },
+];
+
+export const pageMetadata = {
+  home: {
+    title: "Home | Inkubate",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque posuere turpis nec lacus blandit dictum.",
+  },
+  explore: {
+    title: "Explorer | Inkubate",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque posuere turpis nec lacus blandit dictum.",
+  },
+  launchpad: {
+    title: "Launchpad | Inkubate",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque posuere turpis nec lacus blandit dictum.",
+  },
+  mint: {
+    title: "Mint | Inkubate",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque posuere turpis nec lacus blandit dictum.",
+  },
+  profile: {
+    title: "Profile | Inkubate",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque posuere turpis nec lacus blandit dictum.",
+  },
+  stats: {
+    title: "Stats | Inkubate",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque posuere turpis nec lacus blandit dictum.",
+  },
+  assets: {
+    title: "Stats | Inkubate",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque posuere turpis nec lacus blandit dictum.",
+  },
+};

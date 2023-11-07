@@ -52,10 +52,17 @@ import { shortenAddress, weiToNum } from "@/utils/util";
 import { useInkubate } from "@/hooks/useInkubate";
 import { useAccount } from "wagmi";
 import { INK_CONDUIT_KEY } from "@/utils/constants";
-import { SALT } from "@/config";
+import { SALT, metaFaviconData, pageMetadata } from "@/config";
 import { ZeroAddress, ZeroHash } from "ethers";
 import { useUser } from "@/contexts/UserContext";
 import ActivityChart from "@/components/ActivityChart";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: pageMetadata.assets.title,
+  description: pageMetadata.assets.description,
+  icons: metaFaviconData,
+};
 
 export default function NftPage() {
   const pathname = usePathname();

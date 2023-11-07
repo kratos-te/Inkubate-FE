@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import Skeleton from "react-loading-skeleton";
-
 import {
   getActivityByUser,
   getHides,
@@ -34,16 +33,21 @@ import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
-import {
-  ActivityTypes,
-  InactiveNftTypes,
-  NftTypes,
-} from "@/utils/types";
+import { ActivityTypes, InactiveNftTypes, NftTypes } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
 import { errorAlert, successAlert } from "@/components/ToastGroup";
 import useScroll from "@/utils/useScroll";
 
 const profileName = "My Profile";
+
+import { metaFaviconData, pageMetadata } from "@/config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: pageMetadata.profile.title,
+  description: pageMetadata.profile.description,
+  icons: metaFaviconData,
+};
 
 export default function ProfilePage() {
   const query = useSearchParams();
@@ -52,7 +56,7 @@ export default function ProfilePage() {
   const { profile, userData, getUserData, getProfileData } = useUser();
 
   const [sort, setSort] = useState("");
-  const [sortAscending, setSortAscending] = useState<string>("asc");;
+  const [sortAscending, setSortAscending] = useState<string>("asc");
   const [search, setSearch] = useState("");
   const [isDense, setIsDense] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -78,19 +82,20 @@ export default function ProfilePage() {
   useEffect(() => {
     if (loading) return;
     handleFetchStatsData(true);
-  }, [sortAscending, loading]);
+  }, [tab, sort]);
 
   // Fetch initial data when reloading
   useEffect(() => {
     handleFetchStatsData(true);
-  }, [search]);
+
+  }, [search, tab, sort]);
 
   useEffect(() => {
     if (loading || !nftByOwner) return;
     if (nftByOwner && top > 400 * nftByOwner.length - height) {
       handleFetchStatsData(false);
     }
-  }, [top, height, loading]);
+  }, [height, loading, nftByOwner, top, tab, sort]);
 
   const handleFetchStatsData = useCallback(
     (withClear: boolean) => {
@@ -105,22 +110,22 @@ export default function ProfilePage() {
           sortBy: sort,
           filterBy: "ERC721_NFTS",
           search,
-          startId: withClear
+          startId: !withClear
             ? 0
             : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
           offset: DEFAULT_LIST_ITEMS_COUNT,
           limit: DEFAULT_LIST_ITEMS_COUNT,
         })
-          .then((res) => {
+          .then(res => {
             setEndPageLoading(
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear) {
-              setNftByOwner(res)
+              setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setNftByOwner(oldData)
+              setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -135,22 +140,22 @@ export default function ProfilePage() {
           sortBy: sort,
           filterBy: "ERC1155_NFTS",
           search,
-          startId: withClear
+          startId: !withClear
             ? 0
             : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
           offset: DEFAULT_LIST_ITEMS_COUNT,
           limit: DEFAULT_LIST_ITEMS_COUNT,
         })
-          .then((res) => {
+          .then(res => {
             setEndPageLoading(
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear) {
-              setNftByOwner(res)
+              setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setNftByOwner(oldData)
+              setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -171,16 +176,16 @@ export default function ProfilePage() {
           offset: DEFAULT_LIST_ITEMS_COUNT,
           limit: DEFAULT_LIST_ITEMS_COUNT,
         })
-          .then((res) => {
+          .then(res => {
             setEndPageLoading(
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear) {
-              setNftByOwner(res)
+              setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setNftByOwner(oldData)
+              setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -196,16 +201,16 @@ export default function ProfilePage() {
           offset: DEFAULT_LIST_ITEMS_COUNT,
           limit: DEFAULT_LIST_ITEMS_COUNT,
         })
-          .then((res) => {
+          .then(res => {
             setEndPageLoading(
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear && res) {
-              setNftByOwner(res)
+              setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setNftByOwner(oldData)
+              setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -221,16 +226,16 @@ export default function ProfilePage() {
           offset: DEFAULT_LIST_ITEMS_COUNT,
           limit: DEFAULT_LIST_ITEMS_COUNT,
         })
-          .then((res) => {
+          .then(res => {
             setEndPageLoading(
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear && res) {
-              setNftByOwner(res)
+              setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setNftByOwner(oldData)
+              setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -247,16 +252,16 @@ export default function ProfilePage() {
           offset: DEFAULT_LIST_ITEMS_COUNT,
           limit: DEFAULT_LIST_ITEMS_COUNT,
         })
-          .then((res) => {
+          .then(res => {
             setEndPageLoading(
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear) {
-              setActByUser(res)
+              setActByUser(res);
             } else {
               const oldData: ActivityTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setActByUser(oldData)
+              setActByUser(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -265,7 +270,7 @@ export default function ProfilePage() {
           });
       }
     },
-    [search, top, tab]
+    [endPageLoading, top, tab, userData.id, sortAscending, sort, search, nftByOwner]
   );
 
   const handleEditProfile = async () => {
@@ -287,7 +292,7 @@ export default function ProfilePage() {
         startId: 0,
         offset: DEFAULT_LIST_ITEMS_COUNT,
         limit: DEFAULT_LIST_ITEMS_COUNT,
-      }).then((nftData) => {
+      }).then(nftData => {
         if (nftData) setNftByOwner(nftData);
       });
     } else {
@@ -304,7 +309,7 @@ export default function ProfilePage() {
         startId: 0,
         offset: DEFAULT_LIST_ITEMS_COUNT,
         limit: DEFAULT_LIST_ITEMS_COUNT,
-      }).then((nftData) => {
+      }).then(nftData => {
         if (nftData) setNftByOwner(nftData);
       });
     } else {
@@ -390,7 +395,7 @@ export default function ProfilePage() {
                 className="font-readex text-[14px] text-light-100 bg-dark-400 rounded-lg w-full h-11 pl-9"
                 placeholder="Search items"
                 value={search}
-                onChange={(e) => setSearch(e.target.value || "")}
+                onChange={e => setSearch(e.target.value || "")}
               />
             </div>
             <div className="hidden lg:block">

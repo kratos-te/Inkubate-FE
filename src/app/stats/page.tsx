@@ -23,7 +23,18 @@ import {
   StatsSortBy,
 } from "@/utils/types";
 import useScroll from "@/utils/useScroll";
-import { DEFAULT_LIST_ITEMS_COUNT } from "@/config";
+import {
+  DEFAULT_LIST_ITEMS_COUNT,
+  metaFaviconData,
+  pageMetadata,
+} from "@/config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: pageMetadata.stats.title,
+  description: pageMetadata.stats.description,
+  icons: metaFaviconData,
+};
 
 export default function StatPage() {
   const [range, setRange] = useState<PeriodType>(PeriodType.DAY);
@@ -87,7 +98,7 @@ export default function StatPage() {
         offset: DEFAULT_LIST_ITEMS_COUNT,
         limit: DEFAULT_LIST_ITEMS_COUNT,
       })
-        .then((res) => {
+        .then(res => {
           setEndPageLoading(
             !res.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
           );
@@ -124,7 +135,7 @@ export default function StatPage() {
           className={className}
           onClick={() => {
             setSortBy(sort);
-            setOrderBy((prev) =>
+            setOrderBy(prev =>
               prev === SortType.DESC ? SortType.ASC : SortType.DESC
             );
           }}
@@ -151,7 +162,7 @@ export default function StatPage() {
           className="py-2.5 md:py-[30px] w-auto sm:w-[124px] cursor-pointer whitespace-nowrap"
           onClick={() => {
             setSortBy(StatsSortBy.VOLUME);
-            setOrderBy((prev) =>
+            setOrderBy(prev =>
               prev === SortType.DESC ? SortType.ASC : SortType.DESC
             );
           }}
@@ -201,7 +212,7 @@ export default function StatPage() {
                   className="bg-transparent w-full h-[42px] pl-9 text-[14px] font-readex text-light-100 relative z-10 outline-none"
                   placeholder="Search collection"
                   value={search}
-                  onChange={(e) => setSearch(e.target.value || "")}
+                  onChange={e => setSearch(e.target.value || "")}
                 />
               </div>
               <ChainsDropdown

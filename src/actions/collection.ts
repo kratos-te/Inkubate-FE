@@ -1,17 +1,29 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 
-export async function getAllCollections(contains?: string) {
+interface CollectionUrl {
+  search?: string;
+  startId?: number;
+  offset?: number;
+  limit?: number;
+}
+
+export async function getAllCollections({
+  search,
+  startId,
+  offset,
+  limit,
+}: CollectionUrl) {
   try {
-    const response = await axios
-      .get(
-        `${API_BASE_URL}/api/collection?${
-          contains ? "contains=" + contains : ""
-        }`
-      )
-      .then((res) => res.data);
+    const response = await axios.get(
+      `${API_BASE_URL}/api/collection${offset ? "?offset=" + offset : ""}${
+        limit ? "&limit=" + limit : ""
+      }${startId ? "&startId=" + startId : ""}${
+        search ? "?contains=" + search : ""
+      }`
+    );
     console.log("collection", response);
-    return response;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
