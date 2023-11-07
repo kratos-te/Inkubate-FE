@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import CollectionCard from "@/components/CollectionCard";
@@ -10,6 +11,15 @@ import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import { getAllCollections } from "@/actions/collection";
 import { CollectionParam } from "@/utils/types";
+import { DEFAULT_LIST_ITEMS_COUNT, metaFaviconData, pageMetadata } from "@/config";
+import { Metadata } from "next";
+import useScroll from "@/utils/useScroll";
+
+export const metadata: Metadata = {
+  title: pageMetadata.explore.title,
+  description: pageMetadata.explore.description,
+  icons: metaFaviconData,
+};
 
 export default function ExplorePage() {
   const router = useRouter();
@@ -17,12 +27,57 @@ export default function ExplorePage() {
   const tab = query?.get("tab");
   const [collections, setCollections] = useState<CollectionParam[]>([]);
   const [loading, setLoading] = useState(true);
+  const [endPageLoading, setEndPageLoading] = useState(false);
+
+  const { top, height } = useScroll();
+
   useEffect(() => {
-    const getData = async () => {
-      setCollections(await getAllCollections());
-    };
-    getData();
+    if (loading) return;
+    handleFetchStatsData(true);
   }, []);
+
+  // Fetch initial data when reloading
+
+  useEffect(() => {
+    if (loading || !collections) return;
+    if (collections && top > 400 * collections.length - height) {
+      handleFetchStatsData(false);
+    }
+  }, [top]);
+
+  const handleFetchStatsData = useCallback(
+    (withClear: boolean) => {
+      if (withClear) setEndPageLoading(false);
+      if (!withClear && endPageLoading) return;
+      const lastSroll = top;
+      setLoading(true);
+      getAllCollections({
+        startId: !withClear
+          ? 0
+          : Math.floor(collections.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
+        offset: DEFAULT_LIST_ITEMS_COUNT,
+        limit: DEFAULT_LIST_ITEMS_COUNT,
+      })
+        .then(res => {
+          setEndPageLoading(
+            !res.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
+          );
+          if (withClear) {
+            setCollections(res);
+          } else {
+            const oldData: CollectionParam[] = Object.assign(collections);
+            oldData.push(...res);
+            setCollections(oldData);
+            window.scrollTo(0, lastSroll);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [collections, top, endPageLoading]
+  );
+
 
   useEffect(() => {
     setTimeout(() => {

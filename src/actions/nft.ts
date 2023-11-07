@@ -34,7 +34,7 @@ export async function getNft({
   limit,
 }: IGetNft) {
   try {
-    const query = `${API_BASE_URL}/api/nft/collection/${collectionId}?sortAscending=${sortAscending}${
+    const query = `${API_BASE_URL}/api/nft/collection${collectionId}?sortAscending=${sortAscending}${
       sortBy ? "&sortBy=" + sortBy : ""
     }${startId ? "&startId=" + startId : ""}${
       offset ? "&offset=" + offset : ""

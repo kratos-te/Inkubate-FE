@@ -102,7 +102,7 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
                 />
               </div>
             ) : nfts.length > 0 ? (
-              <div className="w-full flex justify-center flex-wrap">
+                <div className="w-full flex gap-1 justify-center flex-wrap">
                 {nfts.map((nft) => (
                   <div key={nft.id} className="flex-col gap-1">
                     <img src={nft.image} alt={nft.name} className="w-20 h-20 rounded-md" />
@@ -158,7 +158,7 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
                     <div className="flex justify-between">
                       <p className="text-[18px] text-white font-bold">Status</p>
                       <p className="text-[16px] text-[#B3B3B3] font-normal">
-                        Processing
+                        Successed
                       </p>
                     </div>
                     <div className="flex justify-between">
@@ -172,12 +172,12 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
                   </div>
                   <div className="flex flex-col gap-[24px] mb-4">
                     <Link href={`/profile?tab=1`}>
-                      <button className="bg-secondary text-white py-3 text-[16px] font-semibold rounded-[12px]" >
+                      <button className="bg-secondary w-full text-white py-3 text-[16px] font-semibold rounded-[12px]" >
                         View NFTs
                       </button>
                     </Link>
                     <Link href={`https://goerli.etherscan.io/tx/${launchpad?.collection.address}`}>
-                      <button className="bg-white py-3 text-[16px] font-semibold rounded-[12px]">
+                      <button className="bg-white w-full py-3 text-[16px] font-semibold rounded-[12px]">
                         View Transaction
                       </button>
                     </Link>

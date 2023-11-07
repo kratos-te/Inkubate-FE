@@ -11,7 +11,7 @@ const SearchBar: FC = () => {
   const [users, setUsers] = useState<UserTypes[]>([]);
   useEffect(() => {
     const getCollections = async () => {
-      const collection = await getAllCollections(search);
+      const collection = await getAllCollections({ search });
       const user = await getAllUsers(search);
       setCollections(collection)
       setUsers(user)

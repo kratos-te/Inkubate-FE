@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FC } from "react";
 import { ArrowDownLineIcon } from "./SvgIcons";
 import { SORT_LIST } from "@/config";
+
 
 interface DropdownProps {
   value: string;
@@ -8,7 +10,10 @@ interface DropdownProps {
   setSortAscending: Function;
   className?: string;
 }
+
 const SortDropdown: FC<DropdownProps> = ({ value, setValue, setSortAscending, className }) => {
+
+
 
   const handelSetData = (item: any) => {
     setValue(item.value);
@@ -16,7 +21,7 @@ const SortDropdown: FC<DropdownProps> = ({ value, setValue, setSortAscending, cl
   }
   return (
     <div
-      className={`${className} w-[177px] h-11 group bg-dark-400 rounded-lg relative z-20 text-[14px]`}
+      className={`${className} w-[177px] h-11 group bg-dark-400 rounded-lg relative z-50 text-[14px]`}
     >
       <div className="flex items-center px-3 text-left text-white h-11 font-readex">
         {SORT_LIST.find((item) => item.value === value)?.title}
@@ -25,7 +30,7 @@ const SortDropdown: FC<DropdownProps> = ({ value, setValue, setSortAscending, cl
         </span>
       </div>
 
-      <div className="group-hover:flex absolute text-white hidden top-[42px] w-[177px] z-10 rounded-b-lg overflow-hidden">
+      <div className="group-hover:flex absolute text-white hidden top-[42px] w-[177px] z-50 rounded-b-lg overflow-hidden">
         <div className="text-white bg-dark-400 flex-col justify-start rounded-lg mt-1">
           {SORT_LIST.map(
             (item, key) =>
