@@ -27,12 +27,7 @@ import ActivityDetail from "@/components/ActivityDetail";
 import { DEFAULT_LIST_ITEMS_COUNT, USER_TABS } from "@/config";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
-import {
-  ActivityTypes,
-  NftTypes,
-  ProfileItem,
-  UserItem,
-} from "@/utils/types";
+import { ActivityTypes, NftTypes, ProfileItem, UserItem } from "@/utils/types";
 import { ListModal } from "@/components/ListModal";
 import useScroll from "@/utils/useScroll";
 
@@ -57,6 +52,9 @@ export default function UserPage() {
     discord: "",
     facebook: "",
     reddit: "",
+    email: "",
+    offerToken: "ETH",
+    minOfferThreshold: BigInt(0),
     avatarId: "",
     bannerId: "",
     avatar: {
@@ -81,7 +79,6 @@ export default function UserPage() {
   const [actByUser, setActByUser] = useState<ActivityTypes[]>([]);
   const [endPageLoading, setEndPageLoading] = useState(false);
 
-
   const tab = useMemo(() => {
     let t = "1";
     if (query && query?.get("tab")) {
@@ -98,7 +95,6 @@ export default function UserPage() {
     return path;
   }, [pathname]);
   const { top, height } = useScroll();
-
 
   useEffect(() => {
     if (loading) return;
@@ -141,11 +137,11 @@ export default function UserPage() {
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear) {
-              setNftByOwner(res)
+              setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setNftByOwner(oldData)
+              setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -171,11 +167,11 @@ export default function UserPage() {
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear) {
-              setNftByOwner(res)
+              setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setNftByOwner(oldData)
+              setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -201,11 +197,11 @@ export default function UserPage() {
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear) {
-              setNftByOwner(res)
+              setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setNftByOwner(oldData)
+              setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -227,11 +223,11 @@ export default function UserPage() {
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
             if (withClear) {
-              setActByUser(res)
+              setActByUser(res);
             } else {
               const oldData: ActivityTypes[] = Object.assign(nftByOwner);
               oldData.push(...res);
-              setActByUser(oldData)
+              setActByUser(oldData);
               window.scrollTo(0, lastSroll);
             }
           })
@@ -242,7 +238,6 @@ export default function UserPage() {
     },
     [search, top, tab]
   );
-
 
   useEffect(() => {
     setLoading(true);

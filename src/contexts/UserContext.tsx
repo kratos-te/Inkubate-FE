@@ -17,8 +17,6 @@ interface UserContextType {
   setUsername: React.Dispatch<React.SetStateAction<string>>;
   userAddress: string;
   setUserAddress: React.Dispatch<React.SetStateAction<string>>;
-  // token: string;
-  // setToken: React.Dispatch<React.SetStateAction<string>>;
   startDate: Date;
   setStartDate: React.Dispatch<React.SetStateAction<Date>>;
   endDate: Date;
@@ -48,8 +46,6 @@ const UserContext = createContext<UserContextType>({
   setStartTime: () => {},
   endTime: "",
   setEndTime: () => {},
-  // token: "",
-  // setToken: () => {},
   userData: { id: "", username: "", walletAddress: "" },
   setUserData: () => {},
   getUserData: () => {},
@@ -59,6 +55,9 @@ const UserContext = createContext<UserContextType>({
     discord: "",
     facebook: "",
     reddit: "",
+    email: "",
+    offerToken: "ETH",
+    minOfferThreshold: BigInt(0),
     avatarId: "",
     bannerId: "",
     avatar: {
@@ -100,7 +99,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [endDate, setEndDate] = useState<Date>(addMonths(today, 1));
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  // const [token, setToken] = useState("");
   const { address, isConnected } = useAccount();
   const [userData, setUserData] = useState({
     id: "",
@@ -113,6 +111,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     discord: "",
     facebook: "",
     reddit: "",
+    email: "",
+    offerToken: "ETH",
+    minOfferThreshold: BigInt(0),
     avatarId: "",
     bannerId: "",
     avatar: {
@@ -144,6 +145,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         discord: profile.discord,
         facebook: profile.facebook,
         reddit: profile.reddit,
+        email: profile.email,
+        offerToken: profile.offerToken,
+        minOfferThreshold: profile.minOfferThreshold,
         avatarId: profile.avatarId,
         bannerId: profile.bannerId,
         avatar: profile.avatar,
@@ -167,8 +171,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setStartTime,
     endTime,
     setEndTime,
-    // token,
-    // setToken,
     userData,
     setUserData,
     getUserData,
@@ -180,7 +182,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("=========");
     getUserData();
   }, [address, isConnected]);
 
