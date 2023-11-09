@@ -71,6 +71,9 @@ export type ProfileItem = {
   discord: string;
   facebook: string;
   reddit: string;
+  email: string;
+  offerToken: string;
+  minOfferThreshold: bigint;
   avatarId: string;
   bannerId: string;
   avatar: PhotoItem;
@@ -448,4 +451,3 @@ export enum UserFilterByOption {
 }
 
 export type CollectionStats = Omit<StatsItem, "index">;
-

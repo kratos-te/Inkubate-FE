@@ -54,11 +54,14 @@ export async function getProfileById(
 }
 
 export async function updateProfile(updateData: {
-  bio: string;
-  twitter: string;
-  discord: string;
-  facebook: string;
-  reddit: string;
+  bio?: string;
+  twitter?: string;
+  discord?: string;
+  facebook?: string;
+  reddit?: string;
+  email?: string;
+  offerToken?: string;
+  minOfferThreshold?: bigint;
   avatarId?: string;
   bannerId?: string;
 }): Promise<string | null> {
@@ -69,19 +72,33 @@ export async function updateProfile(updateData: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const { bio, twitter, discord, facebook, reddit, avatarId, bannerId } =
-      updateData;
+    const {
+      bio,
+      twitter,
+      discord,
+      facebook,
+      reddit,
+      email,
+      offerToken,
+      minOfferThreshold,
+      avatarId,
+      bannerId,
+    } = updateData;
+
     const response = await axios
       .patch(
         `${API_BASE_URL}/api/profile`,
         {
-          bio: bio,
-          twitter: twitter,
-          discord: discord,
-          facebook: facebook,
-          reddit: reddit,
-          avatarId: avatarId,
-          bannerId: bannerId,
+          bio,
+          twitter,
+          discord,
+          facebook,
+          email,
+          offerToken,
+          minOfferThreshold: minOfferThreshold?.toString(),
+          reddit,
+          avatarId,
+          bannerId,
         },
         { headers }
       )

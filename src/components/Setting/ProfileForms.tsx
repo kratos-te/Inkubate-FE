@@ -15,7 +15,7 @@ import Typography from "../Typography";
 import { successAlert } from "../ToastGroup";
 
 const ProfileForms: FC = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const { userData, profile, getUserData, setProfile, getProfileData } =
     useUser();
   const { closeSettingModal } = useModal();
@@ -155,6 +155,11 @@ const ProfileForms: FC = () => {
     } catch (error) {
       console.log("error", error);
     }
+  };
+
+  const onAbort = () => {
+    reset();
+    closeSettingModal();
   };
 
   return (
@@ -330,7 +335,11 @@ const ProfileForms: FC = () => {
           </div>
           <div className="flex justify-start lg:justify-end mt-[39px] lg:mt-[65px] mb-20">
             <div className="flex items-center gap-2.5">
-              <button className="py-[11px] px-8 shadow-card w-[116px] bg-dark-400 rounded-lg text-white font-bold font-readex">
+              <button
+                className="py-[11px] px-8 shadow-card w-[116px] bg-dark-400 rounded-lg text-white font-bold font-readex"
+                type="button"
+                onClick={onAbort}
+              >
                 Cancel
               </button>
               <button
@@ -339,6 +348,7 @@ const ProfileForms: FC = () => {
                   backgroundImage:
                     "linear-gradient(135deg, #FF9CDA 0%, #EA4492 100%)",
                 }}
+                type="submit"
               >
                 Save
               </button>
