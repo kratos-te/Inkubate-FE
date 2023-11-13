@@ -15,6 +15,7 @@ import MainLayout from "@/layouts/MainLayout";
 import { getLaunchpadById } from "@/actions";
 import { LaunchpadParam } from "@/utils/types";
 import { weiToNum } from "@/utils/util";
+import { LaunchpadEditModal } from "@/components/LaunchpadEditModal";
 
 export default function MintPage() {
   const pathname = usePathname();
@@ -191,6 +192,7 @@ export default function MintPage() {
         </div>
       </MainLayout>
       {launchpadById && <MintModal launchpad={launchpadById} />}
+      {launchpadById && <LaunchpadEditModal launchpad={launchpadById} />}
     </>
   );
 }

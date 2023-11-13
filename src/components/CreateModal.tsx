@@ -194,7 +194,7 @@ export const CreateModal: FC = () => {
       className={`fixed z-50 w-full h-full min-h-screen top-0  bg-black/90 transition-opacity`}
     >
       <div className="w-full h-full flex justify-center items-center overflow-auto">
-        <div className="bg-[#161616] w-[1146px] rounded-[12px] max-sm:w-[331px] relative  bg-no-repeat bg-center bg-cover p-[17px] lg:p-9 mt-[700px] max-lg:mt-[2000px]">
+        <div className="bg-[#161616] w-[1146px] rounded-[12px] max-sm:w-[331px] relative bg-no-repeat bg-center bg-cover p-[17px] lg:p-9 mt-[700px] max-lg:mt-[2000px]">
           <button
             className="group md:rounded-xl absolute right-7 md:right-9 top-9 md:top-9 z-10"
             onClick={closeCreateModal}
@@ -399,13 +399,13 @@ export const CreateModal: FC = () => {
                         ))
                       : ""}
 
-                    <button
+                    <div
                       className="flex w-[158px] px-[4px] py-[10px] rounded-xl bg-dark-400 text-[14px] text-[#B3B3B3] font-semibold"
                       onClick={handleCreateAddressList}
                     >
                       <MinuPlusIcon />
                       Another Address
-                    </button>
+                    </div>
                   </div>
                   <div className="flex-col">
                     <SetDuration />

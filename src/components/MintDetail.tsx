@@ -6,6 +6,7 @@ import { LaunchpadParam } from "@/utils/types";
 import Typography from "./Typography";
 import {
   DiscordIcon,
+  EditMintIcon,
   FacebookIcon,
   GalleryIcon,
   RedditIcon,
@@ -16,6 +17,7 @@ import useWindowSize from "@/utils/useWindowSize";
 import MintProgress from "./MintProgress";
 import { useModal } from "@/contexts/ModalContext";
 import { weiToNum } from "@/utils/util";
+import { useUser } from "@/contexts/UserContext";
 
 interface OverviewProps {
   launchpad: LaunchpadParam;
@@ -27,23 +29,11 @@ const MintDetail: FC<OverviewProps> = ({ launchpad, remainingTime }) => {
   // const { price, setPrice } = useState(launchpad.mintPrice)
   // const [supply, setSupply] = useState<string>("0")
   const router = useRouter();
-  const { openMintModal } = useModal();
-  // const { getTotalSupply } = useErc721a();
+  const { openMintModal, openLaunchpadEditModal } = useModal();
+  const { userData } = useUser()
   const { width } = useWindowSize();
 
   const price = launchpad.mintPrice;
-  // const remainingTime = Math.floor(
-  //   (new Date(launchpad.startDate).getTime() - Date.now()) / 1000
-  // );
-
-  // useEffect(()=> {
-  //   const fetchSupply = async () => {
-  //     const supply = await getTotalSupply();
-  //     setSupply(supply);
-  // };
-
-  // fetchSupply();
-  // },[])
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -117,15 +107,25 @@ const MintDetail: FC<OverviewProps> = ({ launchpad, remainingTime }) => {
               >
                 <StarIcon className="mr-1" color="#161616" /> Mint Now
               </button>
-              <button
-                className="py-[11px] h-[42px] text-light-100 flex !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300"
-                onClick={() =>
-                  router.push(`/collection/${launchpad.collectionId}`)
-                }
-              >
-                <GalleryIcon className="mr-1" color="#F2F3F4" />
-                View Collection
-              </button>
+              {userData.id === launchpad.creatorId ?
+                <button
+                  className="py-[11px] h-[42px] text-light-100 flex gap-[7px] !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300"
+                  onClick={openLaunchpadEditModal}
+                >
+                  <EditMintIcon className="mr-1" color="#F2F3F4" />
+                  Edit Mint
+                </button>
+                :
+                <button
+                  className="py-[11px] h-[42px] text-light-100 flex gap-[7px] !rounded-full items-center !font-bold bg-dark-200 justify-center md:mt-0 hover:bg-[#222] duration-300"
+                  onClick={() =>
+                    router.push(`/collection/${launchpad.collectionId}`)}
+                >
+                  <GalleryIcon className="mr-1" color="#F2F3F4" />
+                  View Collection
+                </button>
+              }
+
             </div>
           </div>
           {remainingTime > 0 && (

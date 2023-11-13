@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useAccount, useDisconnect, useBalance } from "wagmi";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,6 +28,7 @@ import {
 } from "./SvgIcons";
 import Typography from "./Typography";
 import { useAuth } from "@/contexts/AuthContext";
+import { getNotification } from "@/actions/notification";
 
 const Header: FC = () => {
   const { openWalletModal, closeWalletModal, openSettingModal } = useModal();
@@ -43,6 +44,7 @@ const Header: FC = () => {
   const [isBnb, setIsBnb] = useState(false);
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const [isConvertModal, setIsConvertModal] = useState(false);
+  const [notifyData, setNotifyData] = useState<string[] | null>();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -71,11 +73,15 @@ const Header: FC = () => {
 
   const handleDropdown = () => {
     setIsShowDropdown(!isShowDropdown);
+    setIsNotificationModal(false)
     setIsConvertModal(false);
   };
 
-  const handleNotification = () => {
+  const handleNotification = async () => {
+    const notification = await getNotification()
+    console.log("here ++++++++++++++", notification);
     setIsNotificationModal(!isNotificationModal);
+    setIsShowDropdown(false)
   };
 
   const handleEditProfile = async () => {
@@ -83,6 +89,16 @@ const Header: FC = () => {
     getProfileData();
     getUserData();
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getNotification()
+      setNotifyData(data)
+    }
+    getData()
+  }, [])
+
+
 
   return (
     <header className="py-8 xl:py-10 2xl:py-[54px] absolute left-0 top-0 w-full z-50">
@@ -117,18 +133,16 @@ const Header: FC = () => {
               <>
                 <div className="flex border-2 border-[#EA4492] rounded-full">
                   <div
-                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full  text-white items-center cursor-pointer ${
-                      isEther ? "bg-[#EA4492]" : ""
-                    }`}
+                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full  text-white items-center cursor-pointer ${isEther ? "bg-[#EA4492]" : ""
+                      }`}
                     onClick={handelSetEther}
                   >
                     <EthIcon color="white" />
                     <p className="text-[12px] text-white font-bold"> ETH</p>
                   </div>
                   <div
-                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full text-white items-center cursor-pointer ${
-                      isBnb ? "bg-[#EA4492]" : ""
-                    }`}
+                    className={`flex space-x-2 border-[#EA4492] py-2 px-4 rounded-full text-white items-center cursor-pointer ${isBnb ? "bg-[#EA4492]" : ""
+                      }`}
                     onClick={handleSetBnb}
                   >
                     <BnbIcon />
@@ -138,81 +152,75 @@ const Header: FC = () => {
                 <IconButton className="relative" onClick={handleNotification}>
                   <AlarmIcon />
                   <BadgeIcon
-                    className={`${
-                      !NOTIFICATIONS ? "hidden" : "absolute right-0"
-                    }`}
+                    className={`${!NOTIFICATIONS ? "hidden" : "absolute right-0"
+                      }`}
                   />
                 </IconButton>
-                <ClickAwayComponent
-                  onClickAway={() => setIsShowDropdown(false)}
-                  className="relative w-[44px] h-[44px]"
-                >
-                  <Image
-                    src={
-                      profile?.avatar?.url ||
-                      "/assets/images/default-avatar.svg"
-                    }
-                    width={44}
-                    height={44}
-                    alt=""
-                    className="rounded-full cursor-pointer w-[44px] h-[44px]"
-                    onClick={handleDropdown}
-                  />
-                  {isShowDropdown && (
-                    <div className="w-64 rounded-2xl bg-dark-200 z-10 absolute top-[70px] right-0">
-                      <div className="flex-col space-y-10 p-6 border-b border-dark-400">
-                        {DROPDOWN_LINKS.map((item, key) => (
-                          <MenuButton
-                            key={key}
-                            icon={<item.icon />}
-                            title={item.title}
-                            link={item.link}
-                          />
-                        ))}
-                        <button
-                          className="flex w-full space-x-4 cursor-pointer"
-                          onClick={handleEditProfile}
-                        >
-                          <MenuSettingIcon />
-                          <p className="text-white text-lg font-semibold">
-                            Settings
-                          </p>
-                        </button>
-                        <button
-                          className="flex w-full space-x-4 cursor-pointer"
-                          onClick={handleDisconnect}
-                        >
-                          <MenuLogoutIcon />
-                          <p className="text-white text-lg font-semibold">
-                            Log out
-                          </p>
-                        </button>
-                      </div>
-                      <Link href={`/profile`} passHref>
-                        <div className="flex items-center p-6 gap-[14px] cursor-pointer bg-secondary rounded-b-2xl">
-                          <Image
-                            src={
-                              profile?.avatar?.url ||
-                              "/assets/images/default-avatar.svg"
-                            }
-                            width={40}
-                            height={40}
-                            alt=""
-                            className="rounded-full"
-                          />
-                          <div className="flex-col space-y-1">
-                            <p className="text-white text-lg">
-                              {userData.username}
-                            </p>
-                            <p className="text-white text-[16px]">
-                              {data?.formatted.slice(0, 7)} ETH
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
+                <Image
+                  src={
+                    profile?.avatar?.url ||
+                    "/assets/images/default-avatar.svg"
+                  }
+                  width={44}
+                  height={44}
+                  alt=""
+                  className="rounded-full cursor-pointer w-[44px] h-[44px]"
+                  onClick={handleDropdown}
+                />
+                {isShowDropdown && (
+                  <ClickAwayComponent onClickAway={() => setIsShowDropdown(false)} className="w-64 rounded-2xl bg-dark-200 z-10 absolute top-32 right-10">
+                    <div className="flex-col space-y-10 p-6 border-b border-dark-400">
+                      {DROPDOWN_LINKS.map((item, key) => (
+                        <MenuButton
+                          key={key}
+                          icon={<item.icon />}
+                          title={item.title}
+                          link={item.link}
+                        />
+                      ))}
+                      <button
+                        className="flex w-full space-x-4 cursor-pointer"
+                        onClick={handleEditProfile}
+                      >
+                        <MenuSettingIcon />
+                        <p className="text-white text-lg font-semibold">
+                          Settings
+                        </p>
+                      </button>
+                      <button
+                        className="flex w-full space-x-4 cursor-pointer"
+                        onClick={handleDisconnect}
+                      >
+                        <MenuLogoutIcon />
+                        <p className="text-white text-lg font-semibold">
+                          Log out
+                        </p>
+                      </button>
                     </div>
-                  )}
-                </ClickAwayComponent>
+                    <Link href={`/profile`} passHref>
+                      <div className="flex items-center p-6 gap-[14px] cursor-pointer bg-secondary rounded-b-2xl">
+                        <Image
+                          src={
+                            profile?.avatar?.url ||
+                            "/assets/images/default-avatar.svg"
+                          }
+                          width={40}
+                          height={40}
+                          alt=""
+                          className="rounded-full"
+                        />
+                        <div className="flex-col space-y-1">
+                          <p className="text-white text-lg">
+                            {userData.username}
+                          </p>
+                          <p className="text-white text-[16px]">
+                            {data?.formatted.slice(0, 7)} ETH
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  </ClickAwayComponent>
+                )}
                 <ConvertModal
                   isOpen={isConvertModal}
                   onClose={() => {
@@ -225,6 +233,7 @@ const Header: FC = () => {
                   onClose={() => {
                     setIsNotificationModal(false);
                   }}
+                  // notifyData={notifyData}
                 />
               </>
             ) : (
@@ -242,19 +251,16 @@ const Header: FC = () => {
             <IconButton onClick={() => console.log("show searchbar")}>
               <SearchIcon className="w-6 h-6" />
             </IconButton>
-            <ClickAwayComponent
-              onClickAway={() => setIsShowDropdown(false)}
-              className={`rounded-lg relative z-20 text-[14px]`}
-            >
-              <div
-                className="text-[12px] md:text-[16px] flex items-center text-left text-white font-bold"
-                onClick={handleDropdown}
-              >
-                <HamburgerIcon className="" />
-              </div>
 
-              {isShowDropdown && (
-                <div className="w-[241px] absolute text-white top-6 z-10 rounded-b-lg overflow-hidden -right-3 pt-2">
+            <div
+              className="text-[12px] md:text-[16px] flex items-center text-left text-white font-bold"
+              onClick={handleDropdown}
+            >
+              <HamburgerIcon className="" />
+            </div>
+
+            {isShowDropdown && (
+              <ClickAwayComponent onClickAway={() => setIsShowDropdown(false)} className="w-[241px] absolute text-white top-6 z-10 rounded-b-lg overflow-hidden -right-3 pt-2">
                   <div className="text-white bg-dark-200 flex-col justify-start rounded-lg mt-1 duration-300 w-[241px]">
                     <div className="flex-col space-y-10 p-6 border-b border-dark-400">
                       {DROPDOWN_LINKS.map((item, key) => (
@@ -306,15 +312,14 @@ const Header: FC = () => {
                       </button>
                     )}
                   </div>
-                </div>
-              )}
-              <ConvertModal
-                isOpen={isConvertModal}
-                onClose={() => {
-                  setIsConvertModal(false);
-                }}
-              />
-            </ClickAwayComponent>
+              </ClickAwayComponent>
+            )}
+            <ConvertModal
+              isOpen={isConvertModal}
+              onClose={() => {
+                setIsConvertModal(false);
+              }}
+            />
           </div>
         </div>
       </div>
