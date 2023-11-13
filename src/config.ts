@@ -8,6 +8,7 @@ import {
 // Define your backend API base URL in your environment variables
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "https://marketapi.5thweb.io";
+
 export const API_INDEXER_URL =
   process.env.NEXT_PUBLIC_API_INDEXER_URL || "https://marketapi.5thweb.io";
 

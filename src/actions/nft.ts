@@ -102,6 +102,7 @@ export async function createNft(createData: NftParams) {
     const response = await axios.post(`${API_BASE_URL}/api/nft`, createData, {
       headers,
     });
+    console.log("create nft>>>>>>>>>", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

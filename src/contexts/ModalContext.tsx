@@ -6,6 +6,9 @@ interface ModalContextType {
   openLaunchpadModal: () => void;
   closeLaunchpadModal: () => void;
   isOpenedLaunchpad: boolean;
+  openLaunchpadEditModal: () => void;
+  closeLaunchpadEditModal: () => void;
+  isOpenedLaunchpadEdit: boolean;
   // setting modal
   openSettingModal: () => void;
   closeSettingModal: () => void;
@@ -76,6 +79,18 @@ export function ModalProvider({ children }: ModalProviderProps) {
     setLaunchpadModal(false);
     document.body.classList.remove("modal-open");
   };
+
+  const [isOpenedLaunchpadEdit, setLaunchpadEditModal] = useState<boolean>(false);
+
+  const openLaunchpadEditModal = () => {
+    setLaunchpadEditModal(true);
+    document.body.classList.add("modal-open");
+  }
+
+  const closeLaunchpadEditModal = () => {
+    setLaunchpadEditModal(false);
+    document.body.classList.remove("modal-open");
+  }
 
   const [isOpenedSetting, setSettingModal] = useState<boolean>(false);
 
@@ -195,6 +210,9 @@ export function ModalProvider({ children }: ModalProviderProps) {
     openLaunchpadModal,
     closeLaunchpadModal,
     isOpenedLaunchpad,
+    openLaunchpadEditModal,
+    closeLaunchpadEditModal,
+    isOpenedLaunchpadEdit,
     openSettingModal,
     closeSettingModal,
     isOpenedSetting,

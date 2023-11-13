@@ -121,6 +121,7 @@ export interface LaunchpadParam {
   imageId: string;
   image: PhotoItem;
   mintPrice: bigint;
+  creatorId: string;
   supply: number;
   owners: string[];
   ownerRoyalties: number[];

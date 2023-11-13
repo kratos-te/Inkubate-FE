@@ -14,7 +14,7 @@ interface DateRangeType {
 }
 
 export const SetDuration: FC = () => {
-  const { isOpenedCreateModal } = useModal();
+  const { isOpenedCreateModal, isOpenedLaunchpadEdit } = useModal();
   const { startDate, endDate, startTime, endTime } = useUser();
   const [isShowCal, setIsShowCal] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -39,7 +39,7 @@ export const SetDuration: FC = () => {
       <div className="flex-col items-left">
         <Typography
           className={` font-semibold text-left  ${
-            isOpenedCreateModal
+            isOpenedCreateModal || isOpenedLaunchpadEdit
               ? "text-[16px]"
               : "text-[24px] max-sm:text-[18px]"
           }`}
