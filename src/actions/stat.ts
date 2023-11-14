@@ -1,8 +1,8 @@
 import axios from "axios";
-import { API_STAT_URL } from "@/config";
+import { API_BASE_URL } from "@/config";
 import { DEFAULT_LIST_ITEMS_COUNT } from "@/config";
 import {
-  CollectionStats,
+  CollectionParam,
   PeriodType,
   SortType,
   StatsSortBy,
@@ -20,7 +20,7 @@ export interface StatsQueryParams {
 
 export async function getAllStats(
   params: StatsQueryParams
-): Promise<CollectionStats[]> {
+): Promise<CollectionParam[]> {
   const period = params.period || PeriodType.DAY;
   const sortBy = params.sortBy || StatsSortBy.VOLUME;
   const sortType = params.sortType || SortType.DESC;
@@ -36,27 +36,10 @@ export async function getAllStats(
 
   try {
     const response = await axios
-      .get(`${API_STAT_URL}/api/stat?${queryString}`)
+      .get(`${API_BASE_URL}/api/collection?${queryString}`)
       .then((res) => res.data);
 
-    let result = response.map((stat: any) => ({
-      collection: {
-        title: stat.collection.name,
-        collectionId: stat.collectionId,
-        totalSupply: stat.collection.supply,
-        owners: stat.owners,
-        listed: stat.listedItems,
-        sales: stat.salesItems,
-        pfp: stat.collection.avatar?.url,
-        floorPrice: stat.floorPrice,
-        volume: stat.volume,
-        description: stat.collection.desc,
-        cover: stat.collection.banner?.url,
-        verified: stat.collection.verified || false,
-      },
-      liquidity: stat.increased,
-    }));
-    return result;
+    return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
@@ -69,63 +52,10 @@ export async function getAllStats(
   }
 }
 
-export async function getTopCollections(period: string) {
-  try {
-    const response = await axios.post(`${API_STAT_URL}/api/stat/top`, {
-      period,
-    });
-    console.log("top colleciton", response.data);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
-      console.error(`Axios Error: ${error.message}`);
-    } else {
-      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
-      console.error(error);
-    }
-    return null; // Return null when an error occurs
-  }
-}
-
-export async function getFeature() {
-  try {
-    const response = await axios.get(`${API_STAT_URL}/api/stat/feature`);
-    console.log("feature", response.data);
-    return response.data ?? [];
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
-      console.error(`Axios Error: ${error.message}`);
-    } else {
-      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
-      console.error(error);
-    }
-    return null; // Return null when an error occurs
-  }
-}
-
-export async function getNotable() {
-  try {
-    const response = await axios.get(`${API_STAT_URL}/api/stat/notable`);
-    console.log("notable", response.data);
-    return response;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
-      console.error(`Axios Error: ${error.message}`);
-    } else {
-      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
-      console.error(error);
-    }
-    return null; // Return null when an error occurs
-  }
-}
-
 export async function getStatByCollectionId(collectionId: string) {
   try {
     const response = await axios.get(
-      `${API_STAT_URL}/api/stat/${collectionId}`
+      `${API_BASE_URL}/api/collection/id/${collectionId}`
     );
     console.log("stat collection", response.data);
     return response.data;

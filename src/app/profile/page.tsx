@@ -82,13 +82,12 @@ export default function ProfilePage() {
   useEffect(() => {
     if (loading) return;
     handleFetchStatsData(true);
-  }, [tab, sort]);
+  }, [search, tab, sort]);
 
   // Fetch initial data when reloading
   useEffect(() => {
     handleFetchStatsData(true);
-
-  }, [search, tab, sort]);
+  }, [router]);
 
   useEffect(() => {
     if (loading || !nftByOwner) return;
@@ -110,7 +109,7 @@ export default function ProfilePage() {
           sortBy: sort,
           filterBy: "ERC721_NFTS",
           search,
-          startId: !withClear
+          startId: withClear
             ? 0
             : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
           offset: DEFAULT_LIST_ITEMS_COUNT,
@@ -120,6 +119,7 @@ export default function ProfilePage() {
             setEndPageLoading(
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
+            console.log("get Nfts >>>>>>", res)
             if (withClear) {
               setNftByOwner(res);
             } else {
@@ -140,7 +140,7 @@ export default function ProfilePage() {
           sortBy: sort,
           filterBy: "ERC1155_NFTS",
           search,
-          startId: !withClear
+          startId: withClear
             ? 0
             : Math.floor(nftByOwner.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
           offset: DEFAULT_LIST_ITEMS_COUNT,
@@ -381,8 +381,7 @@ export default function ProfilePage() {
               tab === "9"
               ? "hidden"
               : "show"
-              }`}
-          >
+              }`}>
             <button className="flex py-3 px-2.5 w-11 lg:w-auto justify-center rounded-lg bg-dark-400 items-center h-11">
               <FilterIcon />
               <Typography className="ml-2.5 text-[14px] leading-[20px] hidden lg:block">

@@ -8,20 +8,7 @@ export type VariantSize =
   | "xl"
   | "2xl"
   | "3xl";
-export type CollectionItem = {
-  title: string;
-  collectionId: string;
-  totalSupply: number;
-  owners: number;
-  listed: number;
-  sales: number;
-  pfp: string;
-  floorPrice: string;
-  volume: string;
-  description: string;
-  cover: string;
-  verified?: boolean;
-};
+
 export type NftItem = {
   id: string;
   name: string;
@@ -35,11 +22,6 @@ export type NftItem = {
   tokenId: string;
   tokenUri: string;
   favorited: boolean;
-};
-export type StatsItem = {
-  index: number;
-  collection: CollectionItem;
-  liquidity: number;
 };
 
 export type ModalItem = {
@@ -104,6 +86,7 @@ export interface CreateLaunchpadParam {
   startDate: string;
   endDate: string;
   network: string;
+  prefix?: string;
   twitter?: string;
   discord?: string;
   facebook?: string;
@@ -378,15 +361,24 @@ export type ActivityTypes = {
   price: bigint;
 };
 
+export type NotificationTypes = {
+  id: string;
+  type: string;
+  userId: string;
+  acknowledged: boolean;
+  activityId: string;
+  activity: ActivityTypes;
+  createdAt: string;
+};
+
 export type StatTypes = {
   id: string;
-  collectionId: string;
-  collection: CollectionParam;
   owners: number;
   listedItems: number;
   salesItems: number;
   floorPrice: bigint;
   volume: bigint;
+  increased: number;
   period: PeriodType;
 };
 enum BasicOrderType {
@@ -450,5 +442,3 @@ export enum UserFilterByOption {
   BUY_OFFER = "BUY_OFFER",
   SELL_OFFER = "SELL_OFFER",
 }
-
-export type CollectionStats = Omit<StatsItem, "index">;

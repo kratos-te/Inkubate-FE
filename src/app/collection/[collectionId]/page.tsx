@@ -43,7 +43,7 @@ export default function CollectionPage() {
   const [nftOne, setNftOne] = useState<NftTypes>();
   const [listByNft, setListByNft] = useState<ListingTypes>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
-  const [stat, setStat] = useState<StatTypes>();
+  const [_stat, setStat] = useState<StatTypes>();
   const [actByCollection, setActByCollection] = useState<ActivityTypes[]>([]);
   const [activeBuy, setActiveBuy] = useState<NftTypes | undefined>(undefined);
 
@@ -75,12 +75,12 @@ export default function CollectionPage() {
   useEffect(() => {
     if (loading) return;
     handleFetchStatsData(true);
-  }, [sortAscending]);
+  }, [search, tab, sortBy, sortAscending]);
 
   // Fetch initial data when reloading
   useEffect(() => {
     handleFetchStatsData(true);
-  }, [search]);
+  }, [router]);
 
   useEffect(() => {
     if (loading || !nftByCollection) return;
@@ -199,8 +199,8 @@ export default function CollectionPage() {
         <CoverBanner
           src={collectionById?.banner?.url || "/assets/images/cover-demo.png"}
         />
-        {collectionById && stat && (
-          <CollectionOverview stat={stat} nfts={nftByCollection || []} />
+        {collectionById && (
+          <CollectionOverview collection={collectionById} nfts={nftByCollection || []} />
         )}
         <div className="max-w-[1600px] mx-5 2xl:mx-auto relative">
           <div className="border-b-[0.5px] py-9  border-light-400 relative z-10">

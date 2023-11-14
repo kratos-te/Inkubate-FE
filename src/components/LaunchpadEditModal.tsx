@@ -27,7 +27,7 @@ export const LaunchpadEditModal: FC<EditModalProps> = ({ launchpad }) => {
     const [changeMaxperTx, setChangeMaxperTx] = useState<string>("");
     const [changeMaxperWallet, setChangeMaxperWallet] = useState<string>("");
     const [changeWlAddr, setChangeWlAddr] = useState<string[]>(launchpad.wlAddresses);
-    const [changeWl, setChangeWl] = useState<boolean>(launchpad.wlEnabled)
+    const [_changeWl, setChangeWl] = useState<boolean>(launchpad.wlEnabled)
     const [changePrice, setChangePrice] = useState<bigint>(launchpad.mintPrice)
 
 
@@ -94,7 +94,7 @@ export const LaunchpadEditModal: FC<EditModalProps> = ({ launchpad }) => {
         setChangePrice(event.target.value)
     }
     const handleEndMint = () => {
-
+        setIsSpinLoading(true)
     }
     if (!isOpenedLaunchpadEdit) return null;
     return (
@@ -110,7 +110,7 @@ export const LaunchpadEditModal: FC<EditModalProps> = ({ launchpad }) => {
                         <CloseCircleIcon className="group-hover:rotate-90 duration-300 w-[40px] h-[40px]" />
                     </button>
                     <div className="modal_body text-center">
-                        <form onSubmit={handleSubmit((data) => { })}>
+                        <form onSubmit={handleSubmit(() => { })}>
                             <div className="flex gap-7 xl:gap-[98px] lg:px-4 pt-11 xl:pt-14  flex-col lg:flex-row">
                                 <div className="w-full lg:w-1/2 flex flex-col gap-6 lg:gap-7">
                                     <div className="flex-col">
@@ -184,6 +184,7 @@ export const LaunchpadEditModal: FC<EditModalProps> = ({ launchpad }) => {
                                                     type="checkbox"
                                                     id="hs-tooltip-example"
                                                     className="hs-tooltip-toggle relative shrink-0 w-[35px] h-[20px] bg-black checked:bg-none checked:bg-secondary rounded-full cursor-pointer transition-colors ease-in-out duration-200 ring-1 ring-transparent  ring-offset-white focus:outline-none appearance-none dark:bg-black dark:checked:bg-secondary before:inline-block before:w-4 before:h-4 before:bg-white checked:before:bg-white before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-white dark:checked:before:bg-white"
+                                                    // value={changeWl}
                                                     onChange={handleChangeWl}
                                                 />
                                             </div>

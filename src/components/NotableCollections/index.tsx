@@ -3,13 +3,12 @@ import { useEffect, useState } from "react";
 import CollectionCard from "../CollectionCard";
 import Typography from "../Typography";
 import Loader from "./Loader";
-import { getNotable } from "@/actions/stat";
-import { StatTypes } from "@/utils/types";
+import { CollectionParam } from "@/utils/types";
+import { getNotableCollections } from "@/actions";
 
 const NotableCollections = () => {
-
   const [loading, setIsLoading] = useState(true);
-  const [collections, setCollections] = useState<StatTypes[]>([]);
+  const [collections, setCollections] = useState<CollectionParam[]>([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -17,20 +16,13 @@ const NotableCollections = () => {
     }, 1200);
   }, []);
 
-  // useEffect(() => {
-  //   getAllCollections().then((result) => {
-  //     setCollections(result || []);
-  //     setIsLoading(false);
-  //   });
-  // }, []);
-
   useEffect(() => {
-    const getNotableCollection = async () => {
-      const getData = await getNotable()
-      setCollections(getData?.data)
-    }
-    getNotableCollection()
-  }, [])
+    const handleGetNotableCollection = async () => {
+      const getData = await getNotableCollections();
+      setCollections(getData);
+    };
+    handleGetNotableCollection();
+  }, []);
 
   return !loading ? (
     <section
@@ -51,9 +43,10 @@ const NotableCollections = () => {
       </div>
       <div className="relative z-10 grid place-content-center ">
         <div className="mt-4 xl:mt-[70px] flex gap-10  overflow-x-auto px-6 max-w-[1304px] mx-auto w-full">
-          {collections && collections.map((item, key) => (
-            <CollectionCard collection={item.collection} key={key} />
-          ))}
+          {collections &&
+            collections.map((collection, key) => (
+              <CollectionCard collection={collection} key={key} />
+            ))}
         </div>
       </div>
     </section>

@@ -1,23 +1,21 @@
 import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatNumberToK, weiToNum } from "@/utils/util";
-import { StatTypes } from "@/utils/types";
+import { formatNumberToK } from "@/utils/util";
+import { CollectionParam } from "@/utils/types";
 import Typography from "./Typography";
 import { VerifiedIcon } from "./SvgIcons";
 import { ethers } from "ethers";
 
 interface ItemProps {
+  collection: CollectionParam;
   num: number;
-  item: StatTypes;
   className?: string;
 }
 
-const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
-  const { collectionId, collection, floorPrice, volume } = item;
-
+const CollectionItemLine: FC<ItemProps> = ({ num, className, collection }) => {
   return (
-    <Link href={`/collection/${collectionId}`}>
+    <Link href={`/collection/${collection.id}`}>
       <div
         className={`flex justify-between items-center ${
           className ? className : ""
@@ -30,12 +28,12 @@ const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
             </Typography>
           </div>
           <Image
-            src={collection?.avatar?.url}
+            src={collection?.avatar?.url || ""}
             width={50}
             height={50}
             objectFit="cover"
             className="rounded-full"
-            alt={collection?.name}
+            alt={collection.name}
           />
           <div className="flex flex-col justify-between w-[calc(100%-66px)]">
             <Typography className="font-bold leading-[1.5] flex items-center text-[14px] lg:text-[20px]">
@@ -43,7 +41,7 @@ const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
               {collection?.verified && <VerifiedIcon className="ml-1" />}
             </Typography>
             <Typography className="text-[12px] leading-[18px] mt-1.5">
-              {formatNumberToK(collection?.supply)} Items
+              {formatNumberToK(collection.supply)} Items
             </Typography>
           </div>
         </div>
@@ -53,7 +51,7 @@ const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
               Floor Price
             </Typography>
             <Typography className="font-bold text-[14px] lg:text-[20px]">
-              {ethers.formatEther(floorPrice)} ETH
+              {ethers.formatEther(collection.stats[0]?.floorPrice || 0)} ETH
             </Typography>
           </div>
           <div className="flex flex-col justify-between gap-2">
@@ -62,7 +60,7 @@ const CollectionItemLine: FC<ItemProps> = ({ num, className, item }) => {
             </Typography>
 
             <Typography className="font-bold text-[14px] lg:text-[20px]">
-              {weiToNum(volume).toFixed(2)} ETH
+              {ethers.formatEther(collection.stats[0]?.volume || 0)} ETH
             </Typography>
           </div>
         </div>

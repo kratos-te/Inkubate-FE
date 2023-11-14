@@ -11,16 +11,17 @@ import {
 import Typography from "../Typography";
 import Image from "next/image";
 import Loader from "./Loader";
-import { NftTypes, StatTypes } from "@/utils/types";
+import { CollectionParam, NftTypes } from "@/utils/types";
 import { formatNumberToK, weiToNum } from "@/utils/util";
 
 interface CollectionProps {
-  stat: StatTypes;
+  // stat: StatTypes;
+  collection: CollectionParam;
   nfts: NftTypes[];
 }
 
-const CollectionOverview: FC<CollectionProps> = ({ stat }) => {
-  const { collection } = stat;
+const CollectionOverview: FC<CollectionProps> = ({ collection }) => {
+  const { stats } = collection;
   const [showMoreDec, setShowMoreDec] = useState(false);
 
   const [loading, setIsLoading] = useState(true);
@@ -100,7 +101,7 @@ const CollectionOverview: FC<CollectionProps> = ({ stat }) => {
                 Owners
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5]">
-                {stat?.owners}
+                {stats[0]?.owners}
               </Typography>
             </div>
 
@@ -109,7 +110,7 @@ const CollectionOverview: FC<CollectionProps> = ({ stat }) => {
                 Listed
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5]">
-                {stat?.listedItems}
+                {stats[0]?.listedItems}
               </Typography>
             </div>
 
@@ -118,16 +119,18 @@ const CollectionOverview: FC<CollectionProps> = ({ stat }) => {
                 Sales
               </Typography>
               <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5]">
-                {stat?.salesItems}
+                {stats[0]?.salesItems}
               </Typography>
             </div>
             <div className="flex flex-col-reverse lg:flex-col">
               <Typography className="font-medium text-[14px] leading-[1]">
                 Floor price
               </Typography>
-              <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5] whitespace-nowrap">
-                {weiToNum(stat?.floorPrice).toFixed(2)} ETH
-              </Typography>
+              {stats[0] &&
+                <Typography className="font-bold text-[20px] lg:text-[24px] mt-[5px] leading-[1.5] whitespace-nowrap">
+                  {weiToNum(stats[0]?.floorPrice).toFixed(2)} ETH
+                </Typography>
+              }
             </div>
           </div>
           <div className="absolute bottom-0 right-0 z-[2] hidden lg:block">

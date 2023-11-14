@@ -125,7 +125,6 @@ const MintDetail: FC<OverviewProps> = ({ launchpad, remainingTime }) => {
                   View Collection
                 </button>
               }
-
             </div>
           </div>
           {remainingTime > 0 && (

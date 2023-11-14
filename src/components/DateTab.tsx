@@ -1,3 +1,4 @@
+import { PeriodType } from "@/utils/types";
 import { FC, Dispatch, SetStateAction } from "react";
 import Typography from "./Typography";
 
@@ -10,19 +11,19 @@ interface DateTabProps {
 const tabs = [
   {
     title: "1H",
-    value: "1H_VOLUME",
+    value: PeriodType.HOUR,
   },
   {
     title: "6H",
-    value: "6H_VOLUME",
+    value: PeriodType.SIX_HOURS,
   },
   {
     title: "24H",
-    value: "24H_VOLUME",
+    value: PeriodType.DAY,
   },
   {
     title: "7D",
-    value: "7D_VOLUME",
+    value: PeriodType.WEEK,
   },
 ];
 

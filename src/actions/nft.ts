@@ -34,7 +34,7 @@ export async function getNft({
   limit,
 }: IGetNft) {
   try {
-    const query = `${API_BASE_URL}/api/nft/collection${collectionId}?sortAscending=${sortAscending}${
+    const query = `${API_BASE_URL}/api/nft/collection/${collectionId}?sortAscending=${sortAscending}${
       sortBy ? "&sortBy=" + sortBy : ""
     }${startId ? "&startId=" + startId : ""}${
       offset ? "&offset=" + offset : ""
@@ -102,7 +102,6 @@ export async function createNft(createData: NftParams) {
     const response = await axios.post(`${API_BASE_URL}/api/nft`, createData, {
       headers,
     });
-    console.log("create nft>>>>>>>>>", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -156,6 +156,7 @@ export const CreateModal: FC = () => {
               startDate: startDay,
               endDate: endDay,
               network: "MAIN",
+              prefix: values.prefix,
               twitter: values.twitter,
               discord: values.discord,
               facebook: values.facebook,
@@ -409,6 +410,16 @@ export const CreateModal: FC = () => {
                   </div>
                   <div className="flex-col">
                     <SetDuration />
+                  </div>
+                  <div className="flex-col">
+                    <Typography className="font-semibold leading-6 text-[16px] text-left">
+                      Prefix
+                    </Typography>
+                    <input
+                      {...register("prefix", { required: false })}
+                      className="bg-dark-400 text-[14px] text-[#B3B3B3]  w-full rounded-xl mt-2 p-[14px] placeholder:text-third"
+                      placeholder="Enter prefix"
+                    />
                   </div>
                   <div className="flex-col">
                     <Typography className="font-semibold leading-6 text-[16px] text-left">

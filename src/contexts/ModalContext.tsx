@@ -6,6 +6,7 @@ interface ModalContextType {
   openLaunchpadModal: () => void;
   closeLaunchpadModal: () => void;
   isOpenedLaunchpad: boolean;
+  // launchpad edit modal
   openLaunchpadEditModal: () => void;
   closeLaunchpadEditModal: () => void;
   isOpenedLaunchpadEdit: boolean;

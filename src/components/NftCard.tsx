@@ -8,7 +8,7 @@ import { useAccount } from "wagmi";
 import Typography from "./Typography";
 import IconButton from "./IconButton";
 import { AddIcon, FavoriteIcon } from "./SvgIcons";
-import { cancelList, createHide } from "@/actions";
+import { cancelList, createHide, removeHide } from "@/actions";
 import { getListByNft } from "@/actions";
 import { useModal } from "@/contexts/ModalContext";
 import { InactiveNftTypes, ListingTypes, NftTypes } from "@/utils/types";
@@ -58,10 +58,17 @@ const NftCard: FC<ItemProps> = ({
     openBuyModal();
   };
 
-  const handleHide = async () => {
-    const hide = await createHide(id);
-    if (hide) {
-      setHide(true)
+  const handleHide = async (hide: boolean) => {
+    if (!hide) {
+      const hidden = await createHide(id);
+      if (hidden) {
+        setHide(true)
+      }
+    } else {
+      const hidden = await removeHide(id);
+      if (hidden) {
+        setHide(false)
+      }
     }
   }
 
@@ -209,7 +216,7 @@ const NftCard: FC<ItemProps> = ({
                 </button>
                 <button
                   className="text-[12px] lg:text-[16px] h-[50px] bg-[#EA4492] hover:bg-[#c84683] rounded-br-xl w-[60px] grid place-content-center duration-300"
-                  onClick={handleHide}
+                  onClick={() => handleHide(hide)}
                 >
                   {!hide ? <AiOutlineEye color="white" /> : <AiOutlineEyeInvisible color="white" />}
                   {/* <AddIcon /> */}
