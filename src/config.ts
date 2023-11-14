@@ -9,13 +9,6 @@ import {
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "https://marketapi.5thweb.io";
 
-export const API_INDEXER_URL =
-  process.env.NEXT_PUBLIC_API_INDEXER_URL || "https://marketapi.5thweb.io";
-
-export const API_STAT_URL = process.env.NEXT_PUBLIC_API_STAT_URL
-  ? process.env.NEXT_PUBLIC_API_STAT_URL
-  : "https://marketapi.5thweb.io";
-
 export const ORIGIN_URI = "http://localhost:3000";
 
 export const SHARE_TWITTER_LINK = `https://twitter.com/intent/tweet?text=Check%20out%20this%20account%20on%20inkubate&url=${ORIGIN_URI}%2F0x3e3403F93fA2ea7061FcC3FDe36cCd789F72b94A&via=inkubate`;

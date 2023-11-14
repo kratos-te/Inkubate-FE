@@ -11,7 +11,11 @@ import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import { getAllCollections } from "@/actions/collection";
 import { CollectionParam } from "@/utils/types";
-import { DEFAULT_LIST_ITEMS_COUNT, metaFaviconData, pageMetadata } from "@/config";
+import {
+  DEFAULT_LIST_ITEMS_COUNT,
+  metaFaviconData,
+  pageMetadata,
+} from "@/config";
 import { Metadata } from "next";
 import useScroll from "@/utils/useScroll";
 
@@ -58,7 +62,7 @@ export default function ExplorePage() {
         offset: DEFAULT_LIST_ITEMS_COUNT,
         limit: DEFAULT_LIST_ITEMS_COUNT,
       })
-        .then(res => {
+        .then((res) => {
           setEndPageLoading(
             !res.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
           );
@@ -77,7 +81,6 @@ export default function ExplorePage() {
     },
     [collections, top, endPageLoading]
   );
-
 
   useEffect(() => {
     setTimeout(() => {
@@ -138,13 +141,9 @@ export default function ExplorePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 gap-x-[30px] gap-y-3 xl:gap-y-10 mt-[34px]">
               {!loading ? (
                 <>
-                  {
-                    collections.map((item, key) => (
-                      <CollectionCard
-                        collection={item}
-                        key={key}
-                      />
-                    ))}
+                  {collections.map((collection, key) => (
+                    <CollectionCard collection={collection} key={key} />
+                  ))}
                 </>
               ) : (
                 Array.from({ length: 8 }).map((_, key) => (

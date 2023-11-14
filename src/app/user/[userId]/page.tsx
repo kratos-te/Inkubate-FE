@@ -23,12 +23,12 @@ import NftGrid from "@/components/NftGrid";
 import CoverBanner from "@/components/CoverBanner";
 import ProfileOverview from "@/components/ProfileOverview";
 import ProfileOverviewLoader from "@/components/ProfileOverview/Loader";
+import { ListModal } from "@/components/ListModal";
 import ActivityDetail from "@/components/ActivityDetail";
 import { DEFAULT_LIST_ITEMS_COUNT, USER_TABS } from "@/config";
 import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import { ActivityTypes, NftTypes, ProfileItem, UserItem } from "@/utils/types";
-import { ListModal } from "@/components/ListModal";
 import useScroll from "@/utils/useScroll";
 
 const profileName = "User Page";
@@ -97,9 +97,8 @@ export default function UserPage() {
   const { top, height } = useScroll();
 
   useEffect(() => {
-    if (loading) return;
     handleFetchStatsData(true);
-  }, [sortAscending, loading]);
+  }, [sortAscending]);
 
   // Fetch initial data when reloading
   useEffect(() => {
@@ -107,14 +106,15 @@ export default function UserPage() {
   }, [search]);
 
   useEffect(() => {
-    if (loading || !nftByOwner) return;
+    if (!nftByOwner) return;
     if (nftByOwner && top > 400 * nftByOwner.length - height) {
       handleFetchStatsData(false);
     }
-  }, [top, height, loading]);
+  }, [top, height]);
 
   const handleFetchStatsData = useCallback(
     (withClear: boolean) => {
+      if (loading) return;
       if (withClear) setEndPageLoading(false);
       if (!withClear && endPageLoading) return;
       const lastSroll = top;
@@ -140,7 +140,7 @@ export default function UserPage() {
               setNftByOwner(res);
             } else {
               const oldData: NftTypes[] = Object.assign(nftByOwner);
-              oldData.push(...res);
+              if (res) oldData.push(...res);
               setNftByOwner(oldData);
               window.scrollTo(0, lastSroll);
             }
@@ -236,7 +236,7 @@ export default function UserPage() {
           });
       }
     },
-    [search, top, tab]
+    [search, top, tab, loading, endPageLoading]
   );
 
   useEffect(() => {
@@ -297,10 +297,11 @@ export default function UserPage() {
                 <button
                   key={key}
                   onClick={() => router.push(`?tab=${item.tab}`)}
-                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${tab === item.tab
+                  className={`text-light-100 text-[12px] lg:text-[15px] duration-300 font-semibold font-readex rounded-xl uppercase py-2.5 px-[14px] ${
+                    tab === item.tab
                       ? "bg-secondary hover:bg-[#AE115B]"
                       : "bg-dark-400 hover:bg-[#444]"
-                    }`}
+                  }`}
                 >
                   {item.title}
                 </button>
@@ -348,7 +349,9 @@ export default function UserPage() {
           </div>
           <div className={`mt-[28px] lg:mt-[38px] flex relative z-10 `}>
             <div className="hidden lg:block w-[300px]">
-              {nftByOwner[0] && <CollectionFilter nft={nftByOwner[0]} />}
+              {nftByOwner && nftByOwner.length > 0 && nftByOwner[0] && (
+                <CollectionFilter nft={nftByOwner[0]} />
+              )}
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
               {(tab === "1" || tab === "2" || tab === "3") && (

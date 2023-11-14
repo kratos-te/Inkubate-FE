@@ -8,16 +8,12 @@ import CollectionItemLine from "../CollectionItemLine";
 import Button from "../Button";
 import DateTab from "../DateTab";
 import Loader from "./Loader";
-import { getTopCollections } from "@/actions/stat";
-import { StatTypes } from "@/utils/types";
+import { CollectionParam } from "@/utils/types";
+import { getTopCollections } from "@/actions";
 
 const TopCollections: FC = () => {
   const [period, setPeriod] = useState("HOUR");
-  const [topCollections, setTopCollections] = useState<StatTypes[]>([]);
-
-  // const collections = Array(12).fill(DEMO_COLLECTIONS[0]);
-
-  // const collections = DEMO_COLLECTIONS;
+  const [topCollections, setTopCollections] = useState<CollectionParam[]>([]);
 
   const [loading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -52,10 +48,10 @@ const TopCollections: FC = () => {
             <div className="relative grid grid-cols-1 gap-7">
               {topCollections &&
                 topCollections.map(
-                  (item, index) =>
+                  (collection, index) =>
                     index < 6 && (
                       <CollectionItemLine
-                        item={item}
+                        collection={collection}
                         num={index + 1}
                         key={index}
                       />
@@ -72,10 +68,10 @@ const TopCollections: FC = () => {
             <div className="relative hidden grid-cols-1 xl:grid gap-7">
               {topCollections &&
                 topCollections.map(
-                  (item, index) =>
+                  (collection, index) =>
                     index >= 6 && (
                       <CollectionItemLine
-                        item={item}
+                        collection={collection}
                         num={index + 1}
                         key={index}
                       />

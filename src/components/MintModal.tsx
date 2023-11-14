@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
 import { CloseCircleIcon, MinusIcon, PlusIcon } from "./SvgIcons";
 import { LoadingPad } from "./LoadingPad";
@@ -22,6 +23,8 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
   const [mintingProgress, setMintingProgress] = useState<boolean>(false);
   const [mintSuccess, setMintSuccess] = useState<boolean>(false);
   const [nfts, setNfts] = useState<NftItem[]>([]);
+
+  const router = useRouter();
 
   const handleMinus = () => {
     setMintValue(mintValue - 1);
@@ -70,6 +73,11 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
     setNfts([]);
     setMintSuccess(false)
     setMintValue(1)
+  }
+
+  const handleToMove = () => {
+    handleCloseModal()
+    router.push("/profile")
   }
 
   if (!isOpenedMintModal) return null;
@@ -171,11 +179,9 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
                     </div>
                   </div>
                   <div className="flex flex-col gap-[24px] mb-4">
-                    <Link href={`/profile?tab=1`}>
-                      <button className="bg-secondary w-full text-white py-3 text-[16px] font-semibold rounded-[12px]" >
-                        View NFTs
-                      </button>
-                    </Link>
+                    <button className="bg-secondary w-full text-white py-3 text-[16px] font-semibold rounded-[12px]" onClick={handleToMove}>
+                      View NFTs
+                    </button>
                     <Link href={`https://goerli.etherscan.io/tx/${launchpad?.collection.address}`}>
                       <button className="bg-white w-full py-3 text-[16px] font-semibold rounded-[12px]">
                         View Transaction

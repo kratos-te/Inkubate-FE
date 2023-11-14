@@ -8,12 +8,12 @@ import Button from "./Button";
 import CollectionCard from "./CollectionCard";
 import CollecionCardLoader from "./Common/CollecionCardLoader";
 import Typography from "./Typography";
-import { getFeature } from "@/actions/stat";
-import { StatTypes } from "@/utils/types";
+import { CollectionParam } from "@/utils/types";
+import { getFeaturedCollections } from "@/actions";
 
 const FeaturedProjects: FC = () => {
   const pathname = usePathname();
-  const [collections, setCollections] = useState<StatTypes[]>([]);
+  const [collections, setCollections] = useState<CollectionParam[]>([]);
   const [loading, setIsLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -22,11 +22,11 @@ const FeaturedProjects: FC = () => {
   }, []);
 
   useEffect(() => {
-    const getFeatureCollection = async () => {
-      const getData = await getFeature();
-      setCollections(getData?.data || []);
+    const handleGetFeatureCollection = async () => {
+      const newCollections = await getFeaturedCollections();
+      setCollections(newCollections);
     };
-    getFeatureCollection();
+    handleGetFeatureCollection();
   }, [pathname]);
 
   return (
@@ -45,12 +45,8 @@ const FeaturedProjects: FC = () => {
         </div>
         <div className="flex xl:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-4 xl:gap-x-[30px] gap-y-10 mt-8 xl:mt-9 overflow-x-auto pb-8 xl:pb-0 px-6">
           {!loading
-            ? collections.map((item, key) => (
-                <CollectionCard
-                // item={item}
-                  collection={item.collection}
-                  key={key}
-                />
+            ? collections.map((collection, key) => (
+                <CollectionCard collection={collection} key={key} />
               ))
             : Array.from({ length: 8 }).map((_, key) => (
                 <CollecionCardLoader key={key} />

@@ -4,7 +4,7 @@ import { useAccount, useDisconnect, useBalance } from "wagmi";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { DROPDOWN_LINKS, HEADER_LINKS, NOTIFICATIONS } from "@/config";
+import { DROPDOWN_LINKS, HEADER_LINKS } from "@/config";
 import { useModal } from "@/contexts/ModalContext";
 import { useUser } from "@/contexts/UserContext";
 import Button from "./Button";
@@ -29,6 +29,8 @@ import {
 import Typography from "./Typography";
 import { useAuth } from "@/contexts/AuthContext";
 import { getNotification } from "@/actions/notification";
+import { NotificationTypes } from "@/utils/types";
+import { shortenAddress } from "@/utils/util";
 
 const Header: FC = () => {
   const { openWalletModal, closeWalletModal, openSettingModal } = useModal();
@@ -44,7 +46,7 @@ const Header: FC = () => {
   const [isBnb, setIsBnb] = useState(false);
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const [isConvertModal, setIsConvertModal] = useState(false);
-  const [notifyData, setNotifyData] = useState<string[] | null>();
+  const [notifyData, setNotifyData] = useState<NotificationTypes[] | null>();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -78,10 +80,10 @@ const Header: FC = () => {
   };
 
   const handleNotification = async () => {
-    const notification = await getNotification()
-    console.log("here ++++++++++++++", notification);
+    // const notification = await getNotification()
+    // console.log("here ++++++++++++++", notification);
     setIsNotificationModal(!isNotificationModal);
-    setIsShowDropdown(false)
+    setIsShowDropdown(false);
   };
 
   const handleEditProfile = async () => {
@@ -96,7 +98,7 @@ const Header: FC = () => {
       setNotifyData(data)
     }
     getData()
-  }, [])
+  }, [userData, router])
 
 
 
@@ -152,7 +154,7 @@ const Header: FC = () => {
                 <IconButton className="relative" onClick={handleNotification}>
                   <AlarmIcon />
                   <BadgeIcon
-                    className={`${!NOTIFICATIONS ? "hidden" : "absolute right-0"
+                    className={`${notifyData && notifyData?.length > 0 ? "absolute right-0" : "hidden"} 
                       }`}
                   />
                 </IconButton>
@@ -211,7 +213,7 @@ const Header: FC = () => {
                         />
                         <div className="flex-col space-y-1">
                           <p className="text-white text-lg">
-                            {userData.username}
+                            {shortenAddress(userData.walletAddress)}
                           </p>
                           <p className="text-white text-[16px]">
                             {data?.formatted.slice(0, 7)} ETH
@@ -233,7 +235,8 @@ const Header: FC = () => {
                   onClose={() => {
                     setIsNotificationModal(false);
                   }}
-                  // notifyData={notifyData}
+                  notifyData={notifyData}
+                  setNotifyData={setNotifyData}
                 />
               </>
             ) : (
@@ -261,57 +264,56 @@ const Header: FC = () => {
 
             {isShowDropdown && (
               <ClickAwayComponent onClickAway={() => setIsShowDropdown(false)} className="w-[241px] absolute text-white top-6 z-10 rounded-b-lg overflow-hidden -right-3 pt-2">
-                  <div className="text-white bg-dark-200 flex-col justify-start rounded-lg mt-1 duration-300 w-[241px]">
-                    <div className="flex-col space-y-10 p-6 border-b border-dark-400">
-                      {DROPDOWN_LINKS.map((item, key) => (
-                        <MenuButton
-                          key={key}
-                          icon={<item.icon />}
-                          title={item.title}
-                          link={item.link}
-                        />
-                      ))}
-                      <button
-                        className="flex space-x-4 cursor-pointer"
-                        onClick={handleDisconnect}
-                      >
-                        <MenuLogoutIcon />
-                        <p className="text-white text-lg font-semibold">
-                          Log out
-                        </p>
-                      </button>
-                    </div>
-                    {isConnected && accessToken ? (
-                      <div className="flex items-center p-6 gap-[14px] bg-secondary rounded-b-2xl">
-                        <Image
-                          src={
-                            profile?.avatar?.url ||
-                            "/assets/images/default-avatar.svg"
-                          }
-                          width={40}
-                          height={40}
-                          alt=""
-                          className="rounded-full cursor-pointer w-[44px] h-[44px]"
-                        />
-                        <div className="flex-col space-y-1">
-                          <p className="text-white text-lg">
-                            {" "}
-                            {userData.username}
-                          </p>
-                          <p className="text-white text-[16px]">
-                            {data?.formatted.slice(0, 7)} ETH
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center bg-secondary rounded-b-2xl"
-                        onClick={openWalletModal}
-                      >
-                        Connect Wallet
-                      </button>
-                    )}
+                <div className="text-white bg-dark-200 flex-col justify-start rounded-lg mt-1 duration-300 w-[241px]">
+                  <div className="flex-col space-y-10 p-6 border-b border-dark-400">
+                    {DROPDOWN_LINKS.map((item, key) => (
+                      <MenuButton
+                        key={key}
+                        icon={<item.icon />}
+                        title={item.title}
+                        link={item.link}
+                      />
+                    ))}
+                    <button
+                      className="flex space-x-4 cursor-pointer"
+                      onClick={handleDisconnect}
+                    >
+                      <MenuLogoutIcon />
+                      <p className="text-white text-lg font-semibold">
+                        Log out
+                      </p>
+                    </button>
                   </div>
+                  {isConnected && accessToken ? (
+                    <div className="flex items-center p-6 gap-[14px] bg-secondary rounded-b-2xl">
+                      <Image
+                        src={
+                          profile?.avatar?.url ||
+                          "/assets/images/default-avatar.svg"
+                        }
+                        width={40}
+                        height={40}
+                        alt=""
+                        className="rounded-full cursor-pointer w-[44px] h-[44px]"
+                      />
+                      <div className="flex-col space-y-1">
+                        <p className="text-white text-lg">
+                          {shortenAddress(userData.walletAddress)}
+                        </p>
+                        <p className="text-white text-[16px]">
+                          {data?.formatted.slice(0, 7)} ETH
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center bg-secondary rounded-b-2xl"
+                      onClick={openWalletModal}
+                    >
+                      Connect Wallet
+                    </button>
+                  )}
+                </div>
               </ClickAwayComponent>
             )}
             <ConvertModal

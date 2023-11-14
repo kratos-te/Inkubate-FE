@@ -38,7 +38,7 @@ export async function getAllCollections({
 
 export async function getCollectionById(id: string) {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/collection/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/api/collection/id/${id}`);
     console.log("collection by Id", response);
     return response;
   } catch (error) {
@@ -56,10 +56,63 @@ export async function getCollectionById(id: string) {
 export async function getCollectionByContract(contract: string) {
   try {
     const response = await axios.get(
-      `${API_BASE_URL}/api/collection/${contract}`
+      `${API_BASE_URL}/api/collection/id/${contract}`
     );
     console.log("collection by Id", response);
     return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
+      console.error(`Axios Error: ${error.message}`);
+    } else {
+      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
+      console.error(error);
+    }
+    return null; // Return null when an error occurs
+  }
+}
+
+export async function getTopCollections(period: string) {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/collection/top`, {
+      params: { period },
+    });
+    console.log("top colleciton", response.data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
+      console.error(`Axios Error: ${error.message}`);
+    } else {
+      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
+      console.error(error);
+    }
+    return null; // Return null when an error occurs
+  }
+}
+
+export async function getNotableCollections() {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/collection/notable`);
+    console.log("notable", response.data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here
+      console.error(`Axios Error: ${error.message}`);
+    } else {
+      // Handle other errors (e.g., JSON parsing errors, unexpected errors) here
+      console.error(error);
+    }
+    return null; // Return null when an error occurs
+  }
+}
+
+export async function getFeaturedCollections() {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/collection/feature`);
+    console.log("feature", response.data);
+    return response.data || [];
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios errors (e.g., network issues, 4xx/5xx responses) here

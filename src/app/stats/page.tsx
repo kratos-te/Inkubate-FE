@@ -17,7 +17,7 @@ import MainLayout from "@/layouts/MainLayout";
 import { Meta } from "@/layouts/Meta";
 import useWindowSize from "@/utils/useWindowSize";
 import {
-  CollectionStats,
+  CollectionParam,
   PeriodType,
   SortType,
   StatsSortBy,
@@ -44,7 +44,7 @@ export default function StatPage() {
   const [orderBy, setOrderBy] = useState<SortType>(SortType.DESC);
   const [loading, setLoading] = useState(false);
   const [endPageLoading, setEndPageLoading] = useState(false);
-  const [collections, setCollections] = useState<CollectionStats[]>([]);
+  const [collections, setCollections] = useState<CollectionParam[]>([]);
 
   const { width } = useWindowSize();
   const { top, height } = useScroll();
@@ -98,14 +98,14 @@ export default function StatPage() {
         offset: DEFAULT_LIST_ITEMS_COUNT,
         limit: DEFAULT_LIST_ITEMS_COUNT,
       })
-        .then(res => {
+        .then((res) => {
           setEndPageLoading(
             !res.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
           );
           if (withClear) {
             setCollections(res);
           } else {
-            const oldData: CollectionStats[] = Object.assign(collections);
+            const oldData: CollectionParam[] = Object.assign(collections);
             oldData.push(...res);
             setCollections(oldData);
             window.scrollTo(0, lastSroll);
@@ -135,7 +135,7 @@ export default function StatPage() {
           className={className}
           onClick={() => {
             setSortBy(sort);
-            setOrderBy(prev =>
+            setOrderBy((prev) =>
               prev === SortType.DESC ? SortType.ASC : SortType.DESC
             );
           }}
@@ -162,7 +162,7 @@ export default function StatPage() {
           className="py-2.5 md:py-[30px] w-auto sm:w-[124px] cursor-pointer whitespace-nowrap"
           onClick={() => {
             setSortBy(StatsSortBy.VOLUME);
-            setOrderBy(prev =>
+            setOrderBy((prev) =>
               prev === SortType.DESC ? SortType.ASC : SortType.DESC
             );
           }}
@@ -212,7 +212,7 @@ export default function StatPage() {
                   className="bg-transparent w-full h-[42px] pl-9 text-[14px] font-readex text-light-100 relative z-10 outline-none"
                   placeholder="Search collection"
                   value={search}
-                  onChange={e => setSearch(e.target.value || "")}
+                  onChange={(e) => setSearch(e.target.value || "")}
                 />
               </div>
               <ChainsDropdown
@@ -285,14 +285,8 @@ export default function StatPage() {
               {!loading ? (
                 <tbody>
                   {collections &&
-                    collections.map((item, key) => (
-                      <RowStatsItem
-                        collection={{
-                          ...item,
-                          index: key + 1,
-                        }}
-                        key={key}
-                      />
+                    collections.map((collection, key) => (
+                      <RowStatsItem collection={collection} key={key} />
                     ))}
                 </tbody>
               ) : (

@@ -24,8 +24,8 @@ const LaunchpadDrops: FC<ListProps> = ({ title, description, collections }) => {
         {description}
       </Typography>
       <div className="flex pb-6 lg:pb-0 overflow-auto lg:overflow-hidden lg:grid lg:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 gap-x-[30px] gap-y-3 xl:gap-y-10 mt-[34px] mx-6 2xl:mx-0">
-        {collections.map((item, key) => (
-          <CollectionCard collection={item} key={key} />
+        {collections.map((collection, key) => (
+          <CollectionCard collection={collection} key={key} />
         ))}
       </div>
     </div>
