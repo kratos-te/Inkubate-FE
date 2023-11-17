@@ -2,7 +2,7 @@ import { getContract } from "wagmi/actions";
 import { Abi } from "viem";
 
 import { DEFAULT_GAS, DEFAULT_GAS_PRICE } from "@/config";
-import { INK_ABI } from "@/utils/abi";
+import { CANCEL_FUNCTION_ABI, INK_ABI } from "@/utils/abi";
 import { INK_CONTRACT_ADDRESS } from "@/utils/constants";
 import {
   AdvancedOrder,
@@ -47,7 +47,7 @@ export function useInkubate() {
     try {
       return await write({
         address: INK_CONTRACT_ADDRESS,
-        abi: INK_ABI as Abi,
+        abi: CANCEL_FUNCTION_ABI as Abi,
         functionName: "cancel",
         args: [orders],
         gas: DEFAULT_GAS,

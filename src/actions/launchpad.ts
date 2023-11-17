@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
-import { CreateLaunchpadParam } from "@/utils/types";
+import { CreateLaunchpadParam, UpdateLaunchpadParam } from "@/utils/types";
 import { checkAuthorization } from ".";
 
 export async function createLaunchpad(createData: CreateLaunchpadParam) {
@@ -11,6 +11,19 @@ export async function createLaunchpad(createData: CreateLaunchpadParam) {
     "Content-Type": "application/json",
   };
   const res = await axios.post(`${API_BASE_URL}/api/launchpad`, createData, {
+    headers,
+  });
+  return res.data;
+}
+
+export async function updateLaunchpad(id: string, data: UpdateLaunchpadParam) {
+  await checkAuthorization();
+  const accessToken = localStorage.getItem("accessToken");
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+  const res = await axios.put(`${API_BASE_URL}/api/launchpad/${id}`, data, {
     headers,
   });
   return res.data;

@@ -19,7 +19,7 @@ export async function getAllCollections({
       `${API_BASE_URL}/api/collection${offset ? "?offset=" + offset : ""}${
         limit ? "&limit=" + limit : ""
       }${startId ? "&startId=" + startId : ""}${
-        search ? "?contains=" + search : ""
+        search ? "&contains=" + search : ""
       }`
     );
     console.log("collection", response);

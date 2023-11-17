@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { SearchIcon, VerifiedIcon } from "./SvgIcons";
 import { CollectionParam, UserTypes } from "@/utils/types";
 import { getAllCollections, getAllUsers } from "@/actions";
@@ -9,6 +10,8 @@ const SearchBar: FC = () => {
   const [show, setShow] = useState(false);
   const [collections, setCollections] = useState<CollectionParam[]>([]);
   const [users, setUsers] = useState<UserTypes[]>([]);
+
+  const router = useRouter();
   useEffect(() => {
     const getCollections = async () => {
       const collection = await getAllCollections({ search });
@@ -21,6 +24,14 @@ const SearchBar: FC = () => {
       setShow(true)
     } else { setShow(false) }
   }, [search])
+
+  const handleMoveCollection = (id: string) => {
+    router.push(`/collection/${id}`)
+  }
+
+  const handleMoveUser = (id: string) => {
+    router.push(`/user/${id}`)
+  }
   return (
     <div
       className="rounded-xl w-[250px] xl:w-[430px] 2xl:w-[500px]  p-[1px] hidden lg:block relative h-11 backdrop-blur-sm"
@@ -55,7 +66,7 @@ const SearchBar: FC = () => {
           <div className="flex flex-col gap-2">
             <div className="text-[15px] uppercase">collections</div>
             {collections && collections.map((item, index) => (
-              <div key={index} className="flex gap-2 items-center">
+              <div key={index} className="flex gap-2 items-center cursor-pointer" onClick={() => handleMoveCollection(item.id)}>
                 <Image src={item?.avatar.url}
                   width={30}
                   height={30}
@@ -77,7 +88,7 @@ const SearchBar: FC = () => {
           <div className="flex flex-col gap-2">
             <div className="text-[15px] uppercase">accounts</div>
             {users && users.map((item, index) => (
-              <div key={index} className="flex gap-2 items-center">
+              <div key={index} className="flex gap-2 items-center cursor-pointer" onClick={() => handleMoveUser(item.id)}>
                 <Image src={item?.profile?.avatar.url}
                   width={30}
                   height={30}

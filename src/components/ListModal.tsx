@@ -23,6 +23,7 @@ import { useInkubate } from "@/hooks/useInkubate";
 import { INK_CONDUIT_KEY } from "@/utils/constants";
 import { NftTypes } from "@/utils/types";
 import { date2UTC, numToWei } from "@/utils/util";
+import { warningAlert } from "./ToastGroup";
 
 export const ListModal: FC<{
   nft: NftTypes;
@@ -100,6 +101,7 @@ export const ListModal: FC<{
       orderParameters,
       counter as string
     );
+    console.log("signature", signature)
     if (signature === "") {
       return { signature: "", data };
     } else {
@@ -110,7 +112,13 @@ export const ListModal: FC<{
   const handleList = async () => {
     setMakeList(true);
     const res = await setApprovalForAll(nft.tokenAddress);
-    if (res.status === "success") {
+    console.log("res of approval", res)
+    if (res === null) {
+      setMakeList(false);
+      warningAlert("Rejected by User!")
+    }
+
+    if (res !== null && res.status === "success") {
       const { signature, data } = await handleSign();
       if (signature) {
         const listing = await listingNft(
@@ -188,7 +196,7 @@ export const ListModal: FC<{
                   <p className="text-[24px] leading-[15px] font-bold lg:text-[24px] lg:leading-[1.5] text-[#B3B3B3] max-sm:text-[20px]">
                     {collection?.name}
                   </p>
-                  {collection.verified &&
+                  {collection?.verified &&
                     <VerifiedIcon color="#EA4492" />
                   }
                 </div>

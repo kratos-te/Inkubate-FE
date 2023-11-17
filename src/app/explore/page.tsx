@@ -43,6 +43,10 @@ export default function ExplorePage() {
   // Fetch initial data when reloading
 
   useEffect(() => {
+    handleFetchStatsData(true);
+  }, [router]);
+
+  useEffect(() => {
     if (loading || !collections) return;
     if (collections && top > 400 * collections.length - height) {
       handleFetchStatsData(false);
@@ -56,7 +60,7 @@ export default function ExplorePage() {
       const lastSroll = top;
       setLoading(true);
       getAllCollections({
-        startId: !withClear
+        startId: withClear
           ? 0
           : Math.floor(collections.length / DEFAULT_LIST_ITEMS_COUNT) + 1,
         offset: DEFAULT_LIST_ITEMS_COUNT,

@@ -14,7 +14,6 @@ interface ItemProps {
 }
 
 const RowStatsItem: FC<ItemProps> = ({ collection, key }) => {
-  console.log(">>>>>>>>>>>>>>>>>>>", collection);
   const router = useRouter();
 
   // set width of emplty corner cells

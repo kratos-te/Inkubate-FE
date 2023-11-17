@@ -12,7 +12,7 @@ import ClickAwayComponent from "./ClickAwayComponent";
 import { LoadingPad } from "./LoadingPad";
 import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
 import Typography from "./Typography";
-import { successAlert } from "./ToastGroup";
+import { successAlert, warningAlert } from "./ToastGroup";
 
 interface BuyModalProps {
   nft: NftTypes;
@@ -27,6 +27,10 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
   const [isBuyStatus, setIsBuyStatus] = useState(false);
   const { buyListing } = useInkubate();
   const handleBuy = async () => {
+    console.log("walletaddress", walletAddress)
+    if (!walletAddress) {
+      warningAlert("Please connect your wallet!")
+    }
     if (!walletAddress || !listing) return;
     setIsBuyStatus(true);
     const orders = {
@@ -51,15 +55,21 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
     };
     console.log("orders", orders);
     const res = await buyListing(orders);
-    const buy = await buyNow(
-      listing.id,
-      nft.id,
-      res?.transactionHash as `0x${string}`,
-      listing.network
-    );
-    console.log("buy", buy);
-    successAlert("Bought successfully!");
-    setIsBuyStatus(false);
+    console.log("res of buy", res)
+    if (res === null) {
+      setIsBuyStatus(false);
+      warningAlert("Rejected by User!")
+    } else {
+      const buy = await buyNow(
+        listing.id,
+        nft.id,
+        res?.transactionHash as `0x${string}`,
+        listing.network
+      );
+      console.log("buy", buy);
+      successAlert("Bought successfully!");
+      setIsBuyStatus(false);
+    }
   };
 
   if (!isOpenedBuyModal) return null;
@@ -101,7 +111,7 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
                   component="h1"
                   className="lg:font-readex font-poppins text-[36px] leading-[44px] max-sm:text-[24px] lg:leading-[35px] font-bold"
                 >
-                  {}
+                  { }
                 </Typography>
               </div>
             </div>

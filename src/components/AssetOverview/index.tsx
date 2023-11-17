@@ -4,7 +4,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { InactiveNftTypes, ListingTypes, NftTypes, OfferTypes, PhotoItem } from "@/utils/types";
+import { ListingTypes, NftTypes, OfferTypes, PhotoItem } from "@/utils/types";
 import Typography from "../Typography";
 import {
   AddCartIcon,
@@ -66,7 +66,6 @@ const AssetOverview: FC<OverviewProps> = ({
   const [nftAvatar, setNftAvatar] = useState<PhotoItem>();
   const [copied, setCopied] = useState(false);
   const [like, setLike] = useState(false);
-  const [likeNft, setLikeNft] = useState<InactiveNftTypes | null>()
 
   const router = useRouter();
   const handleCancelList = async () => {
@@ -111,19 +110,23 @@ const AssetOverview: FC<OverviewProps> = ({
 
       const res = await cancelListing([orders]);
 
-      const cancel = await cancelList(
-        listing.id,
-        nft.id,
-        res?.transactionHash as `0x${string}`,
-        listing.network
-      );
+      if (res === null) {
+        return;
+      } else {
+        const cancel = await cancelList(
+          listing.id,
+          nft.id,
+          res?.transactionHash as `0x${string}`,
+          listing.network
+        );
 
-      successAlert("Canceled List")
+        successAlert("Canceled List")
 
-      if (cancel) {
-        setIsNoticed(false);
+        if (cancel) {
+          setIsNoticed(false);
+        }
+        console.log("cancel", cancel);
       }
-      console.log("cancel", cancel);
     }
   };
 
@@ -137,13 +140,19 @@ const AssetOverview: FC<OverviewProps> = ({
   };
 
   const handleSetLike = async () => {
-    setLike(!like)
+    // setLike(!like)
     if (!like) {
       const likeNft = await createLikes(id)
+      const likes = await getLikeByNft(id)
+      console.log("get Likes=====", likes)
+      setLike(true)
       console.log("like!====", likeNft)
     } else {
       const unlikeNft = await removeLike(id)
       console.log("unlike!========", unlikeNft)
+      const likes = await getLikeByNft(id)
+      console.log("get unlike=====", likes)
+      setLike(false)
     }
   }
 
@@ -177,7 +186,11 @@ const AssetOverview: FC<OverviewProps> = ({
     const getLike = async () => {
       const likes = await getLikeByNft(id)
       console.log("get Likes=====", likes)
-      setLikeNft(likes)
+      if (likes) {
+        setLike(true)
+      } else {
+        setLike(false)
+      }
     }
     getLike()
   }, [id, like])
@@ -249,7 +262,7 @@ const AssetOverview: FC<OverviewProps> = ({
               <ExplorerIcon className="fill-hover" />
             </Link>
             <button onClick={handleSetLike}>
-              {likeNft ? <FavouriteFullIcon /> : <FavoriteSmIcon className="fill-hover" />}
+              {like ? <FavouriteFullIcon /> : <FavoriteSmIcon className="fill-hover" />}
             </button>
             <button className="hidden lg:block" onClick={handleRefresh}>
               <RefreshIcon className="fill-hover" />
