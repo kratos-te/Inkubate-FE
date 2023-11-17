@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import AssetOverview from "@/components/AssetOverview";
 import AssetDetailBox from "@/components/AssetDetailBox";
@@ -199,7 +198,7 @@ export default function NftPage() {
       const listing = await getListByNft(nft?.id);
       const activities = await getActivityByNft(nft?.id);
       setNftByOne(nft);
-      setNftByCollection(nfts?.data);
+      setNftByCollection(nfts);
       setListByNft(listing?.data);
       setActivity(activities?.data);
 

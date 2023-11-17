@@ -23,7 +23,7 @@ import { SetDuration } from "./SetDuratoin";
 import { CloseCircleIcon, VerifiedIcon } from "./SvgIcons";
 import Typography from "./Typography";
 import { useUser } from "@/contexts/UserContext";
-import { successAlert } from "./ToastGroup";
+import { successAlert, warningAlert } from "./ToastGroup";
 
 export const OfferModal: FC<{
   nft: NftTypes;
@@ -107,7 +107,10 @@ export const OfferModal: FC<{
   };
 
   const handleOffer = async () => {
-    if (!walletAddress) return;
+    if (!walletAddress) {
+      warningAlert("Please connect your wallet!")
+      return;
+    }
 
     setMakeOffer(true);
     const startAmount = numToWei(parseFloat(amount));
@@ -119,7 +122,11 @@ export const OfferModal: FC<{
       INK_CONDUIT_ADDRESS,
       BigInt(startAmount)
     );
-    if (res.status === "success") {
+    if (res === null) {
+      setMakeOffer(false);
+      warningAlert("Rejected by User!")
+    }
+    if (res !== null && res.status === "success") {
       const { signature, data } = await handleSign();
       if (signature) {
         const res = await createOffer(

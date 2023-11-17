@@ -17,7 +17,7 @@ import Typography from "@/components/Typography";
 import SortDropdown from "@/components/SortDropdown";
 import CollectionFilter from "@/components/CollectionFilter";
 import NftGrid from "@/components/NftGrid";
-import { getNft, getNftByOne } from "@/actions/nft";
+import { getNft } from "@/actions/nft";
 import {
   ActivityTypes,
   CollectionParam,
@@ -31,6 +31,7 @@ import { BuyModal } from "@/components/BuyModal";
 import { getStatByCollectionId } from "@/actions/stat";
 import { DEFAULT_LIST_ITEMS_COUNT } from "@/config";
 import useScroll from "@/utils/useScroll";
+import { ListModal } from "@/components/ListModal";
 
 export default function CollectionPage() {
   const collectionName = "Opbunnies";
@@ -40,7 +41,7 @@ export default function CollectionPage() {
   const [sortAscending, setSortAscending] = useState<string>("asc");
   const [isDense, setIsDense] = useState(true);
   const [nftByCollection, setNftByCollection] = useState<NftTypes[]>([]);
-  const [nftOne, setNftOne] = useState<NftTypes>();
+  // const [nftOne, setNftOne] = useState<NftTypes>();
   const [listByNft, setListByNft] = useState<ListingTypes>();
   const [collectionById, setCollectionById] = useState<CollectionParam>();
   const [_stat, setStat] = useState<StatTypes>();
@@ -115,11 +116,11 @@ export default function CollectionPage() {
               const collection = await getCollectionById(collectionId);
               const activity = await getActivityByCollection(collectionId);
               const getStat = await getStatByCollectionId(collectionId);
-              const nft = await getNftByOne("0", collection?.data?.address);
+              // const nft = await getNftByOne("0", collection?.data?.address);
               setNftByCollection(res);
               setCollectionById(collection?.data);
               setActByCollection(activity?.data);
-              setNftOne(nft);
+              // setNftOne(nft);
               setStat(getStat?.data);
             };
             getData();
@@ -130,11 +131,11 @@ export default function CollectionPage() {
               const collection = await getCollectionById(collectionId);
               const activity = await getActivityByCollection(collectionId);
               const getStat = await getStatByCollectionId(collectionId);
-              const nft = await getNftByOne("0", collection?.data?.address);
+              // const nft = await getNftByOne("0", collection?.data?.address);
               setNftByCollection(oldData);
               setCollectionById(collection?.data);
               setActByCollection(activity?.data);
-              setNftOne(nft);
+              // setNftOne(nft);
               setStat(getStat?.data);
             };
             getData();
@@ -271,7 +272,7 @@ export default function CollectionPage() {
               }`}
           >
             <div className="hidden lg:block w-[300px]">
-              {nftOne && <CollectionFilter nft={nftOne} />}
+              {nftByCollection[0] && <CollectionFilter nft={nftByCollection[0]} />}
             </div>
             <div className="w-full lg:w-[calc(100%-350px)] lg:ml-[50px]">
               {tab === "1" && (
@@ -290,6 +291,7 @@ export default function CollectionPage() {
         </div>
       </MainLayout>
       {activeBuy && <BuyModal nft={activeBuy} listing={listByNft} />}
+      {activeBuy && <ListModal nft={activeBuy} />}
     </>
   );
 }

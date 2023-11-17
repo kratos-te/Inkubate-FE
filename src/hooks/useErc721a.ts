@@ -3,7 +3,12 @@ import { Abi } from "viem";
 
 import { ERC721A_ABI } from "@/utils/abi";
 import { DEFAULT_MERKLE_ROOT, INK_CONDUIT_ADDRESS } from "@/utils/constants";
-import { DEFAULT_GAS, MIN_GAS, MIN_GAS_PRICE } from "@/config";
+import {
+  DEFAULT_GAS,
+  DEFAULT_GAS_PRICE,
+  MIN_GAS,
+  MIN_GAS_PRICE,
+} from "@/config";
 import { write } from "./utils";
 
 export function useErc721a() {
@@ -99,6 +104,133 @@ export function useErc721a() {
     }
   };
 
+  const changeTotalSupply = async (address: string, supply: number) => {
+    try {
+      return await write({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+        functionName: "changeMaxTotalSupply",
+        args: [supply],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const changeMintAmount = async (address: string, amount: number) => {
+    try {
+      return await write({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+        functionName: "setMaxMintAmount",
+        args: [amount],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const changeMaxWallet = async (address: string, amount: number) => {
+    try {
+      return await write({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+        functionName: "setMaxWalletAmount",
+        args: [amount],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const changeBaseUri = async (address: string, uri: string) => {
+    try {
+      return await write({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+        functionName: "setBaseUri",
+        args: [uri],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const changeStartTime = async (address: string, startTime: number) => {
+    try {
+      return await write({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+        functionName: "changeStartTime",
+        args: [startTime],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const changeEndTime = async (address: string, endTime: number) => {
+    try {
+      return await write({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+        functionName: "changeEndTime",
+        args: [endTime],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const endMinting = async (address: string) => {
+    try {
+      return await write({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+        functionName: "forceFinishMinting",
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
+  const changeWhiteListMode = async (address: string, enable: boolean) => {
+    try {
+      return await write({
+        address: address as `0x${string}`,
+        abi: ERC721A_ABI as Abi,
+        functionName: "enableWhitelistMode",
+        args: [enable],
+        gas: DEFAULT_GAS,
+        gasPrice: DEFAULT_GAS_PRICE,
+      });
+    } catch (e) {
+      console.log("error", e);
+      return null;
+    }
+  };
+
   return {
     approve,
     mintNFT,
@@ -108,5 +240,13 @@ export function useErc721a() {
     getMintingStartTime,
     getTokenUri,
     getTotalSupply,
+    changeTotalSupply,
+    changeMintAmount,
+    changeMaxWallet,
+    changeBaseUri,
+    changeStartTime,
+    changeEndTime,
+    endMinting,
+    changeWhiteListMode,
   };
 }

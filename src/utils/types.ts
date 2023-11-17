@@ -68,12 +68,21 @@ export type PhotoItem = {
   fileEntityId: string;
 };
 
-export interface CreateLaunchpadParam {
+export interface CreateLaunchpadParam extends UpdateLaunchpadParam {
   name: string;
   symbol: string;
   desc: string;
   logoId: string;
   imageId: string;
+  enableReserveTokens: boolean;
+  network: string;
+  twitter?: string;
+  discord?: string;
+  facebook?: string;
+  reddit?: string;
+}
+
+export interface UpdateLaunchpadParam {
   mintPrice: bigint;
   supply: number;
   owners: string[];
@@ -82,15 +91,9 @@ export interface CreateLaunchpadParam {
   maxPerWallet: number;
   wlEnabled: boolean;
   wlAddresses: string[];
-  enableReserveTokens: boolean;
   startDate: string;
   endDate: string;
-  network: string;
   prefix?: string;
-  twitter?: string;
-  discord?: string;
-  facebook?: string;
-  reddit?: string;
   collectionUri: string;
 }
 
@@ -123,6 +126,7 @@ export interface LaunchpadParam {
   collection: CollectionParam;
   collectionId: string;
   collectionUri: string;
+  prefix: string;
 }
 
 export interface CollectionParam {

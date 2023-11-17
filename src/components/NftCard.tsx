@@ -76,15 +76,15 @@ const NftCard: FC<ItemProps> = ({
     console.log(listByNft)
     if (listByNft?.nftId === id) {
       console.log(2)
-      if (!tokenAddress) return;
+      if (!walletAddress) return;
       console.log(3)
       if (listByNft) {
         // const startAmount = (weiToNum(listing.price) / 100) * 95;
         const startDay = date2Timestamp(listByNft.startTime).toString();
         const endDay = date2Timestamp(listByNft.endTime).toString();
-        const counters = await count(tokenAddress as `0x${string}`);
+        const counters = await count(walletAddress as `0x${string}`);
         const orders = {
-          offerer: tokenAddress,
+          offerer: walletAddress,
           zone: ZERO_ADDRESS, // always this is a null address in listing
           offer: [
             {
@@ -117,19 +117,22 @@ const NftCard: FC<ItemProps> = ({
         console.log("orders", orders);
 
         const res = await cancelListing([orders]);
+        if (res === null) {
+          return;
+        } else {
+          const cancel = await cancelList(
+            listByNft.id,
+            nft.id,
+            res?.transactionHash as `0x${string}`,
+            listByNft.network
+          );
+          successAlert("Canceled List");
 
-        const cancel = await cancelList(
-          listByNft.id,
-          nft.id,
-          res?.transactionHash as `0x${string}`,
-          listByNft.network
-        );
-        successAlert("Canceled List");
-
-        if (cancel && setIsNoticed) {
-          setIsNoticed(false);
+          if (cancel && setIsNoticed) {
+            setIsNoticed(false);
+          }
+          console.log("cancel", cancel);
         }
-        console.log("cancel", cancel);
       }
     } else {
       setActiveItem();

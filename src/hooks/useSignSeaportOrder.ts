@@ -31,6 +31,7 @@ export function useSignSeaportOrder() {
       const signature: string | null = await signTypedDataAsync(data).catch(
         () => {
           // user rejected signature request
+          console.log("here is signature", signature);
           return null;
         }
       );

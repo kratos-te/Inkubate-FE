@@ -9,8 +9,13 @@ import {
 
 export const write = async (config: PrepareWriteContractConfig) => {
   const { request } = await prepareWriteContract(config);
-  const { hash } = await writeContract(request);
-  return await waitForTransaction({ hash });
+  try {
+    const { hash } = await writeContract(request);
+    return await waitForTransaction({ hash });
+  } catch (error) {
+    console.log("write error", error);
+    return null;
+  }
 };
 
 export const read = async (config: ReadContractConfig) => {

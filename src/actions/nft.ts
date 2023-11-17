@@ -66,8 +66,6 @@ export async function getNftsByUser({
   limit,
 }: UGetNft) {
   try {
-    // let query = "";
-    // if (filterBy) query = `?filterBy=${filterBy}`;
     const response = await axios.get(
       `${API_BASE_URL}/api/nft/user/${userId}?sortAscending=${sortAscending}${
         filterBy ? "&filterBy=" + filterBy : ""

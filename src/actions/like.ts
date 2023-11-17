@@ -109,13 +109,10 @@ export async function removeLike(id: string): Promise<boolean> {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    await axios
-      .delete(`${API_BASE_URL}/api/like/${id}`, {
-        headers,
-      })
-      .catch((e) => {
-        throw e;
-      });
+    const response = await axios.delete(`${API_BASE_URL}/api/like/${id}`, {
+      headers,
+    });
+    console.log("delete Like", response.data);
     return true;
   } catch (error) {
     if (axios.isAxiosError(error)) {
