@@ -77,6 +77,7 @@ export default function MintPage() {
             remainTime && (
               <MintDetail
                 launchpad={launchpadById}
+                setLaunchPadById={setLaunchPadById}
                 remainingTime={remainTime}
               />
             )
@@ -191,7 +192,7 @@ export default function MintPage() {
           )}
         </div>
       </MainLayout>
-      {launchpadById && <MintModal launchpad={launchpadById} />}
+      {launchpadById && <MintModal launchpad={launchpadById} setLaunchPadById={setLaunchPadById} />}
       {launchpadById && <LaunchpadEditModal launchpad={launchpadById} />}
     </>
   );

@@ -307,7 +307,7 @@ const Header: FC = () => {
                     </div>
                   ) : (
                     <button
-                      className="flex mx-auto py-[18px] mb-[18px] text-lg font-semibold justify-center bg-secondary rounded-b-2xl"
+                        className="flex w-full py-[18px] mb-[18px] text-lg font-semibold justify-center bg-secondary rounded-b-2xl"
                       onClick={openWalletModal}
                     >
                       Connect Wallet

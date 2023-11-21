@@ -44,7 +44,7 @@ const FeaturedProjects: FC = () => {
           </Link>
         </div>
         <div className="flex xl:grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-4 xl:gap-x-[30px] gap-y-10 mt-8 xl:mt-9 overflow-x-auto pb-8 xl:pb-0 px-6">
-          {!loading
+          {!loading && collections
             ? collections.map((collection, key) => (
                 <CollectionCard collection={collection} key={key} />
               ))
