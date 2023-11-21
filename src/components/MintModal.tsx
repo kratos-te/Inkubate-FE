@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { FC, useState } from "react";
-import { useRouter } from "next/navigation";
+import { FC, useMemo, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
 import { CloseCircleIcon, MinusIcon, PlusIcon } from "./SvgIcons";
 import { LoadingPad } from "./LoadingPad";
@@ -9,14 +9,16 @@ import ClickAwayComponent from "./ClickAwayComponent";
 import { useErc721a } from "@/hooks/useErc721a";
 import { LaunchpadParam, NftItem } from "@/utils/types";
 import { createNft } from "@/actions/nft";
-import { errorAlert, successAlert } from "./ToastGroup";
+import { errorAlert, successAlert, warningAlert } from "./ToastGroup";
 import { shortenAddress } from "@/utils/util";
 import Link from "next/link";
+import { getLaunchpadById } from "@/actions";
 
 interface MintModalProps {
   launchpad: LaunchpadParam;
+  setLaunchPadById: Function;
 }
-export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
+export const MintModal: FC<MintModalProps> = ({ launchpad, setLaunchPadById }) => {
   const { mintNFT, getMintingStartTime } = useErc721a();
   const { closeMintModal, isOpenedMintModal } = useModal();
   const [mintValue, setMintValue] = useState<number>(1);
@@ -25,6 +27,15 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
   const [nfts, setNfts] = useState<NftItem[]>([]);
 
   const router = useRouter();
+  const pathname = usePathname();
+
+  const launchpadId = useMemo(() => {
+    let path = "";
+    if (pathname) {
+      path = pathname.split("/")[2] as string;
+    }
+    return path;
+  }, [pathname]);
 
   const handleMinus = () => {
     setMintValue(mintValue - 1);
@@ -47,17 +58,21 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
         launchpad.collection.address
       );
       console.log(rept);
-      const createNfts = await createNft({
-        collectionId: launchpad.collectionId,
-        contractType: "ERC721",
-        price: launchpad.mintPrice.toString(),
-        txHash: rept.transactionHash || "",
-        network: "MAIN",
-      });
-      console.log("created Nft", createNfts);
-      setNfts(createNfts);
-      setMintSuccess(true);
-      successAlert("Minted Successfully!");
+      if (rept === null) {
+        warningAlert("Rejected by User!")
+      } else {
+        const createNfts = await createNft({
+          collectionId: launchpad.collectionId,
+          contractType: "ERC721",
+          price: launchpad.mintPrice.toString(),
+          txHash: rept.transactionHash || "",
+          network: "MAIN",
+        });
+        console.log("created Nft", createNfts);
+        setNfts(createNfts);
+        setMintSuccess(true);
+        successAlert("Minted Successfully!");
+      }
     } catch (e: any) {
       console.log(e.message);
       if (e.message.includes("User rejected the request."))
@@ -73,6 +88,13 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
     setNfts([]);
     setMintSuccess(false)
     setMintValue(1)
+    const getCollection = async () => {
+      if ((pathname.split("/")[1] as string) === "mint" && launchpadId) {
+        const launchpad = await getLaunchpadById(launchpadId);
+        setLaunchPadById(launchpad);
+      }
+    };
+    getCollection();
   }
 
   const handleToMove = () => {
@@ -182,7 +204,7 @@ export const MintModal: FC<MintModalProps> = ({ launchpad }) => {
                     <button className="bg-secondary w-full text-white py-3 text-[16px] font-semibold rounded-[12px]" onClick={handleToMove}>
                       View NFTs
                     </button>
-                    <Link href={`https://goerli.etherscan.io/tx/${launchpad?.collection.address}`}>
+                    <Link href={`https://goerli.etherscan.io/tx/${launchpad?.collection.address}`} target="_blank">
                       <button className="bg-white w-full py-3 text-[16px] font-semibold rounded-[12px]">
                         View Transaction
                       </button>

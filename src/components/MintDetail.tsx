@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import { FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,6 +23,7 @@ import { useUser } from "@/contexts/UserContext";
 
 interface OverviewProps {
   launchpad: LaunchpadParam;
+  setLaunchPadById: Function;
   className?: string;
   remainingTime: number;
 }
@@ -29,6 +32,7 @@ const MintDetail: FC<OverviewProps> = ({ launchpad, remainingTime }) => {
   // const { price, setPrice } = useState(launchpad.mintPrice)
   // const [supply, setSupply] = useState<string>("0")
   const router = useRouter();
+
   const { openMintModal, openLaunchpadEditModal } = useModal();
   const { userData } = useUser()
   const { width } = useWindowSize();
