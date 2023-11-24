@@ -52,7 +52,6 @@ export const OfferModal: FC<{
 
   const handleSign = async () => {
     if (!walletAddress) return { signature: "", data: "" };
-    console.log("endaday", endDay);
     const startAmount = numToWei(parseFloat(amount));
     const consideration = [
       {
@@ -116,7 +115,6 @@ export const OfferModal: FC<{
     const startAmount = numToWei(parseFloat(amount));
     // TODO: notify insuffcient wETH Balance
     // const balance = await balanceOf(GOERLI_WETH_ADDRESS, walletAddress!);
-    // console.log(balance);
     const res = await approve(
       GOERLI_WETH_ADDRESS,
       INK_CONDUIT_ADDRESS,
@@ -129,13 +127,12 @@ export const OfferModal: FC<{
     if (res !== null && res.status === "success") {
       const { signature, data } = await handleSign();
       if (signature) {
-        const res = await createOffer(
+        await createOffer(
           nft.id,
           signature,
           JSON.stringify(data),
           nft.collection.network
         );
-        console.log(res);
       }
       setMakeOffer(false);
       closeOfferModal();

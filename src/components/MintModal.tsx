@@ -50,14 +50,14 @@ export const MintModal: FC<MintModalProps> = ({ launchpad, setLaunchPadById }) =
       const startTimeRes = await getMintingStartTime(
         launchpad.collection.address
       );
-      if (startTimeRes?.res) console.log("here", startTimeRes.res);
+      if (startTimeRes?.res)
+        console.log("here", startTimeRes.res);
       const value = Number(launchpad.mintPrice) * amount;
       const rept = await mintNFT(
         amount,
         value.toString(),
         launchpad.collection.address
       );
-      console.log(rept);
       if (rept === null) {
         warningAlert("Rejected by User!")
       } else {
@@ -68,13 +68,11 @@ export const MintModal: FC<MintModalProps> = ({ launchpad, setLaunchPadById }) =
           txHash: rept.transactionHash || "",
           network: "MAIN",
         });
-        console.log("created Nft", createNfts);
         setNfts(createNfts);
         setMintSuccess(true);
         successAlert("Minted Successfully!");
       }
     } catch (e: any) {
-      console.log(e.message);
       if (e.message.includes("User rejected the request."))
         errorAlert("User rejected the request.");
       else errorAlert("Failed Minting");

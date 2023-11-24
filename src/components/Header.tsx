@@ -80,8 +80,6 @@ const Header: FC = () => {
   };
 
   const handleNotification = async () => {
-    // const notification = await getNotification()
-    // console.log("here ++++++++++++++", notification);
     setIsNotificationModal(!isNotificationModal);
     setIsShowDropdown(false);
   };

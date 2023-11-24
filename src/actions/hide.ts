@@ -22,7 +22,6 @@ export async function createHide(nftId: string) {
       { nftId },
       { headers }
     );
-    console.log("create hide", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

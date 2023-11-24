@@ -32,7 +32,6 @@ export async function updateLaunchpad(id: string, data: UpdateLaunchpadParam) {
 export async function getLaunchpad() {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/launchpad`);
-    console.log("launchpad", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

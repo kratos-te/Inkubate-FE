@@ -13,7 +13,6 @@ export async function getNotification() {
     const response = await axios.get(`${API_BASE_URL}/api/notification/user`, {
       headers,
     });
-    console.log("notification", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -42,7 +41,6 @@ export async function readNotification(ids: string[]) {
       },
       { headers }
     );
-    console.log("read notification", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

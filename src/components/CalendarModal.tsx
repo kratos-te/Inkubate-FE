@@ -70,7 +70,6 @@ export const CalendarModal: FC = () => {
 
   const handleSetDay = (day: Date) => {
     setSeletedDay(format(day, "MM/dd/yyyy"));
-    console.log("day", day);
   };
 
   const handleShowHours = () => {

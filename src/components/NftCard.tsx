@@ -73,11 +73,8 @@ const NftCard: FC<ItemProps> = ({
   }
 
   const handleSell = async () => {
-    console.log(listByNft)
     if (listByNft?.nftId === id) {
-      console.log(2)
       if (!walletAddress) return;
-      console.log(3)
       if (listByNft) {
         // const startAmount = (weiToNum(listing.price) / 100) * 95;
         const startDay = date2Timestamp(listByNft.startTime).toString();
@@ -114,7 +111,6 @@ const NftCard: FC<ItemProps> = ({
           conduitKey: INK_CONDUIT_KEY,
           counter: counters,
         };
-        console.log("orders", orders);
 
         const res = await cancelListing([orders]);
         if (res === null) {
@@ -131,7 +127,6 @@ const NftCard: FC<ItemProps> = ({
           if (cancel && setIsNoticed) {
             setIsNoticed(false);
           }
-          console.log("cancel", cancel);
         }
       }
     } else {

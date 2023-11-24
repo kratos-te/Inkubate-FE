@@ -14,7 +14,6 @@ export function useSignSeaportOrder() {
   const signOrder = useCallback(
     async (orderParameters: OrderParameters, counter: string) => {
       if (!signer) {
-        console.log("No Signer connected");
         return { signature: "", data: "" };
       }
       // "EIP712Domain"
@@ -31,7 +30,6 @@ export function useSignSeaportOrder() {
       const signature: string | null = await signTypedDataAsync(data).catch(
         () => {
           // user rejected signature request
-          console.log("here is signature", signature);
           return null;
         }
       );

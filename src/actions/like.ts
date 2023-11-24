@@ -24,7 +24,6 @@ export async function createLikes(
       { nftId },
       { headers }
     );
-    console.log("like", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -87,7 +86,6 @@ export async function getLikeByNft(
     const response = await axios.get(`${API_BASE_URL}/api/like/${nftId}`, {
       headers,
     });
-    console.log("Like by Nft", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -109,10 +107,9 @@ export async function removeLike(id: string): Promise<boolean> {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios.delete(`${API_BASE_URL}/api/like/${id}`, {
+    axios.delete(`${API_BASE_URL}/api/like/${id}`, {
       headers,
     });
-    console.log("delete Like", response.data);
     return true;
   } catch (error) {
     if (axios.isAxiosError(error)) {

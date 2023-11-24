@@ -38,8 +38,6 @@ export default function MintPage() {
   }, [pathname]);
 
   useEffect(() => {
-    console.log("path", pathname.split("/")[1] as string, launchpadId);
-
     const getCollection = async () => {
       if ((pathname.split("/")[1] as string) === "mint" && launchpadId) {
         const launchpad = await getLaunchpadById(launchpadId);

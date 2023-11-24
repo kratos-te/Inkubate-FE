@@ -67,12 +67,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const message = "Connected with Inkubate";
 
   const sign = async () => {
-    console.log("signed");
     setSigned(true);
   };
 
   const logout = () => {
-    console.log("logout");
     signOut();
     setAccessToken("");
     setRefreshToken("");
@@ -108,7 +106,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       .then(async (sign) => {
         const token = await signIn(userAddress, sign.toString());
         if (token) {
-          console.log("token", token.accessToken);
           setAccessToken(token.accessToken);
           localStorage.setItem("accessToken", token.accessToken);
           setRefreshToken(token.refreshToken);
@@ -117,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       })
       .catch((e) => {
-        console.log("====", e);
+        console.error(e)
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userAddress]);

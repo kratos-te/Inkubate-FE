@@ -51,7 +51,6 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({
   };
 
   const logout = () => {
-    console.log("logout");
     setSigned(false);
   };
 

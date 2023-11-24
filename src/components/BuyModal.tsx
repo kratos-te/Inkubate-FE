@@ -27,7 +27,6 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
   const [isBuyStatus, setIsBuyStatus] = useState(false);
   const { buyListing } = useInkubate();
   const handleBuy = async () => {
-    console.log("walletaddress", walletAddress)
     if (!walletAddress) {
       warningAlert("Please connect your wallet!")
     }
@@ -53,20 +52,17 @@ export const BuyModal: FC<BuyModalProps> = ({ nft, listing }) => {
       additionalRecipients: [],
       signature: listing.signature,
     };
-    console.log("orders", orders);
     const res = await buyListing(orders);
-    console.log("res of buy", res)
     if (res === null) {
       setIsBuyStatus(false);
       warningAlert("Rejected by User!")
     } else {
-      const buy = await buyNow(
+      await buyNow(
         listing.id,
         nft.id,
         res?.transactionHash as `0x${string}`,
         listing.network
       );
-      console.log("buy", buy);
       successAlert("Bought successfully!");
       setIsBuyStatus(false);
     }

@@ -78,7 +78,6 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   };
 
   const handleSetDay = (day: Date) => {
-    console.log("selected Day============");
     const today = new Date();
 
     if (day > today) {
@@ -117,7 +116,6 @@ export const DatePicker: FC<DatePrickerProps> = ({ type, range }) => {
   }, [type, range, today]);
 
   useEffect(() => {
-    console.log("startDay-.................", startDay);
     setStartDate(startDay);
     setEndDate(endDay);
   }, [endDay, endTime, setEndDate, setStartDate, startDay, startTime]);

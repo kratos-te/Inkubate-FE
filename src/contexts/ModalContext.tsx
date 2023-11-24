@@ -110,7 +110,6 @@ export function ModalProvider({ children }: ModalProviderProps) {
     useState<boolean>(false);
 
   const openWalletModal = () => {
-    console.log("open wallet modal");
     setIsOpenedWalletModal(true);
     // document.body.classList.add("modal-open");
   };
@@ -168,7 +167,6 @@ export function ModalProvider({ children }: ModalProviderProps) {
     document.body.classList.add("modal-open");
   };
   const closeCreateModal = () => {
-    console.log("====== Closed!!!!!!!==========")
 
     setIsOpenedCreateModal(false);
     document.body.classList.remove("modal-open");
@@ -192,7 +190,6 @@ export function ModalProvider({ children }: ModalProviderProps) {
   };
   const closeListModal = () => {
     setIsOpenedListModal(false);
-    console.log("closed list modal");
     document.body.classList.remove("modal-open");
   };
 

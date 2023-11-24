@@ -106,7 +106,6 @@ const AssetOverview: FC<OverviewProps> = ({
         conduitKey: INK_CONDUIT_KEY,
         counter: counters,
       };
-      console.log("orders", orders);
 
       const res = await cancelListing([orders]);
 
@@ -125,7 +124,6 @@ const AssetOverview: FC<OverviewProps> = ({
         if (cancel) {
           setIsNoticed(false);
         }
-        console.log("cancel", cancel);
       }
     }
   };
@@ -142,16 +140,12 @@ const AssetOverview: FC<OverviewProps> = ({
   const handleSetLike = async () => {
     // setLike(!like)
     if (!like) {
-      const likeNft = await createLikes(id)
-      const likes = await getLikeByNft(id)
-      console.log("get Likes=====", likes)
+      await createLikes(id)
+      await getLikeByNft(id)
       setLike(true)
-      console.log("like!====", likeNft)
     } else {
-      const unlikeNft = await removeLike(id)
-      console.log("unlike!========", unlikeNft)
-      const likes = await getLikeByNft(id)
-      console.log("get unlike=====", likes)
+      await removeLike(id)
+      await getLikeByNft(id)
       setLike(false)
     }
   }
@@ -185,7 +179,6 @@ const AssetOverview: FC<OverviewProps> = ({
   useEffect(() => {
     const getLike = async () => {
       const likes = await getLikeByNft(id)
-      console.log("get Likes=====", likes)
       if (likes) {
         setLike(true)
       } else {

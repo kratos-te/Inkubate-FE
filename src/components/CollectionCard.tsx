@@ -13,7 +13,6 @@ interface ItemProps {
 }
 
 const CollectionCard: FC<ItemProps> = ({ collection, className }) => {
-  console.log("--------------->", collection);
   const { stats } = collection;
 
   return (

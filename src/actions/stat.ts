@@ -57,7 +57,6 @@ export async function getStatByCollectionId(collectionId: string) {
     const response = await axios.get(
       `${API_BASE_URL}/api/collection/id/${collectionId}`
     );
-    console.log("stat collection", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

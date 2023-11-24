@@ -54,7 +54,7 @@ export function useInkubate() {
         gasPrice: DEFAULT_GAS_PRICE,
       });
     } catch (e) {
-      console.log("error", e);
+      console.error("error", e);
       return null;
     }
   };
@@ -71,7 +71,7 @@ export function useInkubate() {
         value: BigInt(orders.considerationAmount),
       });
     } catch (e) {
-      console.log("error", e);
+      console.error("error", e);
       return null;
     }
   };
@@ -92,7 +92,7 @@ export function useInkubate() {
         gasPrice: DEFAULT_GAS_PRICE,
       });
     } catch (e) {
-      console.log("error", e);
+      console.error("error", e);
       return null;
     }
   };
@@ -111,7 +111,7 @@ export function useInkubate() {
         gasPrice: DEFAULT_GAS_PRICE,
       });
     } catch (e) {
-      console.log("error", e);
+      console.error("error", e);
       return null;
     }
   };

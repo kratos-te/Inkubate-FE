@@ -101,7 +101,6 @@ export const ListModal: FC<{
       orderParameters,
       counter as string
     );
-    console.log("signature", signature)
     if (signature === "") {
       return { signature: "", data };
     } else {
@@ -112,7 +111,6 @@ export const ListModal: FC<{
   const handleList = async () => {
     setMakeList(true);
     const res = await setApprovalForAll(nft.tokenAddress);
-    console.log("res of approval", res)
     if (res === null) {
       setMakeList(false);
       warningAlert("Rejected by User!")
@@ -121,13 +119,12 @@ export const ListModal: FC<{
     if (res !== null && res.status === "success") {
       const { signature, data } = await handleSign();
       if (signature) {
-        const listing = await listingNft(
+        await listingNft(
           id,
           signature,
           JSON.stringify(data),
           nft.collection.network
         );
-        console.log(listing);
       }
       setMakeList(false);
       closeListModal();

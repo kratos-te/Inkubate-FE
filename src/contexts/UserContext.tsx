@@ -7,7 +7,6 @@ import React, {
   useEffect,
 } from "react";
 import { useAccount } from "wagmi";
-
 import { getProfile, getUser } from "@/actions";
 import { UserItem, ProfileItem } from "@/utils/types";
 import { addMonths, startOfToday } from "date-fns";
@@ -25,11 +24,11 @@ interface UserContextType {
   setStartTime: React.Dispatch<React.SetStateAction<string>>;
   endTime: string;
   setEndTime: React.Dispatch<React.SetStateAction<string>>;
-  userData: UserItem;
+  userData: UserItem
   setUserData: React.Dispatch<React.SetStateAction<UserItem>>;
   getUserData: () => void;
   profile: ProfileItem;
-  setProfile: React.Dispatch<React.SetStateAction<ProfileItem>>;
+  setProfile: React.Dispatch<React.SetStateAction<ProfileItem>>;                                                                                                                                                
   getProfileData: () => void;
 }
 
@@ -51,9 +50,9 @@ const UserContext = createContext<UserContextType>({
   getUserData: () => {},
   profile: {
     bio: "",
-    twitter: "",
+    twitter: "", 
     discord: "",
-    facebook: "",
+    facebook: "",                                                                                     
     reddit: "",
     email: "",
     offerToken: "ETH",
@@ -68,11 +67,11 @@ const UserContext = createContext<UserContextType>({
     banner: {
       id: "",
       url: "",
-      fileEntityId: "",
+      fileEntityId: "",                                          
     },
   },
-  setProfile: () => {},
-  getProfileData: () => {},
+  setProfile: () => { },
+  getProfileData: () => { },
 });
 
 export const useUser = () => {

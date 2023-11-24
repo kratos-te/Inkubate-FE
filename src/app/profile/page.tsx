@@ -119,7 +119,6 @@ export default function ProfilePage() {
             setEndPageLoading(
               !res?.length || res.length % DEFAULT_LIST_ITEMS_COUNT != 0
             );
-            console.log("get Nfts >>>>>>", res)
             if (withClear) {
               setNftByOwner(res);
             } else {

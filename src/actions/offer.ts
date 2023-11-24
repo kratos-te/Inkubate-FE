@@ -91,7 +91,6 @@ export async function getOfferByBuy({ startId, offset, limit }: GetOffer) {
         headers,
       }
     );
-    console.log("offer", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

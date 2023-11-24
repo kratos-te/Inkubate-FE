@@ -22,7 +22,6 @@ export async function getAllCollections({
         search ? "&contains=" + search : ""
       }`
     );
-    console.log("collection", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -39,7 +38,6 @@ export async function getAllCollections({
 export async function getCollectionById(id: string) {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/collection/id/${id}`);
-    console.log("collection by Id", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -58,7 +56,6 @@ export async function getCollectionByContract(contract: string) {
     const response = await axios.get(
       `${API_BASE_URL}/api/collection/id/${contract}`
     );
-    console.log("collection by Id", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -77,7 +74,6 @@ export async function getTopCollections(period: string) {
     const response = await axios.get(`${API_BASE_URL}/api/collection/top`, {
       params: { period },
     });
-    console.log("top colleciton", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -94,7 +90,6 @@ export async function getTopCollections(period: string) {
 export async function getNotableCollections() {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/collection/notable`);
-    console.log("notable", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -111,7 +106,6 @@ export async function getNotableCollections() {
 export async function getFeaturedCollections() {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/collection/feature`);
-    console.log("feature", response.data);
     return response.data || [];
   } catch (error) {
     if (axios.isAxiosError(error)) {

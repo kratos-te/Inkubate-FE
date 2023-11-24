@@ -41,7 +41,6 @@ export async function getNft({
     }${limit ? "&limit=" + limit : ""}${search ? "&contains=" + search : ""}`;
 
     const response = await axios.get(query);
-    console.log("nfts", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -75,7 +74,6 @@ export async function getNftsByUser({
         search ? "&contains=" + search : ""
       }`
     );
-    console.log("nft by owner", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

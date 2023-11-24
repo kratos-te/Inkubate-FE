@@ -91,8 +91,6 @@ const ProfileForms: FC = () => {
         const value = data[key];
         values[key] = value;
       }
-      console.log("newPfp", selectedPfpFile);
-      console.log("newBanner", selectedBannerFile);
       if (userData.username !== values.username && values.username) {
         const res = await availableUsername(
           values.username === "" ? userData.username : values.username

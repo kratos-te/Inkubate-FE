@@ -31,7 +31,6 @@ export async function listingNft(
       },
       { headers }
     );
-    console.log("listing", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -49,7 +48,6 @@ export async function listingNft(
 export async function getlistingNft() {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/listing`);
-    console.log("Listings", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -89,7 +87,6 @@ export async function cancelList(
         headers: headers,
       }
     );
-    console.log("cancel listing", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -120,7 +117,6 @@ export async function getListByUser({ startId, offset, limit }: GetLIST) {
         headers,
       }
     );
-    console.log("listing", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -140,7 +136,6 @@ export async function getListByNft(nftId: string) {
     const response = await axios.get(
       `${API_BASE_URL}/api/listing/nft/${nftId}`
     );
-    console.log("list by nft", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -180,7 +175,6 @@ export async function buyNow(
         headers: headers,
       }
     );
-    console.log("direct buy listing", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {

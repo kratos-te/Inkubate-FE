@@ -89,8 +89,6 @@ export const CreateModal: FC = () => {
   const onSubmit = async (data: any) => {
     const startDay = date2UTC(startDate, startTime);
     const endDay = date2UTC(endDate, endTime);
-    console.log(new Date(startDay).getTime());
-    console.log(Date.now());
     if (new Date(startDay).getTime() > Date.now() + FIVE_MINS) {
       if (new Date(endDay).getTime() > new Date(startDay).getTime()) {
         try {
@@ -111,11 +109,7 @@ export const CreateModal: FC = () => {
             url: "",
             fileEntityId: "",
           };
-          console.log("spin!!!!!!!!!!");
-
           if (selectedNftItemFile) {
-            console.log("!!!!!!!!!!!!!!!saving!!!!!!!!!!");
-
             const createNftItem = await createPhoto(selectedNftItemFile);
             nftItem = createNftItem?.data;
           }
@@ -168,7 +162,6 @@ export const CreateModal: FC = () => {
           closeCreateModal();
         } catch (error) {
           errorAlert("Failed creating LaunchPad!");
-          console.log("error", error);
         } finally {
           setIsSpinLoading(false);
         }

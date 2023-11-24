@@ -25,7 +25,6 @@ export const SetDuration: FC = () => {
   });
 
   const handleOpenCalendar = () => {
-    console.log("isShowCal", isShowCal);
     setIsShowCal(!isShowCal);
   };
 

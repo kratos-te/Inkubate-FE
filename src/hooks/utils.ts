@@ -13,7 +13,7 @@ export const write = async (config: PrepareWriteContractConfig) => {
     const { hash } = await writeContract(request);
     return await waitForTransaction({ hash });
   } catch (error) {
-    console.log("write error", error);
+    console.error("write error", error);
     return null;
   }
 };

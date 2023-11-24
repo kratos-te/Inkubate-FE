@@ -20,7 +20,6 @@ export async function getActivityByUser({
         startId ? "&startId=" + startId : ""
       }${offset ? "&offset=" + offset : ""}${limit ? "&limit=" + limit : ""}`
     );
-    console.log("activity", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -39,7 +38,6 @@ export async function getActivityByCollection(collectionId: string) {
     const response = await axios.get(
       `${API_BASE_URL}/api/activity/collection/${collectionId}`
     );
-    console.log("activity by collection", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -58,7 +56,6 @@ export async function getActivityByNft(nftId: string) {
     const response = await axios.get(
       `${API_BASE_URL}/api/activity/nft/${nftId}`
     );
-    console.log("activity by nft", response);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {

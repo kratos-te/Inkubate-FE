@@ -17,10 +17,6 @@ const SettingModal: FC = () => {
 
   const [tab, setTab] = useState("profile");
 
-  // const handleSave = (data: any) => {
-  //   console.log("data:", data);
-  // };
-
   if (!isOpenedSetting) return;
   return (
     <div className="fixed top-0 left-0 z-50 grid w-screen h-screen xld:place-content-center">

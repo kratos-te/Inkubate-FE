@@ -171,7 +171,6 @@ export default function NftPage() {
     ];
 
     const recipient: string = walletAddress;
-    console.log(orders);
 
     const res = await acceptOffer(
       orders,
@@ -179,7 +178,6 @@ export default function NftPage() {
       fulfillments,
       recipient
     );
-    console.log(res);
 
     if (res?.status !== "success") return;
 
@@ -193,7 +191,6 @@ export default function NftPage() {
   useEffect(() => {
     const getNftData = async () => {
       const nft = await getNftByOne(tokenId, contract);
-      console.log("nft", nft);
       const nfts = await getNft(nft?.collectionId);
       const listing = await getListByNft(nft?.id);
       const activities = await getActivityByNft(nft?.id);
@@ -202,8 +199,6 @@ export default function NftPage() {
       setListByNft(listing?.data);
       setActivity(activities?.data);
 
-      console.log("NFT", nft);
-      console.log("Listing", listing);
 
       // ********* Get offers by nft id ************ //
       const newOffers = await getOffersByNftId(nft?.id);

@@ -27,7 +27,6 @@ export async function signIn(userAddress: string, signature: string) {
       walletAddress: userAddress,
       signature: signature,
     });
-    console.log("signIn", response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -91,7 +90,6 @@ export async function refresh(): Promise<string | null> {
         headers: headers,
       }
     );
-    console.log("refresh", response);
     localStorage.setItem("accessToken", response.data.accessToken);
     localStorage.setItem("refreshToken", response.data.refreshToken);
     return response.data;
@@ -115,13 +113,12 @@ export async function validate(): Promise<boolean> {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-    const response = await axios
+    await axios
       .post(`${API_BASE_URL}/api/auth/validate`, {}, { headers })
       .then((res) => res.data)
       .catch((e) => {
         throw e;
       });
-    console.log("validate", response);
     return true;
   } catch (error) {
     if (axios.isAxiosError(error)) {
